@@ -25,18 +25,123 @@
             overflow-x: hidden;
         }
 
-        /* --- CANVAS PETIR LISTRIK BACKGROUND --- */
-        #lightningCanvas {
+        /* --- SYSTEM KEY POPUP OVERLAY --- */
+        .key-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: rgba(4, 5, 10, 0.92);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            transition: all 0.5s ease;
+        }
+
+        .key-box {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(18, 22, 36, 0.95);
+            border: 2px solid #00f0ff;
+            border-radius: 20px;
+            padding: 30px 24px;
+            text-align: center;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.15);
+            animation: keyPulse 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes keyPulse {
+            0% { box-shadow: 0 0 25px rgba(0, 240, 255, 0.3); border-color: #00f0ff; }
+            100% { box-shadow: 0 0 45px rgba(168, 85, 247, 0.6); border-color: #a855f7; }
+        }
+
+        .key-badge {
+            font-size: 38px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px #00f0ff;
+        }
+
+        .key-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.6);
+        }
+
+        .key-desc {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 20px;
+        }
+
+        .key-input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            background: rgba(10, 12, 20, 0.8);
+            color: #00f0ff;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            margin-bottom: 14px;
+        }
+
+        .key-input:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.5);
+        }
+
+        .btn-submit-key {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #00f0ff, #7c3aed);
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit-key:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 28px rgba(168, 85, 247, 0.7);
+        }
+
+        .btn-submit-key:active {
+            transform: scale(0.96);
+        }
+
+        .key-error-msg {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 12px;
+            min-height: 16px;
+            color: #ff4d4d;
+        }
+
+        /* --- CANVAS PETIR BACKGROUND --- */
+        #lightningCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             z-index: 1;
             pointer-events: none;
         }
 
-        /* --- CYBER GRID LATAR --- */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -48,7 +153,7 @@
             pointer-events: none;
         }
 
-        /* --- CONTAINER UTAMA (GLASS UI) --- */
+        /* --- MAIN CONTAINER --- */
         .container {
             width: 100%;
             max-width: 480px;
@@ -81,11 +186,11 @@
 
         @keyframes electricPulse {
             0% { 
-                box-shadow: 0 0 15px rgba(0, 220, 255, 0.6), 0 0 30px rgba(0, 220, 255, 0.2); 
+                box-shadow: 0 0 15px rgba(0, 220, 255, 0.6); 
                 border-color: #00dcff;
             }
             100% { 
-                box-shadow: 0 0 30px rgba(168, 85, 247, 0.9), 0 0 50px rgba(0, 220, 255, 0.5); 
+                box-shadow: 0 0 30px rgba(168, 85, 247, 0.9); 
                 border-color: #a855f7;
             }
         }
@@ -112,7 +217,6 @@
             padding: 5px 14px;
             border-radius: 20px;
             border: 1px solid rgba(0, 220, 255, 0.3);
-            text-shadow: 0 0 5px rgba(0, 220, 255, 0.5);
         }
 
         .links-container {
@@ -149,7 +253,6 @@
             transform: translateY(-2px);
             border-color: rgba(0, 240, 255, 0.6);
             box-shadow: 0 0 18px rgba(0, 220, 255, 0.3);
-            background: rgba(35, 42, 65, 0.85);
         }
 
         .script-info h3 {
@@ -196,12 +299,25 @@
     </style>
 </head>
 <body>
-    <!-- Layer Background Canvas Petir & Grid -->
+
+    <!-- POPUP OVERLAY SYSTEM KEY -->
+    <div id="keyOverlay" class="key-overlay">
+        <div class="key-box">
+            <div class="key-badge">⚡</div>
+            <h2 class="key-title">KILLUA SYSTEM KEY</h2>
+            <p class="key-desc">Masukkan Key rahasia untuk membuka akses Script Hub pin gantenk!</p>
+            <input type="text" id="keyInput" class="key-input" placeholder="Masukkan Key di sini..." autocomplete="off">
+            <button onclick="validateKey()" class="btn-submit-key">UNLOCK SCRIPT HUB</button>
+            <p id="keyErrorMsg" class="key-error-msg"></p>
+        </div>
+    </div>
+
+    <!-- Background Petir & Grid -->
     <div class="bg-grid"></div>
     <canvas id="lightningCanvas"></canvas>
 
     <div class="container">
-        <!-- Profil dengan Gambar Killua -->
+        <!-- Profil dengan Foto Killua -->
         <div class="profile">
             <div class="avatar">
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
@@ -274,9 +390,44 @@
         </div>
     </div>
 
-    <!-- SCRIPT SISTEM ANIMASI PETIR (ELECTRIC SYSTEM) -->
+    <!-- LOGIKA SYSTEM KEY & PETIR ANIMASI -->
     <script>
-        // Copy Code Function
+        // ===============================================
+        // PASSWORD / KEY RAHASIA KAMU (UBAH DI SINI)
+        // ===============================================
+        const SECRET_KEY = "PIN-GANTENK"; 
+
+        // Cek status Unlocked saat halaman dimuat
+        window.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('hub_access_granted') === 'true') {
+                document.getElementById('keyOverlay').style.display = 'none';
+            }
+        });
+
+        // Logika Pengujian Key
+        function validateKey() {
+            const userKey = document.getElementById('keyInput').value.trim();
+            const errorMsg = document.getElementById('keyErrorMsg');
+
+            if (userKey === SECRET_KEY) {
+                errorMsg.style.color = "#00ff88";
+                errorMsg.innerText = "Key Benar! Membuka Akses... ⚡";
+                localStorage.setItem('hub_access_granted', 'true');
+                
+                setTimeout(() => {
+                    document.getElementById('keyOverlay').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('keyOverlay').style.display = 'none';
+                    }, 500);
+                }, 800);
+            } else {
+                errorMsg.style.color = "#ff4d4d";
+                errorMsg.innerText = "❌ Key Salah! Silakan coba lagi.";
+                document.getElementById('keyInput').style.borderColor = "#ff4d4d";
+            }
+        }
+
+        // Salin Kode Script
         function copyCode(text, btn) {
             navigator.clipboard.writeText(text).then(function() {
                 let originalText = btn.innerText;
@@ -291,7 +442,7 @@
             });
         }
 
-        // --- ANIMASI LISTRIK PETIR CANVAS ---
+        // --- ANIMASI CANVAS PETIR ---
         const canvas = document.getElementById('lightningCanvas');
         const ctx = canvas.getContext('2d');
 
@@ -302,11 +453,8 @@
         window.addEventListener('resize', resize);
         resize();
 
-        // System Partikel Energi Listrik
         const particles = [];
-        const particleCount = 45;
-
-        for (let i = 0; i < particleCount; i++) {
+        for (let i = 0; i < 45; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
@@ -317,23 +465,17 @@
             });
         }
 
-        // Menggambar Sambaran Petir Z-shape
         function drawLightning(x1, y1, x2, y2, color, alpha) {
             ctx.beginPath();
             ctx.moveTo(x1, y1);
-            
-            let curX = x1;
-            let curY = y1;
+            let curX = x1, curY = y1;
             const distance = Math.hypot(x2 - x1, y2 - y1);
             const steps = Math.floor(distance / 12);
-            
             for (let i = 0; i < steps; i++) {
                 const targetX = x1 + (x2 - x1) * (i / steps);
                 const targetY = y1 + (y2 - y1) * (i / steps);
-                
                 curX = targetX + (Math.random() - 0.5) * 14;
                 curY = targetY + (Math.random() - 0.5) * 14;
-                
                 ctx.lineTo(curX, curY);
             }
             ctx.lineTo(x2, y2);
@@ -347,60 +489,44 @@
             ctx.shadowBlur = 0;
         }
 
-        let boltTimer = 0;
-        let activeBolt = null;
+        let boltTimer = 0, activeBolt = null;
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Gerakkan & Gambar Partikel Listrik
             for (let i = 0; i < particles.length; i++) {
                 let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                
+                p.x += p.vx; p.y += p.vy;
                 if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
                 if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
                 
                 ctx.beginPath();
                 ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                 ctx.fillStyle = p.color;
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = p.color;
                 ctx.fill();
-                ctx.shadowBlur = 0;
-                
-                // Sambungan Petir Antar Partikel Dekat
+
                 for (let j = i + 1; j < particles.length; j++) {
                     let p2 = particles[j];
                     let dist = Math.hypot(p2.x - p.x, p2.y - p.y);
                     if (dist < 120) {
-                        let alpha = (1 - dist / 120) * 0.7;
-                        drawLightning(p.x, p.y, p2.x, p2.y, p.color, alpha);
+                        drawLightning(p.x, p.y, p2.x, p2.y, p.color, (1 - dist / 120) * 0.7);
                     }
                 }
             }
-            
-            // Kilatan Petir Menyambar Acak
+
             boltTimer++;
-            if (boltTimer % 35 === 0) {
-                if (Math.random() < 0.65) {
-                    let startX = Math.random() * canvas.width;
-                    activeBolt = {
-                        x1: startX,
-                        y1: 0,
-                        x2: startX + (Math.random() - 0.5) * 250,
-                        y2: canvas.height * (0.4 + Math.random() * 0.5),
-                        life: 6
-                    };
-                }
+            if (boltTimer % 35 === 0 && Math.random() < 0.65) {
+                let startX = Math.random() * canvas.width;
+                activeBolt = {
+                    x1: startX, y1: 0,
+                    x2: startX + (Math.random() - 0.5) * 250,
+                    y2: canvas.height * (0.4 + Math.random() * 0.5),
+                    life: 6
+                };
             }
-            
             if (activeBolt && activeBolt.life > 0) {
                 drawLightning(activeBolt.x1, activeBolt.y1, activeBolt.x2, activeBolt.y2, '#00f0ff', activeBolt.life / 6);
                 activeBolt.life--;
             }
-            
             requestAnimationFrame(animate);
         }
         animate();
