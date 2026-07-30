@@ -57,7 +57,7 @@
             100% { transform: scale(1.4); opacity: 0.9; }
         }
 
-        /* --- POPUP KEY OVERLAY & MODALS --- */
+        /* --- POPUP OVERLAY & MODALS --- */
         .key-overlay, .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -88,386 +88,244 @@
             position: relative;
         }
 
-        .key-badge {
-            font-size: 32px;
-            margin-bottom: 8px;
+        .image-modal-box {
+            max-width: 90%;
+            max-height: 85vh;
+            background: #101422;
+            border: 2px solid #00f0ff;
+            border-radius: 14px;
+            padding: 10px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
         }
 
-        .key-title, .modal-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
+        .image-modal-box img {
+            max-width: 100%;
+            max-height: 75vh;
+            border-radius: 8px;
+            object-fit: contain;
         }
 
-        .key-desc, .modal-desc {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-bottom: 18px;
-            font-weight: 600;
-        }
+        .key-badge { font-size: 32px; margin-bottom: 8px; }
+        .key-title, .modal-title { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 6px; }
+        .key-desc, .modal-desc { font-size: 12px; color: #94a3b8; margin-bottom: 18px; font-weight: 600; }
 
         .key-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
+            width: 100%; padding: 12px; border-radius: 10px;
             border: 1px solid rgba(0, 240, 255, 0.4);
-            background: #090b14;
-            color: #00f0ff;
-            font-size: 14px;
-            font-weight: 600;
-            text-align: center;
-            outline: none;
-            margin-bottom: 12px;
+            background: #090b14; color: #00f0ff; font-size: 14px;
+            font-weight: 600; text-align: center; outline: none; margin-bottom: 12px;
         }
 
         .btn-submit-key {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: none;
+            width: 100%; padding: 12px; border-radius: 10px; border: none;
             background: linear-gradient(135deg, #00f0ff, #0077ff);
-            color: #ffffff;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
+            color: #ffffff; font-size: 12px; font-weight: 700; cursor: pointer;
         }
 
-        .btn-submit-key:active {
-            transform: scale(0.97);
-        }
+        .btn-submit-key:active { transform: scale(0.97); }
+        .key-error-msg { font-size: 11px; margin-top: 10px; min-height: 15px; color: #ff4d4d; }
 
-        .key-error-msg {
-            font-size: 11px;
-            margin-top: 10px;
-            min-height: 15px;
-            color: #ff4d4d;
-        }
-
-        /* --- TUTORIAL MODAL STYLES --- */
+        /* --- TUTORIAL STYLES --- */
         .tutorial-step {
-            text-align: left;
-            background: #171c2e;
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid rgba(0, 240, 255, 0.1);
+            text-align: left; background: #171c2e; padding: 10px 12px;
+            border-radius: 8px; margin-bottom: 8px; border: 1px solid rgba(0, 240, 255, 0.1);
         }
-
-        .tutorial-step h4 {
-            font-size: 11px;
-            color: #00f0ff;
-            margin-bottom: 2px;
-        }
-
-        .tutorial-step p {
-            font-size: 10px;
-            color: #cbd5e1;
-            line-height: 1.4;
-        }
+        .tutorial-step h4 { font-size: 11px; color: #00f0ff; margin-bottom: 2px; }
+        .tutorial-step p { font-size: 10px; color: #cbd5e1; line-height: 1.4; }
 
         .close-btn {
-            position: absolute;
-            top: 12px; right: 14px;
-            background: transparent;
-            border: none;
-            color: #ff4d4d;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
+            position: absolute; top: 12px; right: 14px; background: transparent;
+            border: none; color: #ff4d4d; font-size: 18px; font-weight: bold; cursor: pointer; z-index: 10;
         }
 
         /* --- MAIN CONTAINER --- */
         .container {
-            width: 100%;
-            max-width: 460px;
-            background: #101422;
-            border-radius: 20px;
-            padding: 28px 20px;
+            width: 100%; max-width: 460px; background: #101422;
+            border-radius: 20px; padding: 28px 20px;
             border: 1px solid rgba(0, 240, 255, 0.3);
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: relative;
-            z-index: 2;
+            position: relative; z-index: 2;
         }
 
-        .profile {
-            text-align: center;
-            margin-bottom: 18px;
-        }
-
+        .profile { text-align: center; margin-bottom: 18px; }
         .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 8px auto;
-            border: 2px solid #00f0ff;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-            overflow: hidden;
+            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 8px auto;
+            border: 2px solid #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.4); overflow: hidden;
         }
-
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-        }
-
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .name { font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
         .bio {
-            font-size: 11px;
-            color: #00f0ff;
-            background: rgba(0, 240, 255, 0.1);
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
+            font-size: 11px; color: #00f0ff; background: rgba(0, 240, 255, 0.1);
+            display: inline-block; padding: 4px 12px; border-radius: 15px; border: 1px solid rgba(0, 240, 255, 0.2);
         }
 
         /* --- TAB SWITCHER --- */
-        .tab-menu {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 14px;
-        }
-
+        .tab-menu { display: flex; gap: 8px; margin-bottom: 14px; }
         .tab-btn {
-            flex: 1;
-            padding: 9px;
-            border-radius: 10px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            background: #171c2e;
-            color: #8a99ad;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
+            flex: 1; padding: 9px; border-radius: 10px; border: 1px solid rgba(0, 240, 255, 0.2);
+            background: #171c2e; color: #8a99ad; font-size: 11px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 4px;
         }
-
         .tab-btn.active {
-            background: linear-gradient(135deg, #00f0ff, #0077ff);
-            color: #ffffff;
-            border-color: transparent;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+            background: linear-gradient(135deg, #00f0ff, #0077ff); color: #ffffff;
+            border-color: transparent; box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
         /* --- SEARCH & CONTROLS --- */
-        .hub-controls {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
+        .hub-controls { display: flex; gap: 8px; margin-bottom: 12px; }
         .search-input {
-            flex: 1;
-            padding: 9px 12px;
-            border-radius: 8px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            background: #090b14;
-            color: #ffffff;
-            font-size: 11px;
-            outline: none;
+            flex: 1; padding: 9px 12px; border-radius: 8px; border: 1px solid rgba(0, 240, 255, 0.2);
+            background: #090b14; color: #ffffff; font-size: 11px; outline: none;
         }
-
-        .search-input::placeholder {
-            color: #55657e;
-        }
-
-        .search-input:focus {
-            border-color: #00f0ff;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
-        }
+        .search-input::placeholder { color: #55657e; }
+        .search-input:focus { border-color: #00f0ff; box-shadow: 0 0 8px rgba(0, 240, 255, 0.3); }
 
         .btn-tutorial-open {
-            background: #171c2e;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            color: #00f0ff;
-            padding: 0 12px;
-            border-radius: 8px;
-            font-size: 10px;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
+            background: #171c2e; border: 1px solid rgba(0, 240, 255, 0.3); color: #00f0ff;
+            padding: 0 12px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; white-space: nowrap;
         }
 
         /* --- TAB CONTENT --- */
         .tab-content {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 2px;
+            display: none; flex-direction: column; gap: 10px;
+            max-height: 420px; overflow-y: auto; padding-right: 2px;
         }
-
-        .tab-content.active {
-            display: flex;
-        }
-
-        .tab-content::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .tab-content::-webkit-scrollbar-thumb {
-            background: rgba(0, 240, 255, 0.3);
-            border-radius: 4px;
-        }
+        .tab-content.active { display: flex; }
+        .tab-content::-webkit-scrollbar { width: 4px; }
+        .tab-content::-webkit-scrollbar-thumb { background: rgba(0, 240, 255, 0.3); border-radius: 4px; }
 
         .script-card, .social-card {
-            background: #171c2e;
-            border-radius: 12px;
-            padding: 12px 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: #171c2e; border-radius: 12px; padding: 12px 14px;
+            display: flex; justify-content: space-between; align-items: center;
             border: 1px solid rgba(0, 240, 255, 0.1);
         }
 
         .script-info h3, .social-info h3 {
-            font-size: 12px;
-            font-weight: 600;
-            margin-bottom: 2px;
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 12px; font-weight: 600; margin-bottom: 2px; color: #ffffff;
+            display: flex; align-items: center; gap: 6px;
         }
+        .script-info p, .social-info p { font-size: 10px; color: #8a99ad; }
 
-        .script-info p, .social-info p {
-            font-size: 10px;
-            color: #8a99ad;
-        }
-
-        .badge {
-            font-size: 8px;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 4px;
-            text-transform: uppercase;
-        }
-
-        .badge.working {
-            background: rgba(0, 255, 136, 0.15);
-            color: #00ff88;
-            border: 1px solid rgba(0, 255, 136, 0.4);
-        }
-
-        .badge.updated {
-            background: rgba(0, 212, 255, 0.15);
-            color: #00d4ff;
-            border: 1px solid rgba(0, 212, 255, 0.4);
-        }
+        .badge { font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 4px; text-transform: uppercase; }
+        .badge.working { background: rgba(0, 255, 136, 0.15); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.4); }
+        .badge.updated { background: rgba(0, 212, 255, 0.15); color: #00d4ff; border: 1px solid rgba(0, 212, 255, 0.4); }
 
         .btn-action {
-            background: linear-gradient(135deg, #00f0ff, #0077ff);
-            color: #fff;
-            border: none;
-            padding: 7px 14px;
-            border-radius: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-            text-decoration: none;
-            display: inline-block;
+            background: linear-gradient(135deg, #00f0ff, #0077ff); color: #fff;
+            border: none; padding: 7px 14px; border-radius: 8px; font-size: 11px;
+            font-weight: 600; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block;
         }
 
         /* --- QR CODE & PAYMENT SECTIONS --- */
-        .payment-card, .qr-section {
-            background: #171c2e;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
+        .payment-card, .qr-section, .history-section {
+            background: #171c2e; border-radius: 12px; padding: 16px; text-align: center;
             border: 1px solid rgba(0, 240, 255, 0.2);
         }
 
-        .payment-card h3, .qr-section h3 {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #ffffff;
+        .payment-card h3, .qr-section h3, .history-section h3 {
+            font-size: 13px; font-weight: 600; margin-bottom: 4px; color: #ffffff;
         }
 
-        .payment-card p, .qr-section p {
-            font-size: 10px;
-            color: #8a99ad;
-            margin-bottom: 12px;
+        .payment-card p, .qr-section p, .history-section p {
+            font-size: 10px; color: #8a99ad; margin-bottom: 12px;
         }
 
         .payment-card .qr-box {
-            width: 100%;
-            max-width: 250px;
-            height: auto;
-            background: #ffffff;
-            margin: 0 auto;
-            border-radius: 10px;
-            padding: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 100%; max-width: 250px; height: auto; background: #ffffff;
+            margin: 0 auto; border-radius: 10px; padding: 8px; display: flex; justify-content: center; align-items: center;
         }
 
-        .payment-card .qr-box img {
-            width: 100%;
-            height: auto;
-            object-fit: contain;
-            border-radius: 6px;
-        }
+        .payment-card .qr-box img { width: 100%; height: auto; object-fit: contain; border-radius: 6px; }
 
         .qr-section .qr-box {
-            width: 140px;
-            height: 140px;
-            background: #ffffff;
-            margin: 0 auto;
-            border-radius: 8px;
-            padding: 6px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            width: 140px; height: 140px; background: #ffffff; margin: 0 auto;
+            border-radius: 8px; padding: 6px; display: flex; justify-content: center; align-items: center;
         }
 
-        .qr-section .qr-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+        .qr-section .qr-box img { width: 100%; height: 100%; object-fit: contain; }
 
-        .payment-tags {
-            margin-top: 12px;
-            display: flex;
-            justify-content: center;
-            gap: 5px;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            font-size: 9px;
-            font-weight: 700;
-            padding: 3px 7px;
-            border-radius: 4px;
-            color: #ffffff;
-        }
-
+        .payment-tags { margin-top: 12px; display: flex; justify-content: center; gap: 5px; flex-wrap: wrap; }
+        .tag { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; color: #ffffff; }
         .tag.qris { background: #e60012; }
         .tag.dana { background: #118eea; }
         .tag.gopay { background: #00a5cf; }
         .tag.ovo { background: #4c2a86; }
         .tag.bank { background: #28a745; }
 
-        .footer {
-            text-align: center;
-            margin-top: 18px;
-            font-size: 10px;
-            color: #55657e;
+        /* --- HISTORY PEMBELIAN GRID --- */
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
         }
+
+        .history-card {
+            background: #101422;
+            border-radius: 10px;
+            padding: 8px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            text-align: left;
+        }
+
+        .history-img-box {
+            width: 100%;
+            height: 100px;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            background: #000;
+        }
+
+        .history-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .history-img-box:hover img {
+            transform: scale(1.08);
+        }
+
+        .zoom-badge {
+            position: absolute;
+            bottom: 4px; right: 4px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #00f0ff;
+            font-size: 8px;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .history-info {
+            margin-top: 6px;
+        }
+
+        .history-info h4 {
+            font-size: 10px;
+            color: #ffffff;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .history-info .status-lunas {
+            font-size: 8px;
+            color: #00ff88;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 2px;
+        }
+
+        .footer { text-align: center; margin-top: 18px; font-size: 10px; color: #55657e; }
     </style>
 </head>
 <body>
@@ -495,18 +353,24 @@
                 <h4>1. Salin Kode</h4>
                 <p>Pilih script yang ingin kamu gunakan, lalu klik tombol <b>"Salin"</b>.</p>
             </div>
-            
             <div class="tutorial-step">
                 <h4>2. Buka Executor Roblox</h4>
                 <p>Buka Roblox dan jalankan Executor pilihanmu (Delta, Codex, Arceus X, Vega X, dll.).</p>
             </div>
-
             <div class="tutorial-step">
                 <h4>3. Paste & Execute</h4>
                 <p>Tempel/Paste kode yang sudah disalin ke dalam tab Executor, lalu tekan <b>Execute</b>.</p>
             </div>
 
             <button onclick="closeTutorial()" class="btn-submit-key" style="margin-top: 10px;">SIAP, SAYA PAHAM! 👍</button>
+        </div>
+    </div>
+
+    <!-- POPUP MODAL ZOOM GAMBAR BUKTI TRANSAKSI -->
+    <div id="imageModal" class="modal-overlay" onclick="closeImageModal()">
+        <div class="image-modal-box" onclick="event.stopPropagation()">
+            <button onclick="closeImageModal()" class="close-btn">✕</button>
+            <img id="modalImg" src="" alt="Bukti Transaksi Full">
         </div>
     </div>
 
@@ -524,7 +388,7 @@
             <span class="bio">⚡ Roblox Luau Scripter</span>
         </div>
 
-        <!-- TAB MENU (OPSI PILIHAN) -->
+        <!-- TAB MENU -->
         <div class="tab-menu">
             <button class="tab-btn active" onclick="switchTab('scripts', this)">📂 Script Hub</button>
             <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Payment 🔒</button>
@@ -533,13 +397,12 @@
         <!-- OPSI 1: SEMUA LINK SCRIPT -->
         <div id="scriptsTab" class="tab-content active">
             
-            <!-- CONTROLS: SEARCH BAR & TUTORIAL BUTTON -->
             <div class="hub-controls">
                 <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari nama script/game..." onkeyup="filterScripts()">
                 <button class="btn-tutorial-open" onclick="openTutorial()">❓ Tutorial</button>
             </div>
 
-            <!-- 1. Throw a Coin - Auto Sell -->
+            <!-- 1. Throw a Coin -->
             <div class="script-card">
                 <div class="script-info">
                     <h3>💰 Throw a Coin <span class="badge updated">UPDATED</span></h3>
@@ -548,7 +411,7 @@
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/TFG5u0kB\&quot;))()', this)">Salin</button>
             </div>
 
-            <!-- 2. Auto Farm +1 Mine Per Click -->
+            <!-- 2. Auto Farm +1 Mine -->
             <div class="script-card">
                 <div class="script-info">
                     <h3>⛏️ +1 Mine Per Click <span class="badge working">WORKING</span></h3>
@@ -557,7 +420,7 @@
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/XeNwdF93\&quot;))()', this)">Salin</button>
             </div>
 
-            <!-- 3. Farm Kekuatan Brainblast -->
+            <!-- 3. Brainblast -->
             <div class="script-card">
                 <div class="script-info">
                     <h3>🧠 Brainblast Farm <span class="badge working">WORKING</span></h3>
@@ -566,7 +429,7 @@
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/WzvsrNsx\&quot;))()', this)">Salin</button>
             </div>
 
-            <!-- 4. Fly Menu Script -->
+            <!-- 4. Fly Menu -->
             <div class="script-card">
                 <div class="script-info">
                     <h3>✈️ Fly Menu Script <span class="badge working">WORKING</span></h3>
@@ -595,10 +458,10 @@
 
         </div>
 
-        <!-- OPSI 2: SOSIAL MEDIA, GRUP WA, QR PAYMENT & QR WEB (KHUSUS OWNER) -->
+        <!-- OPSI 2: SOSIAL MEDIA, PAYMENT & HISTORY TRANSAKSI -->
         <div id="socialsTab" class="tab-content">
             
-            <!-- Grup WhatsApp -->
+            <!-- WhatsApp -->
             <div class="social-card">
                 <div class="social-info">
                     <h3>💬 Grup WhatsApp Script</h3>
@@ -607,7 +470,7 @@
                 <a href="https://chat.whatsapp.com/CONTOH_LINK_GRUP_WA" target="_blank" class="btn-action">Gabung</a>
             </div>
 
-            <!-- Saluran / Telegram -->
+            <!-- Telegram -->
             <div class="social-card">
                 <div class="social-info">
                     <h3>📢 Saluran Telegram</h3>
@@ -616,7 +479,7 @@
                 <a href="https://t.me/CONTOH_LINK" target="_blank" class="btn-action">Kunjungi</a>
             </div>
 
-            <!-- ALL PAYMENT / QRIS CODE CARD -->
+            <!-- ALL PAYMENT / QRIS -->
             <div class="payment-card">
                 <h3>💳 All Payment / QRIS</h3>
                 <p>Scan untuk transaksi, donasi, atau order script</p>
@@ -632,7 +495,89 @@
                 </div>
             </div>
 
-            <!-- SCAN QR WEB SCAN -->
+            <!-- HISTORY PEMBELIAN ITEM (6 FOTO BUKTI DARI GITHUB) -->
+            <div class="history-section">
+                <h3>📜 History Pembelian Item</h3>
+                <p>Bukti real transaksi berhasil dari para buyer (Klik gambar untuk perbesar)</p>
+
+                <div class="history-grid">
+                    
+                    <!-- BUKTI 1 -->
+                    <div class="history-card">
+                        <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0008.jpg')">
+                            <img src="IMG-20260731-WA0008.jpg" alt="Bukti Transaksi 1">
+                            <span class="zoom-badge">🔍 Zoom</span>
+                        </div>
+                        <div class="history-info">
+                            <h4>Bukti Pembelian #1</h4>
+                            <span class="status-lunas">✅ LUNAS</span>
+                        </div>
+                    </div>
+
+                    <!-- BUKTI 2 -->
+                    <div class="history-card">
+                        <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0009.jpg')">
+                            <img src="IMG-20260731-WA0009.jpg" alt="Bukti Transaksi 2">
+                            <span class="zoom-badge">🔍 Zoom</span>
+                        </div>
+                        <div class="history-info">
+                            <h4>Bukti Pembelian #2</h4>
+                            <span class="status-lunas">✅ LUNAS</span>
+                        </div>
+                    </div>
+
+                    <!-- BUKTI 3 -->
+                    <div class="history-card">
+                        <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0010.jpg')">
+                            <img src="IMG-20260731-WA0010.jpg" alt="Bukti Transaksi 3">
+                            <span class="zoom-badge">🔍 Zoom</span>
+                        </div>
+                        <div class="history-info">
+                            <h4>Bukti Pembelian #3</h4>
+                            <span class="status-lunas">✅ LUNAS</span>
+                        </div>
+                    </div>
+
+                    <!-- BUKTI 4 -->
+                    <div class="history-card">
+                        <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0011.jpg')">
+                            <img src="IMG-20260731-WA0011.jpg" alt="Bukti Transaksi 4">
+                            <span class="zoom-badge">🔍 Zoom</span>
+                        </div>
+                        <div class="history-info">
+                            <h4>Bukti Pembelian #4</h4>
+                            <span class="status-lunas">✅ LUNAS</span>
+                        </div>
+                    </div>
+
+                    <!-- BUKTI 5 -->
+                    <div class="history-card">
+                        <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0012.jpg')">
+                            <img src="IMG-20260731-WA0012.jpg" alt="Bukti Transaksi 5">
+                            <span class="zoom-badge">🔍 Zoom</span>
+                        </div>
+                        <div class="history-info">
+                            <h4>Bukti Pembelian #5</h4>
+                            <span class="status-lunas">✅ LUNAS</span>
+                        </div>
+                    </div>
+
+                    <!-- BUKTI 6 -->
+                    <div class="history-card">
+                        <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0013.jpg')">
+                            <img src="IMG-20260731-WA0013.jpg" alt="Bukti Transaksi 6">
+                            <span class="zoom-badge">🔍 Zoom</span>
+                        </div>
+                        <div class="history-info">
+                            <h4>Bukti Pembelian #6</h4>
+                            <span class="status-lunas">✅ LUNAS</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- SCAN QR WEB -->
             <div class="qr-section">
                 <h3>📷 Scan QR Web ini</h3>
                 <p>Buka website ini langsung dari HP kamu</p>
@@ -649,31 +594,26 @@
     </div>
 
     <script>
-        // --- SETTINGAN KEY SYSTEM ---
-        const USER_KEY = "pinpin";       // Key untuk Pengunjung (Hanya bisa Script Hub)
-        const OWNER_KEY = "pinboss";     // Key Khusus Kamu / Owner (Bisa buka SEMUA Tab)
+        const USER_KEY = "pinpin";       
+        const OWNER_KEY = "pinboss";     
 
-        // Cek status sesi saat loading
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('hub_access_granted') === 'true') {
                 document.getElementById('keyOverlay').style.display = 'none';
             }
         });
 
-        // Validasi Key
         function validateKey() {
             const userKey = document.getElementById('keyInput').value.trim();
             const errorMsg = document.getElementById('keyErrorMsg');
 
             if (userKey === OWNER_KEY) {
-                // Login sebagai OWNER
                 errorMsg.style.color = "#00ff88";
                 errorMsg.innerText = "Selamat Datang Owner! Access Granted 👑";
                 sessionStorage.setItem('hub_access_granted', 'true');
                 sessionStorage.setItem('user_role', 'owner');
                 unlockWeb();
             } else if (userKey === USER_KEY) {
-                // Login sebagai USER BIASA
                 errorMsg.style.color = "#00ff88";
                 errorMsg.innerText = "Key Benar! Membuka Script Hub... ⚡";
                 sessionStorage.setItem('hub_access_granted', 'true');
@@ -694,14 +634,12 @@
             }, 500);
         }
 
-        // Fungsi Ganti Tab dengan Proteksi Owner
         function switchTab(tabName, btnElement) {
             const currentRole = sessionStorage.getItem('user_role');
 
-            // Proteksi: Jika tab yang diklik adalah 'socials' (Payment) dan user BUKAN owner
             if (tabName === 'socials' && currentRole !== 'owner') {
-                alert("🔒 Akses Ditolak!\n\nFitur Info & Payment ini milik Owner. Kamu hanya memiliki akses ke Script Hub.");
-                return; // Batalkan perpindahan tab
+                alert("🔒 Akses Ditolak!\n\nFitur Info, Payment & History ini milik Owner. Kamu hanya memiliki akses ke Script Hub.");
+                return;
             }
 
             document.querySelectorAll('.tab-content').forEach(tab => {
@@ -721,7 +659,6 @@
             btnElement.classList.add('active');
         }
 
-        // FUNGSI SEARCH BAR
         function filterScripts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const cards = document.querySelectorAll('#scriptsTab .script-card');
@@ -736,7 +673,6 @@
             });
         }
 
-        // FUNGSI POPUP TUTORIAL
         function openTutorial() {
             document.getElementById('tutorialModal').style.display = 'flex';
         }
@@ -745,7 +681,15 @@
             document.getElementById('tutorialModal').style.display = 'none';
         }
 
-        // Salin Kode Script
+        function openImageModal(imgSrc) {
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('imageModal').style.display = 'flex';
+        }
+
+        function closeImageModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
         function copyCode(text, btn) {
             navigator.clipboard.writeText(text).then(function() {
                 let originalText = btn.innerText;
