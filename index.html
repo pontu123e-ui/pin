@@ -57,8 +57,8 @@
             100% { transform: scale(1.4); opacity: 0.9; }
         }
 
-        /* --- POPUP KEY OVERLAY --- */
-        .key-overlay {
+        /* --- POPUP KEY OVERLAY & TUTORIAL MODAL --- */
+        .key-overlay, .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(6, 8, 16, 0.96);
@@ -70,15 +70,22 @@
             transition: opacity 0.3s ease;
         }
 
-        .key-box {
+        .modal-overlay {
+            display: none;
+            background: rgba(6, 8, 16, 0.85);
+            backdrop-filter: blur(5px);
+        }
+
+        .key-box, .modal-box {
             width: 100%;
             max-width: 380px;
             background: #101422;
             border: 2px solid #00f0ff;
             border-radius: 18px;
-            padding: 26px 20px;
+            padding: 24px 20px;
             text-align: center;
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.2);
+            position: relative;
         }
 
         .key-badge {
@@ -86,14 +93,14 @@
             margin-bottom: 8px;
         }
 
-        .key-title {
+        .key-title, .modal-title {
             font-size: 18px;
             font-weight: 700;
             color: #ffffff;
             margin-bottom: 6px;
         }
 
-        .key-desc {
+        .key-desc, .modal-desc {
             font-size: 12px;
             color: #94a3b8;
             margin-bottom: 18px;
@@ -135,6 +142,39 @@
             margin-top: 10px;
             min-height: 15px;
             color: #ff4d4d;
+        }
+
+        /* --- TUTORIAL MODAL CONTENT --- */
+        .tutorial-step {
+            text-align: left;
+            background: #171c2e;
+            padding: 10px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .tutorial-step h4 {
+            font-size: 11px;
+            color: #00f0ff;
+            margin-bottom: 2px;
+        }
+
+        .tutorial-step p {
+            font-size: 10px;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px; right: 14px;
+            background: transparent;
+            border: none;
+            color: #ff4d4d;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         /* --- MAIN CONTAINER --- */
@@ -192,7 +232,7 @@
         .tab-menu {
             display: flex;
             gap: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .tab-btn {
@@ -213,6 +253,49 @@
             color: #ffffff;
             border-color: transparent;
             box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* --- FITUR 2: SEARCH BAR & TUTORIAL HEADER --- */
+        .hub-controls {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            background: #090b14;
+            color: #ffffff;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .search-input::placeholder {
+            color: #55657e;
+        }
+
+        .search-input:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+        }
+
+        .btn-tutorial-open {
+            background: #171c2e;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #00f0ff;
+            padding: 0 12px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-tutorial-open:hover {
+            background: rgba(0, 240, 255, 0.15);
         }
 
         /* --- CONTENT SECTIONS --- */
@@ -246,6 +329,11 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid rgba(0, 240, 255, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .script-card:hover {
+            border-color: rgba(0, 240, 255, 0.3);
         }
 
         .script-info h3, .social-info h3 {
@@ -253,11 +341,42 @@
             font-weight: 600;
             margin-bottom: 2px;
             color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         .script-info p, .social-info p {
             font-size: 10px;
             color: #8a99ad;
+        }
+
+        /* --- FITUR 1: BADGES STATUS --- */
+        .badge {
+            font-size: 8px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.working {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+        }
+
+        .badge.updated {
+            background: rgba(0, 212, 255, 0.15);
+            color: #00d4ff;
+            border: 1px solid rgba(0, 212, 255, 0.4);
+        }
+
+        .badge.patched {
+            background: rgba(255, 77, 77, 0.15);
+            color: #ff4d4d;
+            border: 1px solid rgba(255, 77, 77, 0.4);
         }
 
         .btn-action {
@@ -300,7 +419,6 @@
             margin-bottom: 12px;
         }
 
-        /* UKURAN BOX DITAMBAH AGAR POSTER & QR KELIHATAN BESAR JUGA */
         .payment-card .qr-box {
             width: 100%;
             max-width: 250px;
@@ -383,6 +501,32 @@
         </div>
     </div>
 
+    <!-- FITUR 3: POPUP MODAL TUTORIAL CARA PAKAI -->
+    <div id="tutorialModal" class="modal-overlay">
+        <div class="modal-box">
+            <button onclick="closeTutorial()" class="close-btn">✕</button>
+            <h2 class="modal-title">📖 Cara Menggunakan Script</h2>
+            <p class="modal-desc">Ikuti langkah sederhana ini untuk menjalankan script di Roblox:</p>
+            
+            <div class="tutorial-step">
+                <h4>1. Salin Kode</h4>
+                <p>Pilih script yang ingin kamu gunakan, lalu klik tombol <b>"Salin"</b>.</p>
+            </div>
+            
+            <div class="tutorial-step">
+                <h4>2. Buka Executor Roblox</h4>
+                <p>Buka Roblox dan jalankan Executor pilihanmu (Delta, Codex, Arceus X, Vega X, dll.).</p>
+            </div>
+
+            <div class="tutorial-step">
+                <h4>3. Paste & Execute</h4>
+                <p>Tempel/Paste kode yang sudah disalin ke dalam tab Executor, lalu tekan <b>Execute</b>.</p>
+            </div>
+
+            <button onclick="closeTutorial()" class="btn-submit-key" style="margin-top: 10px;">SIAP, SAYA PAHAM! 👍</button>
+        </div>
+    </div>
+
     <!-- Background Grid & Aura -->
     <div class="bg-grid"></div>
     <div class="electric-aura"></div>
@@ -406,11 +550,17 @@
         <!-- OPSI 1: SEMUA LINK SCRIPT -->
         <div id="scriptsTab" class="tab-content active">
             
+            <!-- CONTROLS: SEARCH BAR & TUTORIAL BUTTON -->
+            <div class="hub-controls">
+                <input type="text" id="searchInput" class="search-input" placeholder="🔍 Cari nama script/game..." onkeyup="filterScripts()">
+                <button class="btn-tutorial-open" onclick="openTutorial()">❓ Tutorial</button>
+            </div>
+
             <!-- 1. Throw a Coin - Auto Sell -->
             <div class="script-card">
                 <div class="script-info">
-                    <h3>💰 Throw a Coin - Auto Sell</h3>
-                    <p>Script auto-sell item + Master Asset Protection</p>
+                    <h3>💰 Throw a Coin <span class="badge updated">UPDATED</span></h3>
+                    <p>Auto sell + Master Asset Protection</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/TFG5u0kB\&quot;))()', this)">Salin</button>
             </div>
@@ -418,7 +568,7 @@
             <!-- 2. Auto Farm +1 Mine Per Click -->
             <div class="script-card">
                 <div class="script-info">
-                    <h3>⛏️ Auto Farm +1 Mine Per Click</h3>
+                    <h3>⛏️ +1 Mine Per Click <span class="badge working">WORKING</span></h3>
                     <p>Super op auto farm per click</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/XeNwdF93\&quot;))()', this)">Salin</button>
@@ -427,7 +577,7 @@
             <!-- 3. Farm Kekuatan Brainblast -->
             <div class="script-card">
                 <div class="script-info">
-                    <h3>🧠 Farm Kekuatan Brainblast</h3>
+                    <h3>🧠 Brainblast Farm <span class="badge working">WORKING</span></h3>
                     <p>Auto farm kekuatan brainblast</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/WzvsrNsx\&quot;))()', this)">Salin</button>
@@ -436,7 +586,7 @@
             <!-- 4. Fly Menu Script -->
             <div class="script-card">
                 <div class="script-info">
-                    <h3>✈️ Fly Menu Script</h3>
+                    <h3>✈️ Fly Menu Script <span class="badge working">WORKING</span></h3>
                     <p>Menu terbang anchor method</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('print(\'Ganti link loadstring Fly Menu di sini\')', this)">Salin</button>
@@ -445,7 +595,7 @@
             <!-- 5. Stand Manager -->
             <div class="script-card">
                 <div class="script-info">
-                    <h3>📦 Stand Manager</h3>
+                    <h3>📦 Stand Manager <span class="badge updated">UPDATED</span></h3>
                     <p>Automated multi-stand item management</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('print(\'Ganti link loadstring Stand Manager di sini\')', this)">Salin</button>
@@ -454,7 +604,7 @@
             <!-- 6. Dupe System -->
             <div class="script-card">
                 <div class="script-info">
-                    <h3>📋 Dupe System (Menu 12)</h3>
+                    <h3>📋 Dupe System (12) <span class="badge working">WORKING</span></h3>
                     <p>Rayfield UI Duplication System</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('print(\'Ganti link loadstring Dupe System di sini\')', this)">Salin</button>
@@ -546,6 +696,30 @@
                 errorMsg.style.color = "#ff4d4d";
                 errorMsg.innerText = "❌ Key Salah!";
             }
+        }
+
+        // FITUR 2: FUNGSI FILTER SEARCH BAR
+        function filterScripts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#scriptsTab .script-card');
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // FITUR 3: FUNGSI POPUP TUTORIAL
+        function openTutorial() {
+            document.getElementById('tutorialModal').style.display = 'flex';
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorialModal').style.display = 'none';
         }
 
         // Fungsi Ganti Tab
