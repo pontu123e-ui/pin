@@ -75,16 +75,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            text-decoration: none;
             color: #fff;
             border: 1px solid rgba(255, 255, 255, 0.05);
             transition: all 0.3s ease;
-        }
-        .script-card:hover {
-            background: #282838;
-            border-color: #00dcff;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 220, 255, 0.15);
         }
         .script-info h3 {
             font-size: 13px;
@@ -104,6 +97,10 @@
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-action:active {
+            transform: scale(0.95);
         }
         .footer {
             text-align: center;
@@ -126,22 +123,22 @@
         <div class="links-container">
             
             <!-- Script Throw a Coin - Auto Sell -->
-            <a href="https://pastebin.com/raw/Vs3ECvK8" target="_blank" class="script-card">
+            <div class="script-card">
                 <div class="script-info">
                     <h3>💰 Throw a Coin - Auto Sell</h3>
                     <p>Script auto-sell item dengan proteksi</p>
                 </div>
-                <button class="btn-action">Buka</button>
-            </a>
+                <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/Vs3ECvK8\&quot;))()', this)">Salin</button>
+            </div>
 
-            <!-- Script Tambahan Lainnya Bisa Disusul Nanti -->
-            <a href="#" target="_blank" class="script-card">
+            <!-- Script Tambahan Lainnya (Contoh) -->
+            <div class="script-card">
                 <div class="script-info">
                     <h3>✈️ Fly Menu Script</h3>
                     <p>Menu terbang anchor method</p>
                 </div>
-                <button class="btn-action">Buka</button>
-            </a>
+                <button class="btn-action" onclick="copyCode('print(\'Script belum tersedia!\')', this)">Salin</button>
+            </div>
 
         </div>
 
@@ -149,5 +146,21 @@
             &copy; 2026 pin gantenk. All rights reserved.
         </div>
     </div>
+
+    <script>
+        function copyCode(text, btn) {
+            navigator.clipboard.writeText(text).then(function() {
+                let originalText = btn.innerText;
+                btn.innerText = "Tersalin! ✅";
+                btn.style.background = "linear-gradient(135deg, #00ff88, #00aa55)";
+                setTimeout(function() {
+                    btn.innerText = originalText;
+                    btn.style.background = "";
+                }, 2000);
+            }, function(err) {
+                alert('Gagal menyalin kode!');
+            });
+        }
+    </script>
 </body>
 </html>
