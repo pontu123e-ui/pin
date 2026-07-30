@@ -192,7 +192,7 @@
         /* --- TAB CONTENT --- */
         .tab-content {
             display: none; flex-direction: column; gap: 10px;
-            max-height: 420px; overflow-y: auto; padding-right: 2px;
+            max-height: 440px; overflow-y: auto; padding-right: 2px;
         }
         .tab-content.active { display: flex; }
         .tab-content::-webkit-scrollbar { width: 4px; }
@@ -219,6 +219,26 @@
             border: none; padding: 7px 14px; border-radius: 8px; font-size: 11px;
             font-weight: 600; cursor: pointer; white-space: nowrap; text-decoration: none; display: inline-block;
         }
+
+        .btn-action.wa {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+
+        /* --- MANUAL MANUAL PAYMENT BOX --- */
+        .manual-pay-box {
+            background: #101422;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px dashed rgba(0, 240, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .manual-pay-box div { text-align: left; }
+        .manual-pay-box span { font-size: 10px; color: #8a99ad; }
+        .manual-pay-box strong { display: block; font-size: 12px; color: #00f0ff; letter-spacing: 0.5px; }
 
         /* --- QR CODE & PAYMENT SECTIONS --- */
         .payment-card, .qr-section, .history-section {
@@ -388,10 +408,10 @@
             <span class="bio">⚡ Roblox Luau Scripter</span>
         </div>
 
-        <!-- TAB MENU -->
+        <!-- TAB MENU (TERBUKA UNTUK SEMUA ORANG) -->
         <div class="tab-menu">
             <button class="tab-btn active" onclick="switchTab('scripts', this)">📂 Script Hub</button>
-            <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Payment 🔒</button>
+            <button class="tab-btn" onclick="switchTab('socials', this)">💳 Info & Payment</button>
         </div>
 
         <!-- OPSI 1: SEMUA LINK SCRIPT -->
@@ -461,7 +481,17 @@
         <!-- OPSI 2: SOSIAL MEDIA, PAYMENT & HISTORY TRANSAKSI -->
         <div id="socialsTab" class="tab-content">
             
-            <!-- WhatsApp -->
+            <!-- CHAT PERSONAL / KONFIRMASI PEMBAYARAN -->
+            <div class="social-card" style="border: 1px solid rgba(0, 255, 136, 0.4);">
+                <div class="social-info">
+                    <h3>📲 Chat Admin / Kirim Bukti</h3>
+                    <p>Klik buat kirim bukti transfer / order custom script</p>
+                </div>
+                <!-- GANTI NOMOR WA KAMU DI BAWAH INI (FORMAT: 628xxxx) -->
+                <a href="https://wa.me/6281234567890?text=Halo%20pin%20gantenk,%20aku%20mau%20kirim%20bukti%20pembayaran" target="_blank" class="btn-action wa">Chat WA</a>
+            </div>
+
+            <!-- WhatsApp Group -->
             <div class="social-card">
                 <div class="social-info">
                     <h3>💬 Grup WhatsApp Script</h3>
@@ -470,22 +500,23 @@
                 <a href="https://chat.whatsapp.com/CONTOH_LINK_GRUP_WA" target="_blank" class="btn-action">Gabung</a>
             </div>
 
-            <!-- Telegram -->
-            <div class="social-card">
-                <div class="social-info">
-                    <h3>📢 Saluran Telegram</h3>
-                    <p>Info broadcast & sharing script</p>
-                </div>
-                <a href="https://t.me/CONTOH_LINK" target="_blank" class="btn-action">Kunjungi</a>
-            </div>
-
             <!-- ALL PAYMENT / QRIS -->
             <div class="payment-card">
                 <h3>💳 All Payment / QRIS</h3>
-                <p>Scan untuk transaksi, donasi, atau order script</p>
+                <p>Scan QRIS untuk pembayaran / order script</p>
                 <div class="qr-box">
                     <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment" id="paymentQrImg">
                 </div>
+                
+                <!-- SALIN NOMOR MANUAL DANA -->
+                <div class="manual-pay-box">
+                    <div>
+                        <span>No. DANA / E-Wallet:</span>
+                        <strong>0812-3456-7890</strong> <!-- GANTI DENGAN NOMOR DANA KAMU -->
+                    </div>
+                    <button class="btn-action" onclick="copyText('081234567890', this)">Salin</button>
+                </div>
+
                 <div class="payment-tags">
                     <span class="tag qris">QRIS</span>
                     <span class="tag dana">DANA</span>
@@ -495,14 +526,13 @@
                 </div>
             </div>
 
-            <!-- HISTORY PEMBELIAN ITEM (6 FOTO BUKTI DARI GITHUB) -->
+            <!-- HISTORY PEMBELIAN ITEM -->
             <div class="history-section">
                 <h3>📜 History Pembelian Item</h3>
                 <p>Bukti real transaksi berhasil dari para buyer (Klik gambar untuk perbesar)</p>
 
                 <div class="history-grid">
                     
-                    <!-- BUKTI 1 -->
                     <div class="history-card">
                         <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0008.jpg')">
                             <img src="IMG-20260731-WA0008.jpg" alt="Bukti Transaksi 1">
@@ -514,7 +544,6 @@
                         </div>
                     </div>
 
-                    <!-- BUKTI 2 -->
                     <div class="history-card">
                         <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0009.jpg')">
                             <img src="IMG-20260731-WA0009.jpg" alt="Bukti Transaksi 2">
@@ -526,7 +555,6 @@
                         </div>
                     </div>
 
-                    <!-- BUKTI 3 -->
                     <div class="history-card">
                         <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0010.jpg')">
                             <img src="IMG-20260731-WA0010.jpg" alt="Bukti Transaksi 3">
@@ -538,7 +566,6 @@
                         </div>
                     </div>
 
-                    <!-- BUKTI 4 -->
                     <div class="history-card">
                         <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0011.jpg')">
                             <img src="IMG-20260731-WA0011.jpg" alt="Bukti Transaksi 4">
@@ -550,7 +577,6 @@
                         </div>
                     </div>
 
-                    <!-- BUKTI 5 -->
                     <div class="history-card">
                         <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0012.jpg')">
                             <img src="IMG-20260731-WA0012.jpg" alt="Bukti Transaksi 5">
@@ -562,7 +588,6 @@
                         </div>
                     </div>
 
-                    <!-- BUKTI 6 -->
                     <div class="history-card">
                         <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0013.jpg')">
                             <img src="IMG-20260731-WA0013.jpg" alt="Bukti Transaksi 6">
@@ -594,8 +619,7 @@
     </div>
 
     <script>
-        const USER_KEY = "pinpin";       
-        const OWNER_KEY = "pinboss";     
+        const PASS_KEY = "pinpin";
 
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('hub_access_granted') === 'true') {
@@ -607,21 +631,14 @@
             const userKey = document.getElementById('keyInput').value.trim();
             const errorMsg = document.getElementById('keyErrorMsg');
 
-            if (userKey === OWNER_KEY) {
-                errorMsg.style.color = "#00ff88";
-                errorMsg.innerText = "Selamat Datang Owner! Access Granted 👑";
-                sessionStorage.setItem('hub_access_granted', 'true');
-                sessionStorage.setItem('user_role', 'owner');
-                unlockWeb();
-            } else if (userKey === USER_KEY) {
+            if (userKey === PASS_KEY) {
                 errorMsg.style.color = "#00ff88";
                 errorMsg.innerText = "Key Benar! Membuka Script Hub... ⚡";
                 sessionStorage.setItem('hub_access_granted', 'true');
-                sessionStorage.setItem('user_role', 'user');
                 unlockWeb();
             } else {
                 errorMsg.style.color = "#ff4d4d";
-                errorMsg.innerText = "❌ Key Salah!";
+                errorMsg.innerText = "❌ Key Salah! (Gunakan key: pinpin)";
             }
         }
 
@@ -635,13 +652,6 @@
         }
 
         function switchTab(tabName, btnElement) {
-            const currentRole = sessionStorage.getItem('user_role');
-
-            if (tabName === 'socials' && currentRole !== 'owner') {
-                alert("🔒 Akses Ditolak!\n\nFitur Info, Payment & History ini milik Owner. Kamu hanya memiliki akses ke Script Hub.");
-                return;
-            }
-
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -701,6 +711,16 @@
                 }, 2000);
             }, function(err) {
                 alert('Gagal menyalin kode!');
+            });
+        }
+
+        function copyText(text, btn) {
+            navigator.clipboard.writeText(text).then(function() {
+                let originalText = btn.innerText;
+                btn.innerText = "Copied! ✅";
+                setTimeout(function() {
+                    btn.innerText = originalText;
+                }, 2000);
             });
         }
     </script>
