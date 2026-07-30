@@ -25,7 +25,7 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND KILAT & GRID RINGAN (PURE CSS) --- */
+        /* --- BACKGROUND KILAT & GRID RINGAN --- */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -37,7 +37,6 @@
             pointer-events: none;
         }
 
-        /* Aura Kilat CSS Ringan (Tanpa JS) */
         .electric-aura {
             position: fixed;
             top: 50%;
@@ -58,7 +57,7 @@
             100% { transform: scale(1.4); opacity: 0.9; }
         }
 
-        /* --- POPUP KEY OVERLAY (RINGAN) --- */
+        /* --- POPUP KEY OVERLAY --- */
         .key-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -348,9 +347,9 @@
         // Key Rahasia
         const SECRET_KEY = "PIN-GANTENK"; 
 
-        // Cek jika sudah unlock sebelumnya
+        // Cek status sesi (sessionStorage akan reset otomatis ketika Chrome / Tab ditutup)
         window.addEventListener('DOMContentLoaded', () => {
-            if (localStorage.getItem('hub_access_granted') === 'true') {
+            if (sessionStorage.getItem('hub_access_granted') === 'true') {
                 document.getElementById('keyOverlay').style.display = 'none';
             }
         });
@@ -363,7 +362,7 @@
             if (userKey === SECRET_KEY) {
                 errorMsg.style.color = "#00ff88";
                 errorMsg.innerText = "Key Benar! Membuka Akses... ⚡";
-                localStorage.setItem('hub_access_granted', 'true');
+                sessionStorage.setItem('hub_access_granted', 'true');
                 
                 setTimeout(() => {
                     document.getElementById('keyOverlay').style.opacity = '0';
