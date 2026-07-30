@@ -188,7 +188,7 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
         }
 
-        /* --- TAB SWITCHER (OPSI MENU) --- */
+        /* --- TAB SWITCHER --- */
         .tab-menu {
             display: flex;
             gap: 8px;
@@ -278,7 +278,7 @@
             transform: scale(0.95);
         }
 
-        /* --- QR CODE BOX ---. */
+        /* --- QR CODE BOX --- */
         .qr-section {
             background: #171c2e;
             border-radius: 12px;
@@ -348,22 +348,22 @@
             <span class="bio">⚡ Roblox Luau Scripter</span>
         </div>
 
-        <!-- TAB MENU (OPSI PILIHAN) -->
+        <!-- TAB MENU -->
         <div class="tab-menu">
             <button class="tab-btn active" onclick="switchTab('scripts', this)">📂 Script Hub</button>
             <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Sosial</button>
         </div>
 
-        <!-- OPSI 1: SEMUA LINK SCRIPT -->
+        <!-- TAB 1: SEMUA LINK SCRIPT -->
         <div id="scriptsTab" class="tab-content active">
             
-            <!-- 1. Throw a Coin - Auto Sell -->
+            <!-- 1. Throw a Coin - Auto Sell (LOADSTRING TERUPDATE) -->
             <div class="script-card">
                 <div class="script-info">
                     <h3>💰 Throw a Coin - Auto Sell</h3>
                     <p>Script auto-sell item dengan proteksi</p>
                 </div>
-                <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/Vs3ECvK8\&quot;))()', this)">Salin</button>
+                <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/TFG5u0kB\&quot;))()', this)">Salin</button>
             </div>
 
             <!-- 2. Auto Farm +1 Mine Per Click -->
@@ -413,7 +413,7 @@
 
         </div>
 
-        <!-- OPSI 2: SOSIAL MEDIA, GRUP WA, & QR CODE -->
+        <!-- TAB 2: SOSIAL MEDIA & QR CODE -->
         <div id="socialsTab" class="tab-content">
             
             <!-- Grup WhatsApp -->
@@ -425,7 +425,7 @@
                 <a href="https://chat.whatsapp.com/CONTOH_LINK_GRUP_WA" target="_blank" class="btn-action">Gabung</a>
             </div>
 
-            <!-- Saluran / Telegram / Lainnya -->
+            <!-- Saluran / Telegram -->
             <div class="social-card">
                 <div class="social-info">
                     <h3>📢 Saluran Telegram</h3>
@@ -438,7 +438,6 @@
             <div class="qr-section">
                 <h3>📷 Scan QR Profile / Web Ini</h3>
                 <div class="qr-box">
-                    <!-- Ganti link gambar QR Code kamu di src="" -->
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://pontu123e-ui.github.io/pin/" alt="QR Code Web">
                 </div>
                 <p style="font-size: 10px; color: #8a99ad; margin-top: 8px;">Scan untuk buka web di HP lain</p>
@@ -484,26 +483,22 @@
             }
         }
 
-        // Fungsi Ganti Tab (Opsi 1 & Opsi 2)
+        // Fungsi Ganti Tab
         function switchTab(tabName, btnElement) {
-            // Sembunyikan semua konten tab
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
 
-            // Hilangkan status aktif dari semua tombol tab
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
 
-            // Tampilkan tab yang dipilih
             if (tabName === 'scripts') {
                 document.getElementById('scriptsTab').classList.add('active');
             } else if (tabName === 'socials') {
                 document.getElementById('socialsTab').classList.add('active');
             }
 
-            // Tandai tombol yang diklik menjadi aktif
             btnElement.classList.add('active');
         }
 
