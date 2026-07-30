@@ -25,7 +25,7 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND KILAT & GRID RINGAN --- */
+        /* --- BACKGROUND KILAT & GRID --- */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -57,7 +57,7 @@
             100% { transform: scale(1.4); opacity: 0.9; }
         }
 
-        /* --- POPUP KEY OVERLAY & TUTORIAL MODAL --- */
+        /* --- POPUP KEY OVERLAY & MODALS --- */
         .key-overlay, .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -144,7 +144,7 @@
             color: #ff4d4d;
         }
 
-        /* --- TUTORIAL MODAL CONTENT --- */
+        /* --- TUTORIAL MODAL STYLES --- */
         .tutorial-step {
             text-align: left;
             background: #171c2e;
@@ -246,6 +246,10 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
         }
 
         .tab-btn.active {
@@ -255,7 +259,7 @@
             box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
         }
 
-        /* --- FITUR 2: SEARCH BAR & TUTORIAL HEADER --- */
+        /* --- SEARCH & CONTROLS --- */
         .hub-controls {
             display: flex;
             gap: 8px;
@@ -294,11 +298,7 @@
             white-space: nowrap;
         }
 
-        .btn-tutorial-open:hover {
-            background: rgba(0, 240, 255, 0.15);
-        }
-
-        /* --- CONTENT SECTIONS --- */
+        /* --- TAB CONTENT --- */
         .tab-content {
             display: none;
             flex-direction: column;
@@ -329,11 +329,6 @@
             justify-content: space-between;
             align-items: center;
             border: 1px solid rgba(0, 240, 255, 0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .script-card:hover {
-            border-color: rgba(0, 240, 255, 0.3);
         }
 
         .script-info h3, .social-info h3 {
@@ -351,14 +346,12 @@
             color: #8a99ad;
         }
 
-        /* --- FITUR 1: BADGES STATUS --- */
         .badge {
             font-size: 8px;
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .badge.working {
@@ -373,12 +366,6 @@
             border: 1px solid rgba(0, 212, 255, 0.4);
         }
 
-        .badge.patched {
-            background: rgba(255, 77, 77, 0.15);
-            color: #ff4d4d;
-            border: 1px solid rgba(255, 77, 77, 0.4);
-        }
-
         .btn-action {
             background: linear-gradient(135deg, #00f0ff, #0077ff);
             color: #fff;
@@ -391,10 +378,6 @@
             white-space: nowrap;
             text-decoration: none;
             display: inline-block;
-        }
-
-        .btn-action:active {
-            transform: scale(0.95);
         }
 
         /* --- QR CODE & PAYMENT SECTIONS --- */
@@ -501,7 +484,7 @@
         </div>
     </div>
 
-    <!-- FITUR 3: POPUP MODAL TUTORIAL CARA PAKAI -->
+    <!-- POPUP MODAL TUTORIAL CARA PAKAI -->
     <div id="tutorialModal" class="modal-overlay">
         <div class="modal-box">
             <button onclick="closeTutorial()" class="close-btn">✕</button>
@@ -544,7 +527,7 @@
         <!-- TAB MENU (OPSI PILIHAN) -->
         <div class="tab-menu">
             <button class="tab-btn active" onclick="switchTab('scripts', this)">📂 Script Hub</button>
-            <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Payment</button>
+            <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Payment 🔒</button>
         </div>
 
         <!-- OPSI 1: SEMUA LINK SCRIPT -->
@@ -612,7 +595,7 @@
 
         </div>
 
-        <!-- OPSI 2: SOSIAL MEDIA, GRUP WA, QR PAYMENT & QR WEB -->
+        <!-- OPSI 2: SOSIAL MEDIA, GRUP WA, QR PAYMENT & QR WEB (KHUSUS OWNER) -->
         <div id="socialsTab" class="tab-content">
             
             <!-- Grup WhatsApp -->
@@ -666,10 +649,11 @@
     </div>
 
     <script>
-        // Key Rahasia
-        const SECRET_KEY = "pinpin"; 
+        // --- SETTINGAN KEY SYSTEM ---
+        const USER_KEY = "pinpin";       // Key untuk Pengunjung (Hanya bisa Script Hub)
+        const OWNER_KEY = "pinboss";     // Key Khusus Kamu / Owner (Bisa buka SEMUA Tab)
 
-        // Cek status sesi (sessionStorage)
+        // Cek status sesi saat loading
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('hub_access_granted') === 'true') {
                 document.getElementById('keyOverlay').style.display = 'none';
@@ -681,49 +665,45 @@
             const userKey = document.getElementById('keyInput').value.trim();
             const errorMsg = document.getElementById('keyErrorMsg');
 
-            if (userKey === SECRET_KEY) {
+            if (userKey === OWNER_KEY) {
+                // Login sebagai OWNER
                 errorMsg.style.color = "#00ff88";
-                errorMsg.innerText = "Key Benar! Membuka Akses... ⚡";
+                errorMsg.innerText = "Selamat Datang Owner! Access Granted 👑";
                 sessionStorage.setItem('hub_access_granted', 'true');
-                
-                setTimeout(() => {
-                    document.getElementById('keyOverlay').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('keyOverlay').style.display = 'none';
-                    }, 300);
-                }, 400);
+                sessionStorage.setItem('user_role', 'owner');
+                unlockWeb();
+            } else if (userKey === USER_KEY) {
+                // Login sebagai USER BIASA
+                errorMsg.style.color = "#00ff88";
+                errorMsg.innerText = "Key Benar! Membuka Script Hub... ⚡";
+                sessionStorage.setItem('hub_access_granted', 'true');
+                sessionStorage.setItem('user_role', 'user');
+                unlockWeb();
             } else {
                 errorMsg.style.color = "#ff4d4d";
                 errorMsg.innerText = "❌ Key Salah!";
             }
         }
 
-        // FITUR 2: FUNGSI FILTER SEARCH BAR
-        function filterScripts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const cards = document.querySelectorAll('#scriptsTab .script-card');
-
-            cards.forEach(card => {
-                const text = card.innerText.toLowerCase();
-                if (text.includes(query)) {
-                    card.style.display = "flex";
-                } else {
-                    card.style.display = "none";
-                }
-            });
+        function unlockWeb() {
+            setTimeout(() => {
+                document.getElementById('keyOverlay').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('keyOverlay').style.display = 'none';
+                }, 300);
+            }, 500);
         }
 
-        // FITUR 3: FUNGSI POPUP TUTORIAL
-        function openTutorial() {
-            document.getElementById('tutorialModal').style.display = 'flex';
-        }
-
-        function closeTutorial() {
-            document.getElementById('tutorialModal').style.display = 'none';
-        }
-
-        // Fungsi Ganti Tab
+        // Fungsi Ganti Tab dengan Proteksi Owner
         function switchTab(tabName, btnElement) {
+            const currentRole = sessionStorage.getItem('user_role');
+
+            // Proteksi: Jika tab yang diklik adalah 'socials' (Payment) dan user BUKAN owner
+            if (tabName === 'socials' && currentRole !== 'owner') {
+                alert("🔒 Akses Ditolak!\n\nFitur Info & Payment ini milik Owner. Kamu hanya memiliki akses ke Script Hub.");
+                return; // Batalkan perpindahan tab
+            }
+
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -739,6 +719,30 @@
             }
 
             btnElement.classList.add('active');
+        }
+
+        // FUNGSI SEARCH BAR
+        function filterScripts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const cards = document.querySelectorAll('#scriptsTab .script-card');
+
+            cards.forEach(card => {
+                const text = card.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        }
+
+        // FUNGSI POPUP TUTORIAL
+        function openTutorial() {
+            document.getElementById('tutorialModal').style.display = 'flex';
+        }
+
+        function closeTutorial() {
+            document.getElementById('tutorialModal').style.display = 'none';
         }
 
         // Salin Kode Script
