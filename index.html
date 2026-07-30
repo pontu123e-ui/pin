@@ -94,9 +94,10 @@
         }
 
         .key-desc {
-            font-size: 11px;
+            font-size: 12px;
             color: #94a3b8;
             margin-bottom: 18px;
+            font-weight: 600;
         }
 
         .key-input {
@@ -258,7 +259,7 @@
         <div class="key-box">
             <div class="key-badge">⚡</div>
             <h2 class="key-title">KILLUA SYSTEM KEY</h2>
-            <p class="key-desc">Masukkan Key rahasia untuk mengakses Script Hub!</p>
+            <p class="key-desc">masukkan lisensi Hunter mu jingg</p>
             <input type="text" id="keyInput" class="key-input" placeholder="Masukkan Key di sini..." autocomplete="off">
             <button onclick="validateKey()" class="btn-submit-key">UNLOCK SCRIPT HUB</button>
             <p id="keyErrorMsg" class="key-error-msg"></p>
@@ -347,7 +348,7 @@
         // Key Rahasia
         const SECRET_KEY = "PIN-GANTENK"; 
 
-        // Cek status sesi (sessionStorage akan reset otomatis ketika Chrome / Tab ditutup)
+        // Cek status sesi (sessionStorage)
         window.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('hub_access_granted') === 'true') {
                 document.getElementById('keyOverlay').style.display = 'none';
