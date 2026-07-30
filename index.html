@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pin gantenk - Hub & Socials</title>
+    <title>pin gantenk - Hub, Socials & Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -220,7 +220,7 @@
             display: none;
             flex-direction: column;
             gap: 10px;
-            max-height: 340px;
+            max-height: 380px;
             overflow-y: auto;
             padding-right: 2px;
         }
@@ -278,25 +278,31 @@
             transform: scale(0.95);
         }
 
-        /* --- QR CODE BOX --- */
-        .qr-section {
+        /* --- QR CODE & PAYMENT SECTIONS --- */
+        .payment-card, .qr-section {
             background: #171c2e;
             border-radius: 12px;
             padding: 16px;
             text-align: center;
-            border: 1px solid rgba(0, 240, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.2);
         }
 
-        .qr-section h3 {
-            font-size: 12px;
+        .payment-card h3, .qr-section h3 {
+            font-size: 13px;
             font-weight: 600;
-            margin-bottom: 10px;
+            margin-bottom: 4px;
             color: #ffffff;
         }
 
+        .payment-card p, .qr-section p {
+            font-size: 10px;
+            color: #8a99ad;
+            margin-bottom: 12px;
+        }
+
         .qr-box {
-            width: 130px;
-            height: 130px;
+            width: 140px;
+            height: 140px;
             background: #ffffff;
             margin: 0 auto;
             border-radius: 8px;
@@ -311,6 +317,28 @@
             height: 100%;
             object-fit: contain;
         }
+
+        .payment-tags {
+            margin-top: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 4px;
+            color: #ffffff;
+        }
+
+        .tag.qris { background: #e60012; }
+        .tag.dana { background: #118eea; }
+        .tag.gopay { background: #00a5cf; }
+        .tag.ovo { background: #4c2a86; }
+        .tag.bank { background: #28a745; }
 
         .footer {
             text-align: center;
@@ -334,7 +362,7 @@
         </div>
     </div>
 
-    <!-- Background Grid & Aura CSS -->
+    <!-- Background Grid & Aura -->
     <div class="bg-grid"></div>
     <div class="electric-aura"></div>
 
@@ -348,20 +376,20 @@
             <span class="bio">⚡ Roblox Luau Scripter</span>
         </div>
 
-        <!-- TAB MENU -->
+        <!-- TAB MENU (OPSI PILIHAN) -->
         <div class="tab-menu">
             <button class="tab-btn active" onclick="switchTab('scripts', this)">📂 Script Hub</button>
-            <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Sosial</button>
+            <button class="tab-btn" onclick="switchTab('socials', this)">👤 Info & Payment</button>
         </div>
 
-        <!-- TAB 1: SEMUA LINK SCRIPT -->
+        <!-- OPSI 1: SEMUA LINK SCRIPT -->
         <div id="scriptsTab" class="tab-content active">
             
-            <!-- 1. Throw a Coin - Auto Sell (LOADSTRING TERUPDATE) -->
+            <!-- 1. Throw a Coin - Auto Sell -->
             <div class="script-card">
                 <div class="script-info">
                     <h3>💰 Throw a Coin - Auto Sell</h3>
-                    <p>Script auto-sell item dengan proteksi</p>
+                    <p>Script auto-sell item + Master Asset Protection</p>
                 </div>
                 <button class="btn-action" onclick="copyCode('loadstring(game:HttpGet(\&quot;https://pastebin.com/raw/TFG5u0kB\&quot;))()', this)">Salin</button>
             </div>
@@ -413,7 +441,7 @@
 
         </div>
 
-        <!-- TAB 2: SOSIAL MEDIA & QR CODE -->
+        <!-- OPSI 2: SOSIAL MEDIA, GRUP WA, QR PAYMENT & QR WEB -->
         <div id="socialsTab" class="tab-content">
             
             <!-- Grup WhatsApp -->
@@ -434,13 +462,29 @@
                 <a href="https://t.me/CONTOH_LINK" target="_blank" class="btn-action">Kunjungi</a>
             </div>
 
-            <!-- QR Code Card -->
+            <!-- ALL PAYMENT / QRIS CODE CARD -->
+            <div class="payment-card">
+                <h3>💳 All Payment / QRIS</h3>
+                <p>Scan untuk transaksi, donasi, atau order script</p>
+                <div class="qr-box">
+                    <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment" id="paymentQrImg">
+                </div>
+                <div class="payment-tags">
+                    <span class="tag qris">QRIS</span>
+                    <span class="tag dana">DANA</span>
+                    <span class="tag gopay">GoPay</span>
+                    <span class="tag ovo">OVO</span>
+                    <span class="tag bank">Bank</span>
+                </div>
+            </div>
+
+            <!-- SCAN QR WEB SCAN -->
             <div class="qr-section">
-                <h3>📷 Scan QR Profile / Web Ini</h3>
+                <h3>📷 Scan QR Web ini</h3>
+                <p>Buka website ini langsung dari HP kamu</p>
                 <div class="qr-box">
                     <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://pontu123e-ui.github.io/pin/" alt="QR Code Web">
                 </div>
-                <p style="font-size: 10px; color: #8a99ad; margin-top: 8px;">Scan untuk buka web di HP lain</p>
             </div>
 
         </div>
