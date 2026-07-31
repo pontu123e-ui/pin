@@ -28,6 +28,11 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
+            /* Mencegah seleksi teks di seluruh halaman */
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         /* --- BACKGROUND EFFECT --- */
@@ -97,6 +102,8 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            /* Mencegah gambar di-drag/ditarik ke tab baru */
+            pointer-events: none;
         }
 
         .name {
@@ -171,6 +178,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            pointer-events: none;
         }
 
         @keyframes bounceChibi {
@@ -382,9 +390,9 @@
             width: 100%;
             height: auto;
             border-radius: 6px;
+            pointer-events: none;
         }
 
-        /* TOMBOL DOWNLOAD QRIS */
         .btn-download-qris {
             display: inline-block;
             margin-bottom: 12px;
@@ -562,6 +570,7 @@
             color: #ffffff;
             font-size: 12px;
             outline: none;
+            user-select: text; /* Tetap mengizinkan ketik input */
         }
 
         .form-group input:focus, .form-group textarea:focus {
@@ -608,6 +617,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            pointer-events: none;
         }
 
         /* --- JENDELA CHATBOT POPUP MODAL --- */
@@ -701,6 +711,7 @@
             border-radius: 8px;
             margin-top: 5px;
             border: 1px solid rgba(0, 240, 255, 0.3);
+            pointer-events: none;
         }
 
         .chat-footer {
@@ -746,6 +757,7 @@
             border-radius: 6px;
             font-size: 11px;
             outline: none;
+            user-select: text;
         }
 
         .chat-form label {
@@ -890,7 +902,6 @@
                         <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
                     </div>
                     
-                    <!-- TOMBOL DOWNLOAD QRIS TAMBAHAN -->
                     <a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" class="btn-download-qris">
                         📥 Download QRIS
                     </a>
@@ -992,6 +1003,30 @@
     </div>
 
     <script>
+        // --- 🛡️ SCRIPT ANTI-INSPECT & PROTEKSI KODE WEB ---
+        // 1. Mematikan Klik Kanan
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        // 2. Mematikan Shortcut F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // 3. Mencegah Gambar Ditarik / Saved via Drag
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('dragstart', (e) => e.preventDefault());
+        });
+
+
         // --- FIREBASE REALTIME DATABASE CONFIG ---
         const firebaseConfig = {
             databaseURL: "https://pingantenk-roblox-store-default-rtdb.asia-southeast1.firebasedatabase.app"
@@ -1185,7 +1220,6 @@
             saveChatState();
         }
 
-        // TAHAP 1: PILIH ITEM
         function botSelectItem(itemName, price) {
             botData.item = itemName;
             botData.price = price;
@@ -1193,7 +1227,6 @@
             addMessage('user', `Saya mau beli ${itemName}`);
             
             setTimeout(() => {
-                // PESAN BOT DISESUAIKAN DENGAN INSTRUKSI KAMU
                 addMessage('bot', `Sip! Totalnya <b>Rp ${price.toLocaleString('id-ID')}</b>.<br><br>Silakan <b>download QRIS</b> di samping untuk scan bayar. Atau kalau mau lewati & transfer manual juga bisa, itu nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br><b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`);
                 
                 let footer = document.getElementById('chatFooter');
