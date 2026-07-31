@@ -79,7 +79,7 @@
 
         .profile {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .avatar {
@@ -121,6 +121,97 @@
             border-radius: 15px;
             border: 1px solid rgba(0, 255, 136, 0.3);
             font-weight: 600;
+        }
+
+        /* --- HERO BANNER CHAT AUTO LOOK (LANGSUNG KELIHATAN DI ATAS) --- */
+        .chat-hero-banner {
+            background: linear-gradient(135deg, #171c2e, #1e293b);
+            border: 2px solid #00f0ff;
+            border-radius: 16px;
+            padding: 14px 18px;
+            margin-bottom: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+            animation: pulseBanner 2.5s infinite alternate ease-in-out;
+            transition: transform 0.2s;
+        }
+
+        .chat-hero-banner:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.45);
+        }
+
+        @keyframes pulseBanner {
+            0% { border-color: #00f0ff; box-shadow: 0 0 15px rgba(0, 240, 255, 0.2); }
+            100% { border-color: #a855f7; box-shadow: 0 0 25px rgba(168, 85, 247, 0.4); }
+        }
+
+        .chibi-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chibi-img-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid #00f0ff;
+            overflow: hidden;
+            background: #000;
+            flex-shrink: 0;
+            animation: bounceChibi 1.5s infinite alternate ease-in-out;
+        }
+
+        .chibi-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes bounceChibi {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        .banner-info h3 {
+            font-size: 13px;
+            color: #00f0ff;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .banner-info p {
+            font-size: 11px;
+            color: #cbd5e1;
+        }
+
+        .banner-btn-action {
+            background: linear-gradient(135deg, #00f0ff, #0077ff);
+            color: #000000;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            white-space: nowrap;
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .chat-hero-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+            .chibi-left {
+                flex-direction: column;
+            }
+            .banner-btn-action {
+                width: 100%;
+            }
         }
 
         /* --- LAYOUT UTAMA --- */
@@ -497,84 +588,29 @@
             display: block;
         }
 
-        /* --- CHIBI FLOATING CHAT ASSISTANT (ANIMASI GERAK & BALON TEKS) --- */
-        .floating-assistant-container {
-            position: fixed;
-            bottom: 25px;
-            right: 25px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1000;
-            cursor: pointer;
-        }
-
-        .chat-teaser-bubble {
-            background: linear-gradient(135deg, #171c2e, #1a2238);
-            border: 1px solid #00f0ff;
-            color: #00f0ff;
-            padding: 8px 14px;
-            border-radius: 14px;
-            font-size: 11px;
-            font-weight: 700;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
-            animation: pulseBubble 2s infinite ease-in-out;
-            white-space: nowrap;
-            user-select: none;
-        }
-
-        @keyframes pulseBubble {
-            0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-            50% { transform: scale(1.04); box-shadow: 0 0 22px rgba(0, 240, 255, 0.5); }
-            100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
-        }
-
-        .chibi-toggle-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #00f0ff, #0077ff);
-            border: 2px solid #ffffff;
-            overflow: hidden;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
-            animation: bounceAvatar 1.5s infinite alternate ease-in-out;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .chibi-toggle-btn img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        @keyframes bounceAvatar {
-            0% { transform: translateY(0) scale(1); }
-            100% { transform: translateY(-8px) scale(1.06); }
-        }
-
-        /* --- JENDELA CHATBOT WIDGET --- */
+        /* --- JENDELA CHATBOT POPUP MODAL (TENGAH LAYAR) --- */
         .chat-widget {
             position: fixed;
-            bottom: 95px;
-            right: 25px;
-            width: 340px;
-            height: 480px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 380px;
+            height: 500px;
             background: #101422;
-            border: 1px solid rgba(0, 240, 255, 0.4);
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            border: 2px solid #00f0ff;
+            border-radius: 20px;
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.4);
             display: none;
             flex-direction: column;
             z-index: 1000;
             overflow: hidden;
-            animation: slideUp 0.3s ease-out;
+            animation: popIn 0.3s ease-out;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes popIn {
+            from { opacity: 0; transform: translate(-50%, -45%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
         .chat-header {
@@ -718,6 +754,22 @@
             <h1 class="name">pin gantenk</h1>
             <p class="sub-name">Official Roblox Item Store & Payment</p>
             <span class="status-badge" id="live-indicator">🔴 LIVE REALTIME STOCK ACTIVE</span>
+        </div>
+
+        <!-- BANNER HERO CHAT BOT (POSISI ATAS - MENCARI PERHATIAN) -->
+        <div class="chat-hero-banner" onclick="toggleChat()">
+            <div class="chibi-left">
+                <div class="chibi-img-box">
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
+                </div>
+                <div class="banner-info">
+                    <h3>🍡 Jajan Item Roblox / Chat Aku!!</h3>
+                    <p>Mau beli item / butuh bantuan? Klik di sini aja bro! 💬</p>
+                </div>
+            </div>
+            <div class="banner-btn-action">
+                Chat Sekarang ⚡
+            </div>
         </div>
 
         <!-- MAIN LAYOUT 2 KOLOM -->
@@ -869,24 +921,14 @@
         </div>
     </div>
 
-    <!-- FLOATING CHIBI KILLUA CHAT ASSISTANT -->
-    <div class="floating-assistant-container" onclick="toggleChat()">
-        <div class="chat-teaser-bubble">
-            Jajan?? Chat akuu! 🍡✨
-        </div>
-        <div class="chibi-toggle-btn">
-            <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
-        </div>
-    </div>
-
-    <!-- JENDELA CHATBOT WIDGET -->
+    <!-- JENDELA CHATBOT POPUP (TAMPIL DI TENGAH LAYAR) -->
     <div class="chat-widget" id="chatWidget">
         <div class="chat-header">
             <div style="display:flex; align-items:center; gap:8px;">
                 <div style="width:10px; height:10px; background:#00ff88; border-radius:50%;"></div>
                 <strong>pin Store Assistant</strong>
             </div>
-            <button onclick="toggleChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:16px;">&times;</button>
+            <button onclick="toggleChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:18px;">&times;</button>
         </div>
 
         <div class="chat-body" id="chatBody">
