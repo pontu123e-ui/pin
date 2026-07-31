@@ -6,7 +6,7 @@
     <title>pin gantenk - Roblox Item Store & Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- FIREBASE REALTIME DATABASE SDK (FREE FROM GOOGLE) -->
+    <!-- FIREBASE REALTIME DATABASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -45,9 +45,9 @@
         .electric-aura {
             position: fixed;
             top: 50%; left: 50%;
-            width: 320px; height: 320px;
-            margin-top: -160px; margin-left: -160px;
-            background: radial-gradient(circle, rgba(0, 240, 255, 0.18) 0%, rgba(168, 85, 247, 0.12) 50%, transparent 70%);
+            width: 400px; height: 400px;
+            margin-top: -200px; margin-left: -200px;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 70%);
             border-radius: 50%;
             z-index: 1;
             animation: pulseAura 4s infinite alternate ease-in-out;
@@ -56,47 +56,60 @@
 
         @keyframes pulseAura {
             0% { transform: scale(1); opacity: 0.5; }
-            100% { transform: scale(1.4); opacity: 0.9; }
+            100% { transform: scale(1.3); opacity: 0.8; }
         }
 
         /* --- CONTAINER --- */
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 860px;
             background: #101422;
             border-radius: 20px;
-            padding: 28px 20px;
+            padding: 24px;
             border: 1px solid rgba(0, 240, 255, 0.3);
             box-shadow: 0 10px 35px rgba(0,0,0,0.6);
             position: relative;
             z-index: 2;
         }
 
-        .profile { text-align: center; margin-bottom: 22px; }
+        .profile { text-align: center; margin-bottom: 20px; }
         .avatar {
-            width: 85px; height: 85px; border-radius: 50%; margin: 0 auto 10px auto;
+            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 8px auto;
             border: 2px solid #00f0ff; box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); overflow: hidden;
             cursor: pointer;
         }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .name { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
-        .sub-name { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+        .name { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 2px; }
+        .sub-name { font-size: 11px; color: #94a3b8; margin-bottom: 6px; }
         .status-badge {
             font-size: 10px; color: #00ff88; background: rgba(0, 255, 136, 0.1);
-            display: inline-block; padding: 4px 12px; border-radius: 15px; border: 1px solid rgba(0, 255, 136, 0.3); font-weight: 600;
+            display: inline-block; padding: 3px 10px; border-radius: 15px; border: 1px solid rgba(0, 255, 136, 0.3); font-weight: 600;
+        }
+
+        /* --- LAYOUT UTAMA --- */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        @media (max-width: 768px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         .section-title {
             font-size: 12px; font-weight: 700; color: #00f0ff; text-transform: uppercase;
-            letter-spacing: 1px; margin: 22px 0 12px 4px; display: flex; align-items: center; gap: 6px;
+            letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
         }
 
         /* --- KATALOG ITEM SHOP GRID --- */
         .shop-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 10px;
         }
 
         .item-card {
@@ -108,7 +121,6 @@
             flex-direction: column;
             justify-content: space-between;
             transition: all 0.2s ease;
-            position: relative;
         }
 
         .item-card:hover {
@@ -118,7 +130,7 @@
 
         .item-img-box {
             width: 100%;
-            height: 110px;
+            height: 100px;
             border-radius: 8px;
             overflow: hidden;
             background: #060810;
@@ -143,7 +155,6 @@
             border-radius: 6px;
             border: 1px solid rgba(0, 255, 136, 0.4);
             backdrop-filter: blur(4px);
-            transition: all 0.3s ease;
         }
 
         .stock-badge.empty {
@@ -194,16 +205,31 @@
 
         /* --- QRIS & PAYMENT --- */
         .qris-box {
-            text-align: center; background: #171c2e; border-radius: 14px;
-            padding: 16px; border: 1px solid rgba(0, 240, 255, 0.2); margin-bottom: 12px;
+            text-align: center; 
+            background: #171c2e; 
+            border-radius: 14px;
+            padding: 16px; 
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
+
         .qris-img-wrap {
-            width: 100%; max-width: 240px; background: #ffffff; margin: 10px auto;
-            border-radius: 10px; padding: 8px; display: flex; justify-content: center; align-items: center;
+            width: 100%; 
+            max-width: 220px; 
+            background: #ffffff; 
+            margin: 10px auto;
+            border-radius: 10px; 
+            padding: 8px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center;
         }
         .qris-img-wrap img { width: 100%; height: auto; border-radius: 6px; }
 
-        .manual-pay-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+        .manual-pay-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
         .pay-row {
             background: #101422; border-radius: 8px; padding: 10px 12px;
             display: flex; justify-content: space-between; align-items: center;
@@ -214,8 +240,8 @@
 
         .btn-action {
             background: linear-gradient(135deg, #00f0ff, #0077ff); color: #fff;
-            border: none; padding: 8px 14px; border-radius: 8px; font-size: 11px;
-            font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap;
+            border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px;
+            font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap;
         }
 
         .footer { text-align: center; margin-top: 22px; font-size: 10px; color: #55657e; }
@@ -228,7 +254,7 @@
 
     <div class="container">
         
-        <!-- PROFIL HEADER (Klik 5x foto profil untuk RESTOCK SEMUA STOK) -->
+        <!-- HEADER PROFIL -->
         <div class="profile">
             <div class="avatar" onclick="quickRestock()">
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
@@ -238,81 +264,91 @@
             <span class="status-badge" id="live-indicator">🔴 LIVE REALTIME STOCK ACTIVE</span>
         </div>
 
-        <!-- KATALOG ITEM ROBLOX -->
-        <div class="section-title">🎮 Item Roblox Ready Stock</div>
-        <div class="shop-grid">
+        <!-- MAIN LAYOUT 2 KOLOM -->
+        <div class="main-layout">
             
-            <!-- ITEM 1: DRAGON'S BREATH -->
-            <div class="item-card">
-                <div class="item-img-box">
-                    <span id="stock-item1" class="stock-badge">⚡ Stock: ...</span>
-                    <img src="dragon_s_breath.webp" alt="Dragon's Breath">
-                </div>
-                <div class="item-title">Dragon's Breath Item</div>
-                <div class="item-price">Rp 15.000</div>
-                <button id="btn-item1" class="btn-buy-item" onclick="autoBuyItem('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">
-                    🛒 Beli via WA
-                </button>
-            </div>
-
-            <!-- ITEM 2: HYPNO BLOOM -->
-            <div class="item-card">
-                <div class="item-img-box">
-                    <span id="stock-item2" class="stock-badge">⚡ Stock: ...</span>
-                    <img src="hypno_bloom.webp" alt="Hypno Bloom">
-                </div>
-                <div class="item-title">Hypno Bloom Item</div>
-                <div class="item-price">Rp 25.000</div>
-                <button id="btn-item2" class="btn-buy-item" onclick="autoBuyItem('item2', 'Hypno Bloom Item', 'Rp 25.000')">
-                    🛒 Beli via WA
-                </button>
-            </div>
-
-            <!-- ITEM 3: IMAGES 1 -->
-            <div class="item-card">
-                <div class="item-img-box">
-                    <span id="stock-item3" class="stock-badge">⚡ Stock: ...</span>
-                    <img src="images (1).jpeg" alt="Roblox Special Item">
-                </div>
-                <div class="item-title">Roblox Coin / Item Special</div>
-                <div class="item-price">Rp 10.000</div>
-                <button id="btn-item3" class="btn-buy-item" onclick="autoBuyItem('item3', 'Roblox Coin / Item Special', 'Rp 10.000')">
-                    🛒 Beli via WA
-                </button>
-            </div>
-
-            <!-- ITEM 4: IMAGES 2 -->
-            <div class="item-card">
-                <div class="item-img-box">
-                    <span id="stock-item4" class="stock-badge">⚡ Stock: ...</span>
-                    <img src="images (2).jpeg" alt="Custom Roblox Trade Item">
-                </div>
-                <div class="item-title">Custom Roblox Trade Item</div>
-                <div class="item-price">Rp 20.000</div>
-                <button id="btn-item4" class="btn-buy-item" onclick="autoBuyItem('item4', 'Custom Roblox Trade Item', 'Rp 20.000')">
-                    🛒 Beli via WA
-                </button>
-            </div>
-
-        </div>
-
-        <!-- PAYMENT METHOD -->
-        <div class="section-title">💳 Payment Method / QRIS</div>
-        <div class="qris-box">
-            <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
-            <div class="qris-img-wrap">
-                <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
-            </div>
-
-            <div class="manual-pay-list">
-                <div class="pay-row">
-                    <div class="pay-details">
-                        <span>DANA / GoPay / OVO</span>
-                        <strong>0858-2353-8521</strong>
+            <!-- KOLOM KIRI: KATALOG ITEM -->
+            <div class="layout-left">
+                <div class="section-title">🎮 Item Roblox Ready Stock</div>
+                <div class="shop-grid">
+                    
+                    <!-- ITEM 1 -->
+                    <div class="item-card">
+                        <div class="item-img-box">
+                            <span id="stock-item1" class="stock-badge">⚡ Stock: ...</span>
+                            <img src="dragon_s_breath.webp" alt="Dragon's Breath">
+                        </div>
+                        <div class="item-title">Dragon's Breath Item</div>
+                        <div class="item-price">Rp 15.000</div>
+                        <button id="btn-item1" class="btn-buy-item" onclick="autoBuyItem('item1', 'Dragon Breath Item', 'Rp 15.000')">
+                            🛒 Beli via WA
+                        </button>
                     </div>
-                    <button class="btn-action" onclick="copyText('085823538521', this)">Salin</button>
+
+                    <!-- ITEM 2 -->
+                    <div class="item-card">
+                        <div class="item-img-box">
+                            <span id="stock-item2" class="stock-badge">⚡ Stock: ...</span>
+                            <img src="hypno_bloom.webp" alt="Hypno Bloom">
+                        </div>
+                        <div class="item-title">Hypno Bloom Item</div>
+                        <div class="item-price">Rp 25.000</div>
+                        <button id="btn-item2" class="btn-buy-item" onclick="autoBuyItem('item2', 'Hypno Bloom Item', 'Rp 25.000')">
+                            🛒 Beli via WA
+                        </button>
+                    </div>
+
+                    <!-- ITEM 3 -->
+                    <div class="item-card">
+                        <div class="item-img-box">
+                            <span id="stock-item3" class="stock-badge">⚡ Stock: ...</span>
+                            <img src="images (1).jpeg" alt="Roblox Special Item">
+                        </div>
+                        <div class="item-title">Roblox Coin / Special</div>
+                        <div class="item-price">Rp 10.000</div>
+                        <button id="btn-item3" class="btn-buy-item" onclick="autoBuyItem('item3', 'Roblox Coin / Special', 'Rp 10.000')">
+                            🛒 Beli via WA
+                        </button>
+                    </div>
+
+                    <!-- ITEM 4 -->
+                    <div class="item-card">
+                        <div class="item-img-box">
+                            <span id="stock-item4" class="stock-badge">⚡ Stock: ...</span>
+                            <img src="images (2).jpeg" alt="Custom Roblox Trade Item">
+                        </div>
+                        <div class="item-title">Custom Trade Item</div>
+                        <div class="item-price">Rp 20.000</div>
+                        <button id="btn-item4" class="btn-buy-item" onclick="autoBuyItem('item4', 'Custom Trade Item', 'Rp 20.000')">
+                            🛒 Beli via WA
+                        </button>
+                    </div>
+
                 </div>
             </div>
+
+            <!-- KOLOM KANAN: QRIS & PAYMENT -->
+            <div class="layout-right">
+                <div class="section-title">💳 Payment Method / QRIS</div>
+                <div class="qris-box">
+                    <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
+                    
+                    <div class="qris-img-wrap">
+                        <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
+                    </div>
+
+                    <div class="manual-pay-list">
+                        <div class="pay-row">
+                            <div class="pay-details">
+                                <span>DANA / GoPay / OVO</span>
+                                <strong>0858-2353-8521</strong>
+                            </div>
+                            <button class="btn-action" onclick="copyText('085823538521', this)">Salin</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="footer">
@@ -321,7 +357,7 @@
     </div>
 
     <script>
-        // --- 1. KONFIGURASI DATABASE REALTIME FIREBASE ---
+        // --- FIREBASE REALTIME DATABASE CONFIG ---
         const firebaseConfig = {
             databaseURL: "https://pingantenk-roblox-store-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
@@ -331,7 +367,7 @@
 
         let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
 
-        // --- 2. LISTEN REALTIME DATABASE ---
+        // --- LISTEN REALTIME STOCK ---
         db.ref('stocks').on('value', (snapshot) => {
             const data = snapshot.val();
             if (!data) {
@@ -360,7 +396,7 @@
             }
         });
 
-        // --- 3. FUNGSI AUTO BUY (POTONG STOK REALTIME & BUKA WA) ---
+        // --- AUTO BUY FUNCTION (LANGSUNG BUKA WA TANPA DI-BLOCK BROWSER) ---
         function autoBuyItem(itemId, itemName, itemPrice) {
             let currentCount = localStocks[itemId] || 0;
 
@@ -372,22 +408,22 @@
             let confirmBuy = confirm(`Yakin mau beli ${itemName} (${itemPrice})?\n\nStok akan otomatis berkurang 1 di database live!`);
             if (!confirmBuy) return;
 
+            // Kurangi stok di Firebase Database
             db.ref('stocks/' + itemId).transaction((current) => {
                 if (current === null) return 10;
                 return Math.max(0, current - 1);
             }, (error, committed, snapshot) => {
-                if (committed) {
-                    let newStock = snapshot.val();
-                    let phone = "6285823538521";
-                    let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. (Sisa stok live: ${newStock}). Saya siap bayar!`;
-                    let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-                    
-                    window.open(url, '_blank');
-                }
+                let newStock = snapshot.exists() ? snapshot.val() : 0;
+                let phone = "6285823538521";
+                let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. (Sisa stok live: ${newStock}). Saya siap bayar!`;
+                let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+                
+                // Gunakan location.href agar langsung meluncur ke WA
+                window.location.href = url;
             });
         }
 
-        // --- 4. TIKET RAHASIA RESTOCK UNTUK ADMIN (KLIK FOTO PROFIL 5 KALI) ---
+        // --- ADMIN QUICK RESTOCK (KLIK FOTO PROFIL 5X) ---
         let clickProfile = 0;
         function quickRestock() {
             clickProfile++;
