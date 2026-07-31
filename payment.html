@@ -33,10 +33,12 @@
         /* --- BACKGROUND EFFECT --- */
         .bg-grid {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 220, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 220, 255, 0.05) 1px, transparent 1px);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 220, 255, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(0, 220, 255, 0.05) 1px, transparent 1px);
             background-size: 30px 30px;
             z-index: 1;
             pointer-events: none;
@@ -44,9 +46,12 @@
 
         .electric-aura {
             position: fixed;
-            top: 50%; left: 50%;
-            width: 400px; height: 400px;
-            margin-top: -200px; margin-left: -200px;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            margin-top: -200px;
+            margin-left: -200px;
             background: radial-gradient(circle, rgba(0, 240, 255, 0.15) 0%, rgba(168, 85, 247, 0.1) 50%, transparent 70%);
             border-radius: 50%;
             z-index: 1;
@@ -59,7 +64,7 @@
             100% { transform: scale(1.3); opacity: 0.8; }
         }
 
-        /* --- CONTAINER --- */
+        /* --- CONTAINER UTAMA --- */
         .container {
             width: 100%;
             max-width: 860px;
@@ -72,18 +77,50 @@
             z-index: 2;
         }
 
-        .profile { text-align: center; margin-bottom: 20px; }
+        .profile {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
         .avatar {
-            width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 8px auto;
-            border: 2px solid #00f0ff; box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); overflow: hidden;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 8px auto;
+            border: 2px solid #00f0ff;
+            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
+            overflow: hidden;
             cursor: pointer;
         }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .name { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 2px; }
-        .sub-name { font-size: 11px; color: #94a3b8; margin-bottom: 6px; }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 2px;
+        }
+
+        .sub-name {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
         .status-badge {
-            font-size: 10px; color: #00ff88; background: rgba(0, 255, 136, 0.1);
-            display: inline-block; padding: 3px 10px; border-radius: 15px; border: 1px solid rgba(0, 255, 136, 0.3); font-weight: 600;
+            font-size: 10px;
+            color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            font-weight: 600;
         }
 
         /* --- LAYOUT UTAMA --- */
@@ -101,8 +138,15 @@
         }
 
         .section-title {
-            font-size: 12px; font-weight: 700; color: #00f0ff; text-transform: uppercase;
-            letter-spacing: 1px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #00f0ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
         /* --- KATALOG ITEM SHOP GRID --- */
@@ -128,7 +172,6 @@
             box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
         }
 
-        /* --- BOX ITEM ICON --- */
         .item-img-box {
             width: 100%;
             height: 90px;
@@ -149,7 +192,8 @@
 
         .stock-badge {
             position: absolute;
-            top: 5px; left: 5px;
+            top: 5px;
+            left: 5px;
             background: rgba(6, 8, 16, 0.85);
             color: #00ff88;
             font-size: 9px;
@@ -208,10 +252,10 @@
 
         /* --- QRIS & PAYMENT --- */
         .qris-box {
-            text-align: center; 
-            background: #171c2e; 
+            text-align: center;
+            background: #171c2e;
             border-radius: 14px;
-            padding: 16px; 
+            padding: 16px;
             border: 1px solid rgba(0, 240, 255, 0.2);
             height: 100%;
             display: flex;
@@ -220,34 +264,166 @@
         }
 
         .qris-img-wrap {
-            width: 100%; 
-            max-width: 220px; 
-            background: #ffffff; 
+            width: 100%;
+            max-width: 220px;
+            background: #ffffff;
             margin: 10px auto;
-            border-radius: 10px; 
-            padding: 8px; 
-            display: flex; 
-            justify-content: center; 
+            border-radius: 10px;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
             align-items: center;
         }
-        .qris-img-wrap img { width: 100%; height: auto; border-radius: 6px; }
 
-        .manual-pay-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+        .qris-img-wrap img {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+
+        .manual-pay-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
         .pay-row {
-            background: #101422; border-radius: 8px; padding: 10px 12px;
-            display: flex; justify-content: space-between; align-items: center;
+            background: #101422;
+            border-radius: 8px;
+            padding: 10px 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border: 1px dashed rgba(0, 240, 255, 0.2);
         }
-        .pay-details span { font-size: 9px; color: #8a99ad; text-transform: uppercase; font-weight: 700; }
-        .pay-details strong { display: block; font-size: 12px; color: #00f0ff; letter-spacing: 0.5px; }
 
-        .btn-action {
-            background: linear-gradient(135deg, #00f0ff, #0077ff); color: #fff;
-            border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px;
-            font-weight: 600; cursor: pointer; text-decoration: none; white-space: nowrap;
+        .pay-details span {
+            font-size: 9px;
+            color: #8a99ad;
+            text-transform: uppercase;
+            font-weight: 700;
         }
 
-        /* --- SECTION TESTIMONI (6 FOTO WA) --- */
+        .pay-details strong {
+            display: block;
+            font-size: 12px;
+            color: #00f0ff;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, #00f0ff, #0077ff);
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        /* --- MODAL FORM PEMBELIAN --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(6, 8, 16, 0.85);
+            backdrop-filter: blur(8px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-box {
+            background: #101422;
+            border-radius: 16px;
+            padding: 22px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid #00f0ff;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+            animation: fadeInModal 0.25s ease-out;
+        }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+            padding-bottom: 8px;
+        }
+
+        .modal-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #00f0ff;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            color: #cbd5e1;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            background: #171c2e;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 12px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #00f0ff;
+            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-submit-order {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 6px;
+        }
+
+        /* --- SECTION TESTIMONI --- */
         .testi-container {
             margin-top: 25px;
             border-top: 1px solid rgba(0, 240, 255, 0.15);
@@ -288,7 +464,12 @@
             display: block;
         }
 
-        .footer { text-align: center; margin-top: 22px; font-size: 10px; color: #55657e; }
+        .footer {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 10px;
+            color: #55657e;
+        }
     </style>
 </head>
 <body>
@@ -297,7 +478,6 @@
     <div class="electric-aura"></div>
 
     <div class="container">
-        
         <!-- HEADER PROFIL -->
         <div class="profile">
             <div class="avatar" onclick="quickRestock()">
@@ -310,12 +490,10 @@
 
         <!-- MAIN LAYOUT 2 KOLOM -->
         <div class="main-layout">
-            
             <!-- KOLOM KIRI: KATALOG ITEM -->
             <div class="layout-left">
                 <div class="section-title">🎮 Item Roblox Ready Stock</div>
                 <div class="shop-grid">
-                    
                     <!-- ITEM 1 -->
                     <div class="item-card">
                         <div class="item-img-box">
@@ -324,7 +502,7 @@
                         </div>
                         <div class="item-title">Dragon's Breath Item</div>
                         <div class="item-price">Rp 15.000</div>
-                        <button id="btn-item1" class="btn-buy-item" onclick="autoBuyItem('item1', 'Dragon Breath Item', 'Rp 15.000')">
+                        <button id="btn-item1" class="btn-buy-item" onclick="openOrderModal('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">
                             🛒 Beli via WA
                         </button>
                     </div>
@@ -337,7 +515,7 @@
                         </div>
                         <div class="item-title">Hypno Bloom Item</div>
                         <div class="item-price">Rp 25.000</div>
-                        <button id="btn-item2" class="btn-buy-item" onclick="autoBuyItem('item2', 'Hypno Bloom Item', 'Rp 25.000')">
+                        <button id="btn-item2" class="btn-buy-item" onclick="openOrderModal('item2', 'Hypno Bloom Item', 'Rp 25.000')">
                             🛒 Beli via WA
                         </button>
                     </div>
@@ -350,7 +528,7 @@
                         </div>
                         <div class="item-title">Roblox Coin / Special</div>
                         <div class="item-price">Rp 10.000</div>
-                        <button id="btn-item3" class="btn-buy-item" onclick="autoBuyItem('item3', 'Roblox Coin / Special', 'Rp 10.000')">
+                        <button id="btn-item3" class="btn-buy-item" onclick="openOrderModal('item3', 'Roblox Coin / Special', 'Rp 10.000')">
                             🛒 Beli via WA
                         </button>
                     </div>
@@ -363,11 +541,10 @@
                         </div>
                         <div class="item-title">Custom Trade Item</div>
                         <div class="item-price">Rp 20.000</div>
-                        <button id="btn-item4" class="btn-buy-item" onclick="autoBuyItem('item4', 'Custom Trade Item', 'Rp 20.000')">
+                        <button id="btn-item4" class="btn-buy-item" onclick="openOrderModal('item4', 'Custom Trade Item', 'Rp 20.000')">
                             🛒 Beli via WA
                         </button>
                     </div>
-
                 </div>
             </div>
 
@@ -376,11 +553,9 @@
                 <div class="section-title">💳 Payment Method / QRIS</div>
                 <div class="qris-box">
                     <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
-                    
                     <div class="qris-img-wrap">
                         <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
                     </div>
-
                     <div class="manual-pay-list">
                         <div class="pay-row">
                             <div class="pay-details">
@@ -392,10 +567,9 @@
                     </div>
                 </div>
             </div>
-
         </div>
 
-        <!-- SECTION BUKTI TRANSFER / TESTIMONI (6 FOTO DARI WA) -->
+        <!-- SECTION BUKTI TRANSFER / TESTIMONI -->
         <div class="testi-container">
             <div class="section-title">📸 Bukti Transfer & Testimoni Pembeli</div>
             <div class="testi-grid">
@@ -413,16 +587,40 @@
         </div>
     </div>
 
+    <!-- MODAL POPUP INPUT USERNAME ROBLOX -->
+    <div id="buyModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-title" id="modal-item-title">Konfirmasi Pembelian</span>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            
+            <div class="form-group">
+                <label for="roblox-username">Username Roblox <span style="color:#ff4d4d;">*</span></label>
+                <input type="text" id="roblox-username" placeholder="Contoh: PinGantenk123" required>
+            </div>
+
+            <div class="form-group">
+                <label for="order-notes">Catatan Tambahan (Opsional)</label>
+                <textarea id="order-notes" rows="2" placeholder="Contoh: Sertakan jam pengiriman atau pesan khusus..."></textarea>
+            </div>
+
+            <button class="btn-submit-order" onclick="submitOrderToWA()">
+                🚀 Kirim Pesanan ke WhatsApp
+            </button>
+        </div>
+    </div>
+
     <script>
         // --- FIREBASE REALTIME DATABASE CONFIG ---
         const firebaseConfig = {
             databaseURL: "https://pingantenk-roblox-store-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
         let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
+        let selectedItem = null;
 
         // --- LISTEN REALTIME STOCK ---
         db.ref('stocks').on('value', (snapshot) => {
@@ -431,52 +629,78 @@
                 db.ref('stocks').set(localStocks);
                 return;
             }
-
             localStocks = data;
-
             for (let id in localStocks) {
                 let badge = document.getElementById('stock-' + id);
                 let btn = document.getElementById('btn-' + id);
                 let count = localStocks[id];
-
-                if (count > 0) {
-                    badge.innerText = `⚡ Stock: ${count} Ready`;
-                    badge.classList.remove('empty');
-                    btn.innerText = "🛒 Beli via WA";
-                    btn.classList.remove('disabled');
-                } else {
-                    badge.innerText = `❌ STOK HABIS`;
-                    badge.classList.add('empty');
-                    btn.innerText = "🚫 Stok Habis";
-                    btn.classList.add('disabled');
+                
+                if (badge && btn) {
+                    if (count > 0) {
+                        badge.innerText = `⚡ Stock: ${count} Ready`;
+                        badge.classList.remove('empty');
+                        btn.innerText = "🛒 Beli via WA";
+                        btn.classList.remove('disabled');
+                    } else {
+                        badge.innerText = `❌ STOK HABIS`;
+                        badge.classList.add('empty');
+                        btn.innerText = "🚫 Stok Habis";
+                        btn.classList.add('disabled');
+                    }
                 }
             }
         });
 
-        // --- AUTO BUY FUNCTION ---
-        function autoBuyItem(itemId, itemName, itemPrice) {
+        // --- MODAL FUNCTIONS ---
+        function openOrderModal(itemId, itemName, itemPrice) {
             let currentCount = localStocks[itemId] || 0;
-
             if (currentCount <= 0) {
                 alert("Maaf bro, stok item ini baru saja habis!");
                 return;
             }
 
-            let confirmBuy = confirm(`Beli ${itemName} (${itemPrice})?\n\nKlik OK untuk langsung menuju ke WhatsApp.`);
-            if (!confirmBuy) return;
+            selectedItem = { id: itemId, name: itemName, price: itemPrice };
+            document.getElementById('modal-item-title').innerText = `Beli: ${itemName}`;
+            document.getElementById('roblox-username').value = "";
+            document.getElementById('order-notes').value = "";
+            document.getElementById('buyModal').style.display = "flex";
+        }
+
+        function closeOrderModal() {
+            document.getElementById('buyModal').style.display = "none";
+            selectedItem = null;
+        }
+
+        function submitOrderToWA() {
+            if (!selectedItem) return;
+
+            let username = document.getElementById('roblox-username').value.trim();
+            let notes = document.getElementById('order-notes').value.trim();
+
+            if (!username) {
+                alert("Harap isi Username Roblox kamu terlebih dahulu!");
+                return;
+            }
 
             // 1. Kurangi stok di Firebase secara background
-            db.ref('stocks/' + itemId).transaction((current) => {
+            db.ref('stocks/' + selectedItem.id).transaction((current) => {
                 if (current === null) return 10;
                 return Math.max(0, current - 1);
             });
 
-            // 2. Buat URL WhatsApp yang kompatibel di semua HP
+            // 2. Susun format teks WhatsApp
             let phone = "6285823538521";
-            let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. Saya siap bayar!`;
+            let text = `Halo pin gantenk!\n` +
+                       `Saya mau beli: *${selectedItem.name}*\n` +
+                       `Harga: *${selectedItem.price}*\n` +
+                       `Username Roblox: *${username}*\n` +
+                       (notes ? `Catatan: ${notes}\n` : "") +
+                       `\nSaya siap melakukan pembayaran!`;
+
             let url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
 
-            // 3. Langsung luncurkan ke WhatsApp seketika
+            // 3. Alihkan ke WhatsApp
+            closeOrderModal();
             window.location.href = url;
         }
 
@@ -501,7 +725,9 @@
             navigator.clipboard.writeText(text).then(function() {
                 let originalText = btn.innerText;
                 btn.innerText = "Copied! ✅";
-                setTimeout(function() { btn.innerText = originalText; }, 2000);
+                setTimeout(function() {
+                    btn.innerText = originalText;
+                }, 2000);
             });
         }
     </script>
