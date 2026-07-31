@@ -10,6 +10,9 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
+    <!-- TESSERACT.JS UNTUK OCR / BACA GAMBAR DARI BROWSER -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -187,7 +190,6 @@
             display: block;
         }
 
-        /* LIST BARIS ITEM (TANPA GAMBAR) */
         .item-row {
             display: flex;
             justify-content: space-between;
@@ -428,7 +430,6 @@
             cursor: pointer;
         }
 
-        /* FORM INPUT INSIDE MODAL */
         .form-group {
             margin-bottom: 12px;
             text-align: left;
@@ -471,7 +472,6 @@
             margin-top: 6px;
         }
 
-        /* GRID FOTO TESTIMONI DALAM MODAL */
         .testi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -498,6 +498,150 @@
             height: 100%;
             object-fit: cover;
             display: block;
+        }
+
+        /* --- FLOATING CHATBOT WIDGET --- */
+        .chat-toggle-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00f0ff, #0077ff);
+            color: #fff;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
+            z-index: 1000;
+            transition: transform 0.2s ease;
+        }
+
+        .chat-toggle-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-widget {
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            width: 340px;
+            height: 460px;
+            background: #101422;
+            border: 1px solid rgba(0, 240, 255, 0.4);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            overflow: hidden;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-header {
+            background: #171c2e;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.2);
+            font-size: 13px;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-msg {
+            max-width: 82%;
+            padding: 8px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            line-height: 1.4;
+            word-break: break-word;
+        }
+
+        .chat-msg.bot {
+            background: #171c2e;
+            color: #ffffff;
+            align-self: flex-start;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            border-bottom-left-radius: 2px;
+        }
+
+        .chat-msg.user {
+            background: linear-gradient(135deg, #00f0ff, #0077ff);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+            font-weight: 600;
+        }
+
+        .chat-footer {
+            padding: 10px;
+            background: #171c2e;
+            border-top: 1px solid rgba(0, 240, 255, 0.15);
+        }
+
+        .chat-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .opt-btn {
+            background: #101422;
+            color: #00f0ff;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .opt-btn:hover {
+            background: #00f0ff;
+            color: #000;
+        }
+
+        .chat-input-box {
+            display: flex;
+            gap: 6px;
+        }
+
+        .chat-input-box input {
+            flex: 1;
+            background: #101422;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            color: #fff;
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            outline: none;
+        }
+
+        .chat-input-box button {
+            background: #00f0ff;
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 11px;
+            cursor: pointer;
         }
 
         .footer {
@@ -673,6 +817,37 @@
         </div>
     </div>
 
+    <!-- TOMBOL FLOATING CHATBOT -->
+    <button class="chat-toggle-btn" onclick="toggleChat()">
+        💬
+    </button>
+
+    <!-- JENDELA CHATBOT WIDGET -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:10px; height:10px; background:#00ff88; border-radius:50%;"></div>
+                <strong>pin Store Assistant AI</strong>
+            </div>
+            <button onclick="toggleChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:16px;">&times;</button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="chat-msg bot">
+                Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Mau beli item apa hari ini?
+            </div>
+        </div>
+
+        <div class="chat-footer" id="chatFooter">
+            <div class="chat-options" id="chatOptions">
+                <button class="opt-btn" onclick="botSelectItem('Dragon\'s Breath Item', 15000)">🌱 Dragon's Breath (Rp 15.000)</button>
+                <button class="opt-btn" onclick="botSelectItem('Hypno Bloom Item', 25000)">🌺 Hypno Bloom (Rp 25.000)</button>
+                <button class="opt-btn" onclick="botSelectItem('Roblox Coin Special', 10000)">🪙 Roblox Coin (Rp 10.000)</button>
+                <button class="opt-btn" onclick="botSelectItem('Custom Trade Item', 20000)">🎁 Custom Trade Item (Rp 20.000)</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // --- FIREBASE REALTIME DATABASE CONFIG ---
         const firebaseConfig = {
@@ -786,6 +961,115 @@
 
         function closeTestiModal() {
             document.getElementById('testiModal').style.display = "none";
+        }
+
+        // --- CHATBOT WIDGET & OCR SYSTEM ---
+        let botData = {
+            item: "",
+            price: 0,
+            username: "",
+            ocrVerified: false
+        };
+
+        function toggleChat() {
+            let widget = document.getElementById('chatWidget');
+            widget.style.display = (widget.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function addMessage(sender, text) {
+            let body = document.getElementById('chatBody');
+            let div = document.createElement('div');
+            div.className = `chat-msg ${sender}`;
+            div.innerHTML = text;
+            body.appendChild(div);
+            body.scrollTop = body.scrollHeight;
+        }
+
+        function botSelectItem(itemName, price) {
+            botData.item = itemName;
+            botData.price = price;
+
+            addMessage('user', `Saya mau beli ${itemName}`);
+            
+            setTimeout(() => {
+                addMessage('bot', `Sip! Totalnya <b>Rp ${price.toLocaleString('id-ID')}</b>.<br><br>Silakan transfer via QRIS / DANA di atas, lalu upload bukti screenshot-nya ya! 📸`);
+                
+                let footer = document.getElementById('chatFooter');
+                footer.innerHTML = `
+                    <div style="text-align:center;">
+                        <label for="tf-file" style="background:#00f0ff; color:#000; padding:8px 12px; border-radius:6px; font-size:11px; font-weight:700; cursor:pointer; display:block;">
+                            📁 Unggah Bukti Transfer
+                        </label>
+                        <input type="file" id="tf-file" accept="image/*" style="display:none;" onchange="processTransferReceipt(this)">
+                    </div>
+                `;
+            }, 600);
+        }
+
+        function processTransferReceipt(input) {
+            if (!input.files || !input.files[0]) return;
+            let file = input.files[0];
+
+            addMessage('user', `🖼️ Sending screenshot: ${file.name}`);
+            addMessage('bot', `⚡ <i>Bot sedang membaca & memindai bukti transfer... Mohon tunggu sebentar.</i>`);
+
+            Tesseract.recognize(
+                file,
+                'ind+eng',
+                { logger: m => console.log(m) }
+            ).then(({ data: { text } }) => {
+                console.log("Hasil Teks OCR:", text);
+
+                let cleanText = text.toLowerCase();
+                let isSuccess = cleanText.includes("berhasil") || cleanText.includes("sukses") || cleanText.includes("transfer") || cleanText.includes("selesai");
+
+                if (isSuccess) {
+                    botData.ocrVerified = true;
+                    addMessage('bot', `✅ <b>Bukti transfer terdeteksi valid!</b><br>Sekarang, silakan masukkan <b>Username Roblox</b> kamu:`);
+                    
+                    let footer = document.getElementById('chatFooter');
+                    footer.innerHTML = `
+                        <div class="chat-input-box">
+                            <input type="text" id="bot-usn-input" placeholder="Masukkan Username Roblox..." />
+                            <button onclick="submitBotUsername()">Kirim</button>
+                        </div>
+                    `;
+                } else {
+                    addMessage('bot', `⚠️ Bot kurang yakin dengan gambar ini. Pastikan foto screenshot bukti transfer terlihat jelas dan tulisan 'BERHASIL' terbaca ya! Silakan coba upload ulang.`);
+                }
+            }).catch(err => {
+                addMessage('bot', `❌ Gagal membaca gambar. Silakan kirim gambar yang lebih jelas.`);
+            });
+        }
+
+        function submitBotUsername() {
+            let usnInput = document.getElementById('bot-usn-input').value.trim();
+            if (!usnInput) return;
+
+            botData.username = usnInput;
+            addMessage('user', `Username: ${usnInput}`);
+
+            setTimeout(() => {
+                addMessage('bot', `Mantap! Semua data terverifikasi. Klik tombol di bawah untuk langsung terhubung ke WhatsApp dan klaim item kamu! 🚀`);
+
+                let phone = "6285823538521";
+                let textWa = `Halo pin gantenk!\n` +
+                             `Saya sudah bayar via Web Bot Auto-Check:\n` +
+                             `Item: *${botData.item}*\n` +
+                             `Harga: *Rp ${botData.price.toLocaleString('id-ID')}*\n` +
+                             `Username Roblox: *${botData.username}*\n` +
+                             `Status Bukti: *Terverifikasi Bot ✅*\n\n` +
+                             `Tolong proses pesanan saya ya!`;
+
+                let waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textWa)}`;
+
+                let footer = document.getElementById('chatFooter');
+                footer.innerHTML = `
+                    <a href="${waUrl}" target="_blank" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none;">
+                        📲 Buka WhatsApp & Klaim Item
+                    </a>
+                `;
+            }, 500);
         }
 
         // --- ADMIN QUICK RESTOCK (KLIK FOTO KILLUA 5X) ---
