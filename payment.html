@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pin gantenk - All Payment & Official Hub</title>
+    <title>pin gantenk - All Payment & Official Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -60,7 +60,7 @@
         /* --- MAIN CONTAINER --- */
         .container {
             width: 100%;
-            max-width: 460px;
+            max-width: 480px;
             background: #101422;
             border-radius: 20px;
             padding: 28px 20px;
@@ -84,12 +84,111 @@
             display: inline-block; padding: 4px 12px; border-radius: 15px; border: 1px solid rgba(0, 255, 136, 0.3); font-weight: 600;
         }
 
-        /* --- CARD STYLES --- */
+        /* --- SECTION TITLE --- */
         .section-title {
             font-size: 12px; font-weight: 700; color: #00f0ff; text-transform: uppercase;
-            letter-spacing: 1px; margin: 18px 0 10px 4px; display: flex; align-items: center; gap: 6px;
+            letter-spacing: 1px; margin: 22px 0 12px 4px; display: flex; align-items: center; gap: 6px;
         }
 
+        /* --- KATALOG ITEM SHOP GRID --- */
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .item-card {
+            background: #171c2e;
+            border-radius: 12px;
+            padding: 10px;
+            border: 1px solid rgba(0, 240, 255, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .item-card:hover {
+            border-color: #00f0ff;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .item-img-box {
+            width: 100%;
+            height: 110px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #060810;
+            position: relative;
+            margin-bottom: 8px;
+        }
+
+        .item-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .stock-badge {
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            background: rgba(6, 8, 16, 0.85);
+            color: #00ff88;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            backdrop-filter: blur(4px);
+        }
+
+        .stock-badge.out {
+            color: #ff4d4d;
+            border-color: rgba(255, 77, 77, 0.4);
+        }
+
+        .item-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+
+        .item-price {
+            font-size: 12px;
+            font-weight: 700;
+            color: #00f0ff;
+            margin-bottom: 8px;
+        }
+
+        .btn-buy-item {
+            width: 100%;
+            padding: 7px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-buy-item:hover {
+            opacity: 0.9;
+        }
+
+        /* --- CARD STYLES BIASA --- */
         .card {
             background: #171c2e; border-radius: 12px; padding: 14px;
             border: 1px solid rgba(0, 240, 255, 0.15); margin-bottom: 12px;
@@ -111,7 +210,7 @@
         }
         .btn-action.wa { background: linear-gradient(135deg, #25D366, #128C7E); }
 
-        /* --- TOMBOL UTAMA BUKTI TRANSAKSI --- */
+        /* --- TOMBOL BUKTI TRANSAKSI --- */
         .btn-open-history {
             width: 100%;
             padding: 14px;
@@ -223,7 +322,6 @@
             <p class="modal-subtitle">Bukti real transaksi berhasil dari buyer (Klik gambar untuk perbesar)</p>
 
             <div class="history-grid">
-                
                 <div class="history-card">
                     <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0008.jpg')">
                         <img src="IMG-20260731-WA0008.jpg" alt="Bukti 1">
@@ -289,7 +387,6 @@
                         <span class="status">✅ LUNAS</span>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -314,18 +411,75 @@
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
             <h1 class="name">pin gantenk</h1>
-            <p class="sub-name">Official Payment & Community Hub</p>
+            <p class="sub-name">Official Roblox Store & Payment Hub</p>
             <span class="status-badge">🟢 Online • Ready Process</span>
         </div>
 
+        <!-- FITUR TERBARU: KATALOG ITEM ROBLOX -->
+        <div class="section-title">🎮 Katalog Item & Script Roblox</div>
+        <div class="shop-grid">
+            
+            <!-- ITEM 1 -->
+            <div class="item-card">
+                <div class="item-img-box">
+                    <span class="stock-badge">⚡ Stok: 10 Ready</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 1">
+                </div>
+                <div class="item-title">Brainrot Script Custom</div>
+                <div class="item-price">Rp 15.000</div>
+                <button class="btn-buy-item" onclick="buyRobloxItem('Brainrot Script Custom', 'Rp 15.000')">
+                    🛒 Beli via WA
+                </button>
+            </div>
+
+            <!-- ITEM 2 -->
+            <div class="item-card">
+                <div class="item-img-box">
+                    <span class="stock-badge">🔥 Stok: 5 Ready</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 2">
+                </div>
+                <div class="item-title">Dupe System Stand Script</div>
+                <div class="item-price">Rp 25.000</div>
+                <button class="btn-buy-item" onclick="buyRobloxItem('Dupe System Stand Script', 'Rp 25.000')">
+                    🛒 Beli via WA
+                </button>
+            </div>
+
+            <!-- ITEM 3 -->
+            <div class="item-card">
+                <div class="item-img-box">
+                    <span class="stock-badge">⚡ Stok: 8 Ready</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 3">
+                </div>
+                <div class="item-title">Fly Menu Anchor Method</div>
+                <div class="item-price">Rp 10.000</div>
+                <button class="btn-buy-item" onclick="buyRobloxItem('Fly Menu Anchor Method', 'Rp 10.000')">
+                    🛒 Beli via WA
+                </button>
+            </div>
+
+            <!-- ITEM 4 -->
+            <div class="item-card">
+                <div class="item-img-box">
+                    <span class="stock-badge">⚡ Stok: 15 Ready</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 4">
+                </div>
+                <div class="item-title">Auto Loop Gift + Respawn</div>
+                <div class="item-price">Rp 20.000</div>
+                <button class="btn-buy-item" onclick="buyRobloxItem('Auto Loop Gift + Respawn', 'Rp 20.000')">
+                    🛒 Beli via WA
+                </button>
+            </div>
+
+        </div>
+
         <!-- CONTACT / CHAT ADMIN -->
-        <div class="section-title">💬 Konfirmasi & Order</div>
+        <div class="section-title">💬 Konfirmasi & Order Custom</div>
         <div class="card card-flex" style="border-color: rgba(0, 255, 136, 0.4);">
             <div class="card-info">
                 <h3>📲 Chat Admin WhatsApp</h3>
                 <p>Kirim bukti transfer / order script custom</p>
             </div>
-            <!-- LINK WA UPDATED -->
             <a href="https://wa.me/6285823538521?text=Halo%20pin%20gantenk,%20saya%20mau%20konfirmasi%20pembayaran" target="_blank" class="btn-action wa">Chat WA</a>
         </div>
 
@@ -343,7 +497,6 @@
                         <span>DANA / GoPay / OVO</span>
                         <strong>0858-2353-8521</strong>
                     </div>
-                    <!-- NOMOR SALIN UPDATED -->
                     <button class="btn-action" onclick="copyText('085823538521', this)">Salin</button>
                 </div>
             </div>
@@ -382,11 +535,19 @@
         </div>
 
         <div class="footer">
-            &copy; 2026 pin gantenk. Official Payment Page.
+            &copy; 2026 pin gantenk. Official Payment & Store Page.
         </div>
     </div>
 
     <script>
+        // FUNGSI BELI ITEM KATALOG VIA WA OTOMATIS
+        function buyRobloxItem(itemName, itemPrice) {
+            let phone = "6285823538521";
+            let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. Apakah stoknya masih ready?`;
+            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            window.open(url, '_blank');
+        }
+
         // Buka Popup Galeri History
         function openHistoryModal() {
             document.getElementById('historyModal').style.display = 'flex';
