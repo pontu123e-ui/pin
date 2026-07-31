@@ -396,7 +396,7 @@
             }
         });
 
-        // --- AUTO BUY FUNCTION (LANGSUNG BUKA WA TANPA DI-BLOCK BROWSER) ---
+        // --- AUTO BUY FUNCTION (INSTANT REDIRECT TO WA) ---
         function autoBuyItem(itemId, itemName, itemPrice) {
             let currentCount = localStocks[itemId] || 0;
 
@@ -405,22 +405,22 @@
                 return;
             }
 
-            let confirmBuy = confirm(`Yakin mau beli ${itemName} (${itemPrice})?\n\nStok akan otomatis berkurang 1 di database live!`);
+            let confirmBuy = confirm(`Beli ${itemName} (${itemPrice})?\n\nKlik OK untuk langsung ke WhatsApp.`);
             if (!confirmBuy) return;
 
-            // Kurangi stok di Firebase Database
+            // 1. Kurangi stok di Firebase secara background
             db.ref('stocks/' + itemId).transaction((current) => {
                 if (current === null) return 10;
                 return Math.max(0, current - 1);
-            }, (error, committed, snapshot) => {
-                let newStock = snapshot.exists() ? snapshot.val() : 0;
-                let phone = "6285823538521";
-                let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. (Sisa stok live: ${newStock}). Saya siap bayar!`;
-                let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-                
-                // Gunakan location.href agar langsung meluncur ke WA
-                window.location.href = url;
             });
+
+            // 2. Buat URL WhatsApp yang kompatibel di semua HP
+            let phone = "6285823538521";
+            let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. Saya siap bayar!`;
+            let url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
+
+            // 3. Langsung luncurkan ke WhatsApp seketika tanpa nunggu callback biar gak diblokir
+            window.location.href = url;
         }
 
         // --- ADMIN QUICK RESTOCK (KLIK FOTO PROFIL 5X) ---
