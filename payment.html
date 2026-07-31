@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pin gantenk - Roblox Item Store & Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- FIREBASE SDK UNTUK LIVE STOCK REALTIME -->
+    
+    <!-- FIREBASE REALTIME DATABASE SDK (FREE FROM GOOGLE) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -29,7 +30,7 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND KILAT & GRID --- */
+        /* --- BACKGROUND EFFECT --- */
         .bg-grid {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -58,7 +59,7 @@
             100% { transform: scale(1.4); opacity: 0.9; }
         }
 
-        /* --- MAIN CONTAINER --- */
+        /* --- CONTAINER --- */
         .container {
             width: 100%;
             max-width: 480px;
@@ -71,11 +72,11 @@
             z-index: 2;
         }
 
-        /* --- PROFILE SECTION --- */
         .profile { text-align: center; margin-bottom: 22px; }
         .avatar {
             width: 85px; height: 85px; border-radius: 50%; margin: 0 auto 10px auto;
             border: 2px solid #00f0ff; box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); overflow: hidden;
+            cursor: pointer;
         }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
         .name { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
@@ -85,7 +86,6 @@
             display: inline-block; padding: 4px 12px; border-radius: 15px; border: 1px solid rgba(0, 255, 136, 0.3); font-weight: 600;
         }
 
-        /* --- SECTION TITLE --- */
         .section-title {
             font-size: 12px; font-weight: 700; color: #00f0ff; text-transform: uppercase;
             letter-spacing: 1px; margin: 22px 0 12px 4px; display: flex; align-items: center; gap: 6px;
@@ -114,7 +114,6 @@
         .item-card:hover {
             border-color: #00f0ff;
             box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
-            transform: translateY(-2px);
         }
 
         .item-img-box {
@@ -133,11 +132,9 @@
             object-fit: cover;
         }
 
-        /* BADGE STOK LIVE */
         .stock-badge {
             position: absolute;
-            top: 5px;
-            left: 5px;
+            top: 5px; left: 5px;
             background: rgba(6, 8, 16, 0.85);
             color: #00ff88;
             font-size: 9px;
@@ -152,7 +149,7 @@
         .stock-badge.empty {
             color: #ff4d4d;
             border-color: rgba(255, 77, 77, 0.4);
-            background: rgba(255, 0, 0, 0.2);
+            background: rgba(255, 0, 0, 0.25);
         }
 
         .item-title {
@@ -185,32 +182,17 @@
             align-items: center;
             justify-content: center;
             gap: 4px;
-            transition: opacity 0.2s;
+            transition: all 0.2s ease;
         }
 
         .btn-buy-item.disabled {
-            background: #334155;
-            color: #94a3b8;
+            background: #334155 !important;
+            color: #94a3b8 !important;
             cursor: not-allowed;
+            pointer-events: none;
         }
 
-        /* --- CARD STYLES BIASA --- */
-        .card {
-            background: #171c2e; border-radius: 12px; padding: 14px;
-            border: 1px solid rgba(0, 240, 255, 0.15); margin-bottom: 12px;
-        }
-        .card-flex { display: flex; justify-content: space-between; align-items: center; }
-        .card-info h3 { font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 2px; }
-        .card-info p { font-size: 10px; color: #8a99ad; }
-
-        .btn-action {
-            background: linear-gradient(135deg, #00f0ff, #0077ff); color: #fff;
-            border: none; padding: 8px 14px; border-radius: 8px; font-size: 11px;
-            font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap;
-        }
-        .btn-action.wa { background: linear-gradient(135deg, #25D366, #128C7E); }
-
-        /* --- QRIS & E-WALLET BOX --- */
+        /* --- QRIS & PAYMENT --- */
         .qris-box {
             text-align: center; background: #171c2e; border-radius: 14px;
             padding: 16px; border: 1px solid rgba(0, 240, 255, 0.2); margin-bottom: 12px;
@@ -230,6 +212,12 @@
         .pay-details span { font-size: 9px; color: #8a99ad; text-transform: uppercase; font-weight: 700; }
         .pay-details strong { display: block; font-size: 12px; color: #00f0ff; letter-spacing: 0.5px; }
 
+        .btn-action {
+            background: linear-gradient(135deg, #00f0ff, #0077ff); color: #fff;
+            border: none; padding: 8px 14px; border-radius: 8px; font-size: 11px;
+            font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap;
+        }
+
         .footer { text-align: center; margin-top: 22px; font-size: 10px; color: #55657e; }
     </style>
 </head>
@@ -240,68 +228,68 @@
 
     <div class="container">
         
-        <!-- PROFIL HEADER -->
+        <!-- PROFIL HEADER (Klik 5x foto profil untuk RESTOCK SEMUA STOK) -->
         <div class="profile">
-            <div class="avatar">
+            <div class="avatar" onclick="quickRestock()">
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
             <h1 class="name">pin gantenk</h1>
             <p class="sub-name">Official Roblox Item Store & Payment</p>
-            <span class="status-badge">🟢 Online • Live Stock Active</span>
+            <span class="status-badge" id="live-indicator">🔴 LIVE REALTIME STOCK ACTIVE</span>
         </div>
 
         <!-- KATALOG ITEM ROBLOX -->
         <div class="section-title">🎮 Item Roblox Ready Stock</div>
         <div class="shop-grid">
             
-            <!-- ITEM 1: BRAINROT -->
+            <!-- ITEM 1: DRAGON'S BREATH -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span id="stock-item1" class="stock-badge">⚡ Stock: 10</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Brainrot Item">
+                    <span id="stock-item1" class="stock-badge">⚡ Stock: ...</span>
+                    <img src="dragon_s_breath.webp" alt="Dragon's Breath">
                 </div>
-                <div class="item-title">Brainrot Special Item</div>
+                <div class="item-title">Dragon's Breath Item</div>
                 <div class="item-price">Rp 15.000</div>
-                <button id="btn-item1" class="btn-buy-item" onclick="buyItem('item1', 'Brainrot Special Item', 'Rp 15.000')">
+                <button id="btn-item1" class="btn-buy-item" onclick="autoBuyItem('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-            <!-- ITEM 2: LIMITED ITEM -->
+            <!-- ITEM 2: HYPNO BLOOM -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span id="stock-item2" class="stock-badge">⚡ Stock: 5</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Rare Item">
+                    <span id="stock-item2" class="stock-badge">⚡ Stock: ...</span>
+                    <img src="hypno_bloom.webp" alt="Hypno Bloom">
                 </div>
-                <div class="item-title">Rare Pet / Godly Item</div>
+                <div class="item-title">Hypno Bloom Item</div>
                 <div class="item-price">Rp 25.000</div>
-                <button id="btn-item2" class="btn-buy-item" onclick="buyItem('item2', 'Rare Pet / Godly Item', 'Rp 25.000')">
+                <button id="btn-item2" class="btn-buy-item" onclick="autoBuyItem('item2', 'Hypno Bloom Item', 'Rp 25.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-            <!-- ITEM 3: CURRENCY / COIN -->
+            <!-- ITEM 3: IMAGES 1 -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span id="stock-item3" class="stock-badge">⚡ Stock: 20</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Roblox Currency">
+                    <span id="stock-item3" class="stock-badge">⚡ Stock: ...</span>
+                    <img src="images (1).jpeg" alt="Roblox Special Item">
                 </div>
-                <div class="item-title">Roblox Coin Package</div>
+                <div class="item-title">Roblox Coin / Item Special</div>
                 <div class="item-price">Rp 10.000</div>
-                <button id="btn-item3" class="btn-buy-item" onclick="buyItem('item3', 'Roblox Coin Package', 'Rp 10.000')">
+                <button id="btn-item3" class="btn-buy-item" onclick="autoBuyItem('item3', 'Roblox Coin / Item Special', 'Rp 10.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-            <!-- ITEM 4: CUSTOM REQUEST -->
+            <!-- ITEM 4: IMAGES 2 -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span id="stock-item4" class="stock-badge">⚡ Stock: 8</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Custom Item">
+                    <span id="stock-item4" class="stock-badge">⚡ Stock: ...</span>
+                    <img src="images (2).jpeg" alt="Custom Roblox Trade Item">
                 </div>
                 <div class="item-title">Custom Roblox Trade Item</div>
                 <div class="item-price">Rp 20.000</div>
-                <button id="btn-item4" class="btn-buy-item" onclick="buyItem('item4', 'Custom Roblox Trade Item', 'Rp 20.000')">
+                <button id="btn-item4" class="btn-buy-item" onclick="autoBuyItem('item4', 'Custom Roblox Trade Item', 'Rp 20.000')">
                     🛒 Beli via WA
                 </button>
             </div>
@@ -328,30 +316,35 @@
         </div>
 
         <div class="footer">
-            &copy; 2026 pin gantenk. Roblox Item Store.
+            &copy; 2026 pin gantenk. Realtime Roblox Item Store.
         </div>
     </div>
 
     <script>
-        // --- 1. MEMORY LOCAL / DATABASE STOK REALTIME ---
-        let stocks = {
-            item1: 10,
-            item2: 5,
-            item3: 20,
-            item4: 8
+        // --- 1. KONFIGURASI DATABASE REALTIME FIREBASE ---
+        const firebaseConfig = {
+            databaseURL: "https://pingantenk-roblox-store-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
-        // Ambil stok tersimpan dari memori HP/Browser jika ada
-        if(localStorage.getItem('roblox_stocks')) {
-            stocks = JSON.parse(localStorage.getItem('roblox_stocks'));
-        }
+        let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
 
-        // --- 2. FUNGSI UPDATE TAMPILAN STOK LIVE ---
-        function renderStocks() {
-            for (let id in stocks) {
+        // --- 2. LISTEN REALTIME DATABASE ---
+        db.ref('stocks').on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (!data) {
+                db.ref('stocks').set(localStocks);
+                return;
+            }
+
+            localStocks = data;
+
+            for (let id in localStocks) {
                 let badge = document.getElementById('stock-' + id);
                 let btn = document.getElementById('btn-' + id);
-                let count = stocks[id];
+                let count = localStocks[id];
 
                 if (count > 0) {
                     badge.innerText = `⚡ Stock: ${count} Ready`;
@@ -365,30 +358,50 @@
                     btn.classList.add('disabled');
                 }
             }
-        }
+        });
 
-        // --- 3. FUNGSI BELI ITEM (KURANGI STOK OTOMATIS + CHAT WA) ---
-        function buyItem(itemId, itemName, itemPrice) {
-            if (stocks[itemId] <= 0) {
-                alert("Maaf bro, stok item ini sudah habis!");
+        // --- 3. FUNGSI AUTO BUY (POTONG STOK REALTIME & BUKA WA) ---
+        function autoBuyItem(itemId, itemName, itemPrice) {
+            let currentCount = localStocks[itemId] || 0;
+
+            if (currentCount <= 0) {
+                alert("Maaf bro, stok item ini baru saja habis!");
                 return;
             }
 
-            // Kurangi stok 1 angka
-            stocks[itemId] -= 1;
-            
-            // Simpan perubahan stok
-            localStorage.setItem('roblox_stocks', JSON.stringify(stocks));
-            
-            // Update tampilan di layar langsung!
-            renderStocks();
+            let confirmBuy = confirm(`Yakin mau beli ${itemName} (${itemPrice})?\n\nStok akan otomatis berkurang 1 di database live!`);
+            if (!confirmBuy) return;
 
-            // Direct ke WhatsApp dengan Format Pesan Otomatis
-            let phone = "6285823538521";
-            let text = `Halo pin gantenk, saya mau beli Item Roblox: *${itemName}* seharga *${itemPrice}*. Sisa stok tadi: ${stocks[itemId]}. Mohon proses ya!`;
-            let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
-            
-            window.open(url, '_blank');
+            db.ref('stocks/' + itemId).transaction((current) => {
+                if (current === null) return 10;
+                return Math.max(0, current - 1);
+            }, (error, committed, snapshot) => {
+                if (committed) {
+                    let newStock = snapshot.val();
+                    let phone = "6285823538521";
+                    let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. (Sisa stok live: ${newStock}). Saya siap bayar!`;
+                    let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+                    
+                    window.open(url, '_blank');
+                }
+            });
+        }
+
+        // --- 4. TIKET RAHASIA RESTOCK UNTUK ADMIN (KLIK FOTO PROFIL 5 KALI) ---
+        let clickProfile = 0;
+        function quickRestock() {
+            clickProfile++;
+            if (clickProfile >= 5) {
+                let pin = prompt("🔐 Masukkan PIN Restock Admin:");
+                if (pin === "1234") {
+                    let resetData = { item1: 10, item2: 5, item3: 20, item4: 8 };
+                    db.ref('stocks').set(resetData);
+                    alert("✅ Berhasil! Semua stok item telah di-RESTOCK otomatis!");
+                } else if (pin !== null) {
+                    alert("PIN Salah!");
+                }
+                clickProfile = 0;
+            }
         }
 
         function copyText(text, btn) {
@@ -398,9 +411,6 @@
                 setTimeout(function() { btn.innerText = originalText; }, 2000);
             });
         }
-
-        // Jalankan render stok saat halaman dibuka
-        renderStocks();
     </script>
 </body>
 </html>
