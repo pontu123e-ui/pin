@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pin gantenk - All Payment & Official Store</title>
+    <title>pin gantenk - Roblox Item Store & Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- FIREBASE SDK UNTUK LIVE STOCK REALTIME -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -39,12 +43,9 @@
 
         .electric-aura {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 320px;
-            height: 320px;
-            margin-top: -160px;
-            margin-left: -160px;
+            top: 50%; left: 50%;
+            width: 320px; height: 320px;
+            margin-top: -160px; margin-left: -160px;
             background: radial-gradient(circle, rgba(0, 240, 255, 0.18) 0%, rgba(168, 85, 247, 0.12) 50%, transparent 70%);
             border-radius: 50%;
             z-index: 1;
@@ -132,6 +133,7 @@
             object-fit: cover;
         }
 
+        /* BADGE STOK LIVE */
         .stock-badge {
             position: absolute;
             top: 5px;
@@ -144,11 +146,13 @@
             border-radius: 6px;
             border: 1px solid rgba(0, 255, 136, 0.4);
             backdrop-filter: blur(4px);
+            transition: all 0.3s ease;
         }
 
-        .stock-badge.out {
+        .stock-badge.empty {
             color: #ff4d4d;
             border-color: rgba(255, 77, 77, 0.4);
+            background: rgba(255, 0, 0, 0.2);
         }
 
         .item-title {
@@ -184,22 +188,18 @@
             transition: opacity 0.2s;
         }
 
-        .btn-buy-item:hover {
-            opacity: 0.9;
+        .btn-buy-item.disabled {
+            background: #334155;
+            color: #94a3b8;
+            cursor: not-allowed;
         }
 
         /* --- CARD STYLES BIASA --- */
         .card {
             background: #171c2e; border-radius: 12px; padding: 14px;
             border: 1px solid rgba(0, 240, 255, 0.15); margin-bottom: 12px;
-            transition: transform 0.2s ease, border-color 0.2s ease;
         }
-        .card:hover { border-color: rgba(0, 240, 255, 0.4); }
-
-        .card-flex {
-            display: flex; justify-content: space-between; align-items: center;
-        }
-
+        .card-flex { display: flex; justify-content: space-between; align-items: center; }
         .card-info h3 { font-size: 13px; font-weight: 600; color: #ffffff; margin-bottom: 2px; }
         .card-info p { font-size: 10px; color: #8a99ad; }
 
@@ -209,30 +209,6 @@
             font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; white-space: nowrap;
         }
         .btn-action.wa { background: linear-gradient(135deg, #25D366, #128C7E); }
-
-        /* --- TOMBOL BUKTI TRANSAKSI --- */
-        .btn-open-history {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #171c2e, #101422);
-            border: 1px solid #00f0ff;
-            border-radius: 12px;
-            color: #00f0ff;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.15);
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .btn-open-history:hover {
-            background: linear-gradient(135deg, #00f0ff, #0077ff);
-            color: #ffffff;
-            box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
-        }
 
         /* --- QRIS & E-WALLET BOX --- */
         .qris-box {
@@ -254,152 +230,11 @@
         .pay-details span { font-size: 9px; color: #8a99ad; text-transform: uppercase; font-weight: 700; }
         .pay-details strong { display: block; font-size: 12px; color: #00f0ff; letter-spacing: 0.5px; }
 
-        .tags { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
-        .tag { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; color: #fff; }
-        .tag.qris { background: #e60012; }
-        .tag.dana { background: #118eea; }
-        .tag.gopay { background: #00a5cf; }
-        .tag.ovo { background: #4c2a86; }
-
-        /* --- MODALS OVERLAY --- */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(6, 8, 16, 0.92); backdrop-filter: blur(6px);
-            z-index: 9999; display: none; justify-content: center; align-items: center; padding: 20px;
-        }
-
-        .modal-box {
-            width: 100%; max-width: 440px; background: #101422;
-            border: 2px solid #00f0ff; border-radius: 16px; padding: 20px;
-            position: relative; max-height: 85vh; overflow-y: auto;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
-        }
-
-        .modal-title { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px; text-align: center; }
-        .modal-subtitle { font-size: 10px; color: #8a99ad; text-align: center; margin-bottom: 16px; }
-
-        /* --- HISTORY GRID INSIDE MODAL --- */
-        .history-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .history-card {
-            background: #171c2e; border-radius: 10px; padding: 8px;
-            border: 1px solid rgba(0, 240, 255, 0.15);
-        }
-        .history-img-box {
-            width: 100%; height: 95px; border-radius: 6px; overflow: hidden;
-            position: relative; cursor: pointer; background: #000;
-        }
-        .history-img-box img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
-        .history-img-box:hover img { transform: scale(1.08); }
-        .zoom-badge {
-            position: absolute; bottom: 4px; right: 4px; background: rgba(0,0,0,0.7);
-            color: #00f0ff; font-size: 8px; padding: 2px 5px; border-radius: 4px; font-weight: 600;
-        }
-        .history-info { margin-top: 6px; }
-        .history-info h4 { font-size: 10px; color: #fff; font-weight: 600; }
-        .history-info .status { font-size: 8px; color: #00ff88; font-weight: 700; display: inline-block; margin-top: 2px; }
-
-        /* --- ZOOM IMAGE MODAL --- */
-        .image-modal-box {
-            max-width: 90%; max-height: 85vh; background: #101422; border: 2px solid #00f0ff;
-            border-radius: 14px; padding: 10px; position: relative; box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
-        }
-        .image-modal-box img { max-width: 100%; max-height: 75vh; border-radius: 8px; object-fit: contain; }
-        .close-btn {
-            position: absolute; top: 10px; right: 14px; background: transparent;
-            border: none; color: #ff4d4d; font-size: 18px; font-weight: bold; cursor: pointer; z-index: 10;
-        }
-
         .footer { text-align: center; margin-top: 22px; font-size: 10px; color: #55657e; }
     </style>
 </head>
 <body>
 
-    <!-- MODAL 1: GALERI POPUP BUKTI TRANSAKSI -->
-    <div id="historyModal" class="modal-overlay" onclick="closeHistoryModal()">
-        <div class="modal-box" onclick="event.stopPropagation()">
-            <button onclick="closeHistoryModal()" class="close-btn">✕</button>
-            <h2 class="modal-title">📜 History Pembelian Item</h2>
-            <p class="modal-subtitle">Bukti real transaksi berhasil dari buyer (Klik gambar untuk perbesar)</p>
-
-            <div class="history-grid">
-                <div class="history-card">
-                    <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0008.jpg')">
-                        <img src="IMG-20260731-WA0008.jpg" alt="Bukti 1">
-                        <span class="zoom-badge">🔍 Zoom</span>
-                    </div>
-                    <div class="history-info">
-                        <h4>Bukti TRX #1</h4>
-                        <span class="status">✅ LUNAS</span>
-                    </div>
-                </div>
-
-                <div class="history-card">
-                    <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0009.jpg')">
-                        <img src="IMG-20260731-WA0009.jpg" alt="Bukti 2">
-                        <span class="zoom-badge">🔍 Zoom</span>
-                    </div>
-                    <div class="history-info">
-                        <h4>Bukti TRX #2</h4>
-                        <span class="status">✅ LUNAS</span>
-                    </div>
-                </div>
-
-                <div class="history-card">
-                    <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0010.jpg')">
-                        <img src="IMG-20260731-WA0010.jpg" alt="Bukti 3">
-                        <span class="zoom-badge">🔍 Zoom</span>
-                    </div>
-                    <div class="history-info">
-                        <h4>Bukti TRX #3</h4>
-                        <span class="status">✅ LUNAS</span>
-                    </div>
-                </div>
-
-                <div class="history-card">
-                    <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0011.jpg')">
-                        <img src="IMG-20260731-WA0011.jpg" alt="Bukti 4">
-                        <span class="zoom-badge">🔍 Zoom</span>
-                    </div>
-                    <div class="history-info">
-                        <h4>Bukti TRX #4</h4>
-                        <span class="status">✅ LUNAS</span>
-                    </div>
-                </div>
-
-                <div class="history-card">
-                    <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0012.jpg')">
-                        <img src="IMG-20260731-WA0012.jpg" alt="Bukti 5">
-                        <span class="zoom-badge">🔍 Zoom</span>
-                    </div>
-                    <div class="history-info">
-                        <h4>Bukti TRX #5</h4>
-                        <span class="status">✅ LUNAS</span>
-                    </div>
-                </div>
-
-                <div class="history-card">
-                    <div class="history-img-box" onclick="openImageModal('IMG-20260731-WA0013.jpg')">
-                        <img src="IMG-20260731-WA0013.jpg" alt="Bukti 6">
-                        <span class="zoom-badge">🔍 Zoom</span>
-                    </div>
-                    <div class="history-info">
-                        <h4>Bukti TRX #6</h4>
-                        <span class="status">✅ LUNAS</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL 2: ZOOM GAMBAR FULL SCREEN -->
-    <div id="imageModal" class="modal-overlay" onclick="closeImageModal()">
-        <div class="image-modal-box" onclick="event.stopPropagation()">
-            <button onclick="closeImageModal()" class="close-btn">✕</button>
-            <img id="modalImg" src="" alt="Bukti Transaksi Full">
-        </div>
-    </div>
-
-    <!-- BACKGROUND EFFECT -->
     <div class="bg-grid"></div>
     <div class="electric-aura"></div>
 
@@ -411,82 +246,72 @@
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
             <h1 class="name">pin gantenk</h1>
-            <p class="sub-name">Official Roblox Store & Payment Hub</p>
-            <span class="status-badge">🟢 Online • Ready Process</span>
+            <p class="sub-name">Official Roblox Item Store & Payment</p>
+            <span class="status-badge">🟢 Online • Live Stock Active</span>
         </div>
 
-        <!-- FITUR TERBARU: KATALOG ITEM ROBLOX -->
-        <div class="section-title">🎮 Katalog Item & Script Roblox</div>
+        <!-- KATALOG ITEM ROBLOX -->
+        <div class="section-title">🎮 Item Roblox Ready Stock</div>
         <div class="shop-grid">
             
-            <!-- ITEM 1 -->
+            <!-- ITEM 1: BRAINROT -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span class="stock-badge">⚡ Stok: 10 Ready</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 1">
+                    <span id="stock-item1" class="stock-badge">⚡ Stock: 10</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Brainrot Item">
                 </div>
-                <div class="item-title">Brainrot Script Custom</div>
+                <div class="item-title">Brainrot Special Item</div>
                 <div class="item-price">Rp 15.000</div>
-                <button class="btn-buy-item" onclick="buyRobloxItem('Brainrot Script Custom', 'Rp 15.000')">
+                <button id="btn-item1" class="btn-buy-item" onclick="buyItem('item1', 'Brainrot Special Item', 'Rp 15.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-            <!-- ITEM 2 -->
+            <!-- ITEM 2: LIMITED ITEM -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span class="stock-badge">🔥 Stok: 5 Ready</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 2">
+                    <span id="stock-item2" class="stock-badge">⚡ Stock: 5</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Rare Item">
                 </div>
-                <div class="item-title">Dupe System Stand Script</div>
+                <div class="item-title">Rare Pet / Godly Item</div>
                 <div class="item-price">Rp 25.000</div>
-                <button class="btn-buy-item" onclick="buyRobloxItem('Dupe System Stand Script', 'Rp 25.000')">
+                <button id="btn-item2" class="btn-buy-item" onclick="buyItem('item2', 'Rare Pet / Godly Item', 'Rp 25.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-            <!-- ITEM 3 -->
+            <!-- ITEM 3: CURRENCY / COIN -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span class="stock-badge">⚡ Stok: 8 Ready</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 3">
+                    <span id="stock-item3" class="stock-badge">⚡ Stock: 20</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Roblox Currency">
                 </div>
-                <div class="item-title">Fly Menu Anchor Method</div>
+                <div class="item-title">Roblox Coin Package</div>
                 <div class="item-price">Rp 10.000</div>
-                <button class="btn-buy-item" onclick="buyRobloxItem('Fly Menu Anchor Method', 'Rp 10.000')">
+                <button id="btn-item3" class="btn-buy-item" onclick="buyItem('item3', 'Roblox Coin Package', 'Rp 10.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-            <!-- ITEM 4 -->
+            <!-- ITEM 4: CUSTOM REQUEST -->
             <div class="item-card">
                 <div class="item-img-box">
-                    <span class="stock-badge">⚡ Stok: 15 Ready</span>
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Item Roblox 4">
+                    <span id="stock-item4" class="stock-badge">⚡ Stock: 8</span>
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Custom Item">
                 </div>
-                <div class="item-title">Auto Loop Gift + Respawn</div>
+                <div class="item-title">Custom Roblox Trade Item</div>
                 <div class="item-price">Rp 20.000</div>
-                <button class="btn-buy-item" onclick="buyRobloxItem('Auto Loop Gift + Respawn', 'Rp 20.000')">
+                <button id="btn-item4" class="btn-buy-item" onclick="buyItem('item4', 'Custom Roblox Trade Item', 'Rp 20.000')">
                     🛒 Beli via WA
                 </button>
             </div>
 
-        </div>
-
-        <!-- CONTACT / CHAT ADMIN -->
-        <div class="section-title">💬 Konfirmasi & Order Custom</div>
-        <div class="card card-flex" style="border-color: rgba(0, 255, 136, 0.4);">
-            <div class="card-info">
-                <h3>📲 Chat Admin WhatsApp</h3>
-                <p>Kirim bukti transfer / order script custom</p>
-            </div>
-            <a href="https://wa.me/6285823538521?text=Halo%20pin%20gantenk,%20saya%20mau%20konfirmasi%20pembayaran" target="_blank" class="btn-action wa">Chat WA</a>
         </div>
 
         <!-- PAYMENT METHOD -->
-        <div class="section-title">💳 All Payment / QRIS</div>
+        <div class="section-title">💳 Payment Method / QRIS</div>
         <div class="qris-box">
-            <p style="font-size: 11px; color: #8a99ad;">Scan QRIS di bawah menggunakan E-Wallet / Mobile Banking</p>
+            <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
             <div class="qris-img-wrap">
                 <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
             </div>
@@ -500,84 +325,82 @@
                     <button class="btn-action" onclick="copyText('085823538521', this)">Salin</button>
                 </div>
             </div>
-
-            <div class="tags">
-                <span class="tag qris">QRIS</span>
-                <span class="tag dana">DANA</span>
-                <span class="tag gopay">GoPay</span>
-                <span class="tag ovo">OVO</span>
-            </div>
-        </div>
-
-        <!-- BUKTI TRANSAKSI (Satu Tombol) -->
-        <div class="section-title">📜 Testimoni / Bukti Transaksi</div>
-        <button class="btn-open-history" onclick="openHistoryModal()">
-            <span>📜</span> Lihat Bukti Pembelian (6 Foto) <span>✨</span>
-        </button>
-
-        <!-- KOMUNITAS & GRUP -->
-        <div class="section-title">🌐 Komunitas & Sosial Media</div>
-        
-        <div class="card card-flex">
-            <div class="card-info">
-                <h3>💬 Grup WhatsApp Official</h3>
-                <p>Diskusi script, update, & info promo</p>
-            </div>
-            <a href="https://chat.whatsapp.com/CONTOH_LINK_GRUP_WA" target="_blank" class="btn-action">Gabung</a>
-        </div>
-
-        <div class="card card-flex">
-            <div class="card-info">
-                <h3>📢 Channel Telegram</h3>
-                <p>Broadcast info script & update langsung</p>
-            </div>
-            <a href="https://t.me/CONTOH_LINK" target="_blank" class="btn-action">Kunjungi</a>
         </div>
 
         <div class="footer">
-            &copy; 2026 pin gantenk. Official Payment & Store Page.
+            &copy; 2026 pin gantenk. Roblox Item Store.
         </div>
     </div>
 
     <script>
-        // FUNGSI BELI ITEM KATALOG VIA WA OTOMATIS
-        function buyRobloxItem(itemName, itemPrice) {
+        // --- 1. MEMORY LOCAL / DATABASE STOK REALTIME ---
+        let stocks = {
+            item1: 10,
+            item2: 5,
+            item3: 20,
+            item4: 8
+        };
+
+        // Ambil stok tersimpan dari memori HP/Browser jika ada
+        if(localStorage.getItem('roblox_stocks')) {
+            stocks = JSON.parse(localStorage.getItem('roblox_stocks'));
+        }
+
+        // --- 2. FUNGSI UPDATE TAMPILAN STOK LIVE ---
+        function renderStocks() {
+            for (let id in stocks) {
+                let badge = document.getElementById('stock-' + id);
+                let btn = document.getElementById('btn-' + id);
+                let count = stocks[id];
+
+                if (count > 0) {
+                    badge.innerText = `⚡ Stock: ${count} Ready`;
+                    badge.classList.remove('empty');
+                    btn.innerText = "🛒 Beli via WA";
+                    btn.classList.remove('disabled');
+                } else {
+                    badge.innerText = `❌ STOK HABIS`;
+                    badge.classList.add('empty');
+                    btn.innerText = "🚫 Stok Habis";
+                    btn.classList.add('disabled');
+                }
+            }
+        }
+
+        // --- 3. FUNGSI BELI ITEM (KURANGI STOK OTOMATIS + CHAT WA) ---
+        function buyItem(itemId, itemName, itemPrice) {
+            if (stocks[itemId] <= 0) {
+                alert("Maaf bro, stok item ini sudah habis!");
+                return;
+            }
+
+            // Kurangi stok 1 angka
+            stocks[itemId] -= 1;
+            
+            // Simpan perubahan stok
+            localStorage.setItem('roblox_stocks', JSON.stringify(stocks));
+            
+            // Update tampilan di layar langsung!
+            renderStocks();
+
+            // Direct ke WhatsApp dengan Format Pesan Otomatis
             let phone = "6285823538521";
-            let text = `Halo pin gantenk, saya mau beli *${itemName}* seharga *${itemPrice}*. Apakah stoknya masih ready?`;
+            let text = `Halo pin gantenk, saya mau beli Item Roblox: *${itemName}* seharga *${itemPrice}*. Sisa stok tadi: ${stocks[itemId]}. Mohon proses ya!`;
             let url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+            
             window.open(url, '_blank');
-        }
-
-        // Buka Popup Galeri History
-        function openHistoryModal() {
-            document.getElementById('historyModal').style.display = 'flex';
-        }
-
-        function closeHistoryModal() {
-            document.getElementById('historyModal').style.display = 'none';
-        }
-
-        // Buka Zoom Foto Per Lembar
-        function openImageModal(imgSrc) {
-            document.getElementById('modalImg').src = imgSrc;
-            document.getElementById('imageModal').style.display = 'flex';
-        }
-
-        function closeImageModal() {
-            document.getElementById('imageModal').style.display = 'none';
         }
 
         function copyText(text, btn) {
             navigator.clipboard.writeText(text).then(function() {
                 let originalText = btn.innerText;
                 btn.innerText = "Copied! ✅";
-                btn.style.background = "linear-gradient(135deg, #00ff88, #00aa55)";
-                setTimeout(function() {
-                    btn.innerText = originalText;
-                    btn.style.background = "";
-                }, 2000);
+                setTimeout(function() { btn.innerText = originalText; }, 2000);
             });
         }
+
+        // Jalankan render stok saat halaman dibuka
+        renderStocks();
     </script>
 </body>
 </html>
