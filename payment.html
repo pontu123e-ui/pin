@@ -149,59 +149,91 @@
             gap: 6px;
         }
 
-        /* --- KATALOG ITEM SHOP GRID --- */
-        .shop-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
+        /* --- DESAIN KATEGORI & ITEM LIST (ACCORDION) --- */
+        .category-box {
+            background: #171c2e;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+            margin-bottom: 12px;
+            overflow: hidden;
+        }
+
+        .category-header {
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #171c2e, #1a2238);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #00f0ff;
+            user-select: none;
+            transition: background 0.2s ease;
+        }
+
+        .category-header:hover {
+            background: #202740;
+        }
+
+        .category-content {
+            display: none;
+            padding: 10px 14px;
+            background: #101422;
+            border-top: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .category-content.active {
+            display: block;
+        }
+
+        /* LIST BARIS ITEM (TANPA GAMBAR) */
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
             gap: 10px;
         }
 
-        .item-card {
-            background: #171c2e;
-            border-radius: 12px;
-            padding: 10px;
-            border: 1px solid rgba(0, 240, 255, 0.15);
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            transition: all 0.2s ease;
+            gap: 2px;
         }
 
-        .item-card:hover {
-            border-color: #00f0ff;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+        .item-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #ffffff;
         }
 
-        .item-img-box {
-            width: 100%;
-            height: 90px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, #090d1a, #1a2238);
-            border: 1px solid rgba(0, 240, 255, 0.1);
-            position: relative;
-            margin-bottom: 8px;
+        .item-price {
+            font-size: 11px;
+            font-weight: 600;
+            color: #00f0ff;
+        }
+
+        .item-action {
             display: flex;
-            justify-content: center;
             align-items: center;
-        }
-
-        .item-icon {
-            font-size: 38px;
-            filter: drop-shadow(0 0 8px rgba(0, 240, 255, 0.4));
+            gap: 8px;
         }
 
         .stock-badge {
-            position: absolute;
-            top: 5px;
-            left: 5px;
             background: rgba(6, 8, 16, 0.85);
             color: #00ff88;
             font-size: 9px;
             font-weight: 700;
-            padding: 2px 6px;
+            padding: 3px 8px;
             border-radius: 6px;
             border: 1px solid rgba(0, 255, 136, 0.4);
-            backdrop-filter: blur(4px);
+            white-space: nowrap;
         }
 
         .stock-badge.empty {
@@ -210,36 +242,16 @@
             background: rgba(255, 0, 0, 0.25);
         }
 
-        .item-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 4px;
-            line-height: 1.3;
-        }
-
-        .item-price {
-            font-size: 12px;
-            font-weight: 700;
-            color: #00f0ff;
-            margin-bottom: 8px;
-        }
-
         .btn-buy-item {
-            width: 100%;
-            padding: 7px;
+            padding: 6px 12px;
             background: linear-gradient(135deg, #25D366, #128C7E);
             color: #ffffff;
             border: none;
             border-radius: 6px;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             cursor: pointer;
-            text-align: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
+            white-space: nowrap;
             transition: all 0.2s ease;
         }
 
@@ -402,7 +414,6 @@
             color: #ffffff;
             font-size: 12px;
             outline: none;
-            transition: border-color 0.2s ease;
         }
 
         .form-group input:focus, .form-group textarea:focus {
@@ -449,12 +460,6 @@
             border: 1px solid rgba(0, 240, 255, 0.2);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             aspect-ratio: 1 / 1;
-            transition: transform 0.2s ease, border-color 0.2s ease;
-        }
-
-        .testi-card:hover {
-            transform: translateY(-3px);
-            border-color: #00f0ff;
         }
 
         .testi-card img {
@@ -490,62 +495,76 @@
 
         <!-- MAIN LAYOUT 2 KOLOM -->
         <div class="main-layout">
-            <!-- KOLOM KIRI: KATALOG ITEM -->
+            <!-- KOLOM KIRI: KATALOG ITEM KATEGORI MAP -->
             <div class="layout-left">
-                <div class="section-title">🎮 Item Roblox Ready Stock</div>
-                <div class="shop-grid">
-                    <!-- ITEM 1 -->
-                    <div class="item-card">
-                        <div class="item-img-box">
-                            <span id="stock-item1" class="stock-badge">⚡ Stock: ...</span>
-                            <div class="item-icon">🐲</div>
-                        </div>
-                        <div class="item-title">Dragon's Breath Item</div>
-                        <div class="item-price">Rp 15.000</div>
-                        <button id="btn-item1" class="btn-buy-item" onclick="openOrderModal('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">
-                            🛒 Beli via WA
-                        </button>
-                    </div>
+                <div class="section-title">📂 Pilih Map / Kategori Item</div>
 
-                    <!-- ITEM 2 -->
-                    <div class="item-card">
-                        <div class="item-img-box">
-                            <span id="stock-item2" class="stock-badge">⚡ Stock: ...</span>
-                            <div class="item-icon">🌸</div>
-                        </div>
-                        <div class="item-title">Hypno Bloom Item</div>
-                        <div class="item-price">Rp 25.000</div>
-                        <button id="btn-item2" class="btn-buy-item" onclick="openOrderModal('item2', 'Hypno Bloom Item', 'Rp 25.000')">
-                            🛒 Beli via WA
-                        </button>
+                <!-- KATEGORI 1: MAP GROW GARDEN 2 -->
+                <div class="category-box">
+                    <div class="category-header" onclick="toggleCategory('cat-grow-garden')">
+                        <span>🌱 Map: Grow Garden 2</span>
+                        <span id="arrow-cat-grow-garden">🔻</span>
                     </div>
-
-                    <!-- ITEM 3 -->
-                    <div class="item-card">
-                        <div class="item-img-box">
-                            <span id="stock-item3" class="stock-badge">⚡ Stock: ...</span>
-                            <div class="item-icon">🪙</div>
+                    <div class="category-content active" id="cat-grow-garden">
+                        <!-- ITEM 1 -->
+                        <div class="item-row">
+                            <div class="item-info">
+                                <div class="item-title">Dragon's Breath Item</div>
+                                <div class="item-price">Rp 15.000</div>
+                            </div>
+                            <div class="item-action">
+                                <span id="stock-item1" class="stock-badge">⚡ Stock: ...</span>
+                                <button id="btn-item1" class="btn-buy-item" onclick="openOrderModal('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">🛒 Beli</button>
+                            </div>
                         </div>
-                        <div class="item-title">Roblox Coin / Special</div>
-                        <div class="item-price">Rp 10.000</div>
-                        <button id="btn-item3" class="btn-buy-item" onclick="openOrderModal('item3', 'Roblox Coin / Special', 'Rp 10.000')">
-                            🛒 Beli via WA
-                        </button>
-                    </div>
 
-                    <!-- ITEM 4 -->
-                    <div class="item-card">
-                        <div class="item-img-box">
-                            <span id="stock-item4" class="stock-badge">⚡ Stock: ...</span>
-                            <div class="item-icon">🎁</div>
+                        <!-- ITEM 2 -->
+                        <div class="item-row">
+                            <div class="item-info">
+                                <div class="item-title">Hypno Bloom Item</div>
+                                <div class="item-price">Rp 25.000</div>
+                            </div>
+                            <div class="item-action">
+                                <span id="stock-item2" class="stock-badge">⚡ Stock: ...</span>
+                                <button id="btn-item2" class="btn-buy-item" onclick="openOrderModal('item2', 'Hypno Bloom Item', 'Rp 25.000')">🛒 Beli</button>
+                            </div>
                         </div>
-                        <div class="item-title">Custom Trade Item</div>
-                        <div class="item-price">Rp 20.000</div>
-                        <button id="btn-item4" class="btn-buy-item" onclick="openOrderModal('item4', 'Custom Trade Item', 'Rp 20.000')">
-                            🛒 Beli via WA
-                        </button>
                     </div>
                 </div>
+
+                <!-- KATEGORI 2: SPECIAL & OTHER MAPS -->
+                <div class="category-box">
+                    <div class="category-header" onclick="toggleCategory('cat-special')">
+                        <span>🎁 Special & Other Items</span>
+                        <span id="arrow-cat-special">🔻</span>
+                    </div>
+                    <div class="category-content" id="cat-special">
+                        <!-- ITEM 3 -->
+                        <div class="item-row">
+                            <div class="item-info">
+                                <div class="item-title">Roblox Coin / Special</div>
+                                <div class="item-price">Rp 10.000</div>
+                            </div>
+                            <div class="item-action">
+                                <span id="stock-item3" class="stock-badge">⚡ Stock: ...</span>
+                                <button id="btn-item3" class="btn-buy-item" onclick="openOrderModal('item3', 'Roblox Coin / Special', 'Rp 10.000')">🛒 Beli</button>
+                            </div>
+                        </div>
+
+                        <!-- ITEM 4 -->
+                        <div class="item-row">
+                            <div class="item-info">
+                                <div class="item-title">Custom Trade Item</div>
+                                <div class="item-price">Rp 20.000</div>
+                            </div>
+                            <div class="item-action">
+                                <span id="stock-item4" class="stock-badge">⚡ Stock: ...</span>
+                                <button id="btn-item4" class="btn-buy-item" onclick="openOrderModal('item4', 'Custom Trade Item', 'Rp 20.000')">🛒 Beli</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <!-- KOLOM KANAN: QRIS & PAYMENT -->
@@ -637,19 +656,33 @@
                 
                 if (badge && btn) {
                     if (count > 0) {
-                        badge.innerText = `⚡ Stock: ${count} Ready`;
+                        badge.innerText = `⚡ Stock: ${count}`;
                         badge.classList.remove('empty');
-                        btn.innerText = "🛒 Beli via WA";
+                        btn.innerText = "🛒 Beli";
                         btn.classList.remove('disabled');
                     } else {
-                        badge.innerText = `❌ STOK HABIS`;
+                        badge.innerText = `❌ HABIS`;
                         badge.classList.add('empty');
-                        btn.innerText = "🚫 Stok Habis";
+                        btn.innerText = "🚫 Habis";
                         btn.classList.add('disabled');
                     }
                 }
             }
         });
+
+        // --- TOGGLE CATEGORY ACCORDION ---
+        function toggleCategory(catId) {
+            let content = document.getElementById(catId);
+            let arrow = document.getElementById('arrow-' + catId);
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                arrow.innerText = '🔻';
+            } else {
+                content.classList.add('active');
+                arrow.innerText = '🔺';
+            }
+        }
 
         // --- MODAL FUNCTIONS ---
         function openOrderModal(itemId, itemName, itemPrice) {
