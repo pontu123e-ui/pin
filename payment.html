@@ -149,7 +149,7 @@
             gap: 6px;
         }
 
-        /* --- DESAIN KATEGORI & ITEM LIST --- */
+        /* --- KATEGORI & ITEM LIST --- */
         .category-box {
             background: #171c2e;
             border-radius: 12px;
@@ -497,32 +497,68 @@
             display: block;
         }
 
-        /* --- FLOATING CHATBOT WIDGET --- */
-        .chat-toggle-btn {
+        /* --- CHIBI FLOATING CHAT ASSISTANT (ANIMASI GERAK & BALON TEKS) --- */
+        .floating-assistant-container {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 55px;
-            height: 55px;
+            bottom: 25px;
+            right: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            cursor: pointer;
+        }
+
+        .chat-teaser-bubble {
+            background: linear-gradient(135deg, #171c2e, #1a2238);
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            padding: 8px 14px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.3);
+            animation: pulseBubble 2s infinite ease-in-out;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        @keyframes pulseBubble {
+            0% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+            50% { transform: scale(1.04); box-shadow: 0 0 22px rgba(0, 240, 255, 0.5); }
+            100% { transform: scale(1); box-shadow: 0 0 10px rgba(0, 240, 255, 0.2); }
+        }
+
+        .chibi-toggle-btn {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background: linear-gradient(135deg, #00f0ff, #0077ff);
-            color: #fff;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 240, 255, 0.4);
-            z-index: 1000;
-            transition: transform 0.2s ease;
+            border: 2px solid #ffffff;
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+            animation: bounceAvatar 1.5s infinite alternate ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .chat-toggle-btn:hover {
-            transform: scale(1.1);
+        .chibi-toggle-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
+        @keyframes bounceAvatar {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-8px) scale(1.06); }
+        }
+
+        /* --- JENDELA CHATBOT WIDGET --- */
         .chat-widget {
             position: fixed;
-            bottom: 85px;
-            right: 20px;
+            bottom: 95px;
+            right: 25px;
             width: 340px;
             height: 480px;
             background: #101422;
@@ -833,10 +869,15 @@
         </div>
     </div>
 
-    <!-- TOMBOL FLOATING CHATBOT -->
-    <button class="chat-toggle-btn" onclick="toggleChat()">
-        💬
-    </button>
+    <!-- FLOATING CHIBI KILLUA CHAT ASSISTANT -->
+    <div class="floating-assistant-container" onclick="toggleChat()">
+        <div class="chat-teaser-bubble">
+            Jajan?? Chat akuu! 🍡✨
+        </div>
+        <div class="chibi-toggle-btn">
+            <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
+        </div>
+    </div>
 
     <!-- JENDELA CHATBOT WIDGET -->
     <div class="chat-widget" id="chatWidget">
@@ -978,7 +1019,7 @@
             document.getElementById('testiModal').style.display = "none";
         }
 
-        // --- CHATBOT WIDGET SYSTEM (TANPA AI OCR - LEBIH AMAN & CEPAT) ---
+        // --- CHATBOT WIDGET SYSTEM ---
         let botData = {
             item: "",
             price: 0,
@@ -1046,7 +1087,7 @@
             reader.readAsDataURL(file);
         }
 
-        // TAHAP akhir: LAKUKAN REDIRECT KE WHATSAPP
+        // TAHAP AKHIR: LAKUKAN REDIRECT KE WHATSAPP
         function processBotSubmission() {
             let usnInput = document.getElementById('bot-usn-input').value.trim();
 
