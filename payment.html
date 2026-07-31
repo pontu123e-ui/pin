@@ -337,7 +337,37 @@
             white-space: nowrap;
         }
 
-        /* --- MODAL FORM PEMBELIAN --- */
+        /* --- TOMBOL UNTUK BUKA MODAL TESTIMONI --- */
+        .testi-container {
+            margin-top: 20px;
+            border-top: 1px solid rgba(0, 240, 255, 0.15);
+            padding-top: 16px;
+        }
+
+        .btn-show-testi {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #171c2e, #1a2238);
+            color: #00f0ff;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-show-testi:hover {
+            background: #202740;
+            border-color: #00f0ff;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        /* --- MODAL POPUP (PEMBELIAN & TESTIMONI) --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -362,6 +392,12 @@
             border: 1px solid #00f0ff;
             box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
             animation: fadeInModal 0.25s ease-out;
+        }
+
+        .modal-box.modal-large {
+            max-width: 520px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
 
         @keyframes fadeInModal {
@@ -392,6 +428,7 @@
             cursor: pointer;
         }
 
+        /* FORM INPUT INSIDE MODAL */
         .form-group {
             margin-bottom: 12px;
             text-align: left;
@@ -434,17 +471,12 @@
             margin-top: 6px;
         }
 
-        /* --- SECTION TESTIMONI --- */
-        .testi-container {
-            margin-top: 25px;
-            border-top: 1px solid rgba(0, 240, 255, 0.15);
-            padding-top: 20px;
-        }
-
+        /* GRID FOTO TESTIMONI DALAM MODAL */
         .testi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         @media (max-width: 480px) {
@@ -455,10 +487,9 @@
 
         .testi-card {
             background: #171c2e;
-            border-radius: 12px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid rgba(0, 240, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             aspect-ratio: 1 / 1;
         }
 
@@ -588,17 +619,11 @@
             </div>
         </div>
 
-        <!-- SECTION BUKTI TRANSFER / TESTIMONI -->
+        <!-- SECTION TOMBOL TESTIMONI -->
         <div class="testi-container">
-            <div class="section-title">📸 Bukti Transfer & Testimoni Pembeli</div>
-            <div class="testi-grid">
-                <div class="testi-card"><img src="IMG-20260731-WA0008.jpg" alt="Testimoni 1"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0009.jpg" alt="Testimoni 2"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0010.jpg" alt="Testimoni 3"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0011.jpg" alt="Testimoni 4"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0012.jpg" alt="Testimoni 5"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0013.jpg" alt="Testimoni 6"></div>
-            </div>
+            <button class="btn-show-testi" onclick="openTestiModal()">
+                📸 Lihat Bukti Transfer & Testimoni Pembeli
+            </button>
         </div>
 
         <div class="footer">
@@ -627,6 +652,24 @@
             <button class="btn-submit-order" onclick="submitOrderToWA()">
                 🚀 Kirim Pesanan ke WhatsApp
             </button>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP BUKTI TRANSFER & TESTIMONI -->
+    <div id="testiModal" class="modal-overlay">
+        <div class="modal-box modal-large">
+            <div class="modal-header">
+                <span class="modal-title">📸 Bukti Transfer & Testimoni</span>
+                <button class="modal-close" onclick="closeTestiModal()">&times;</button>
+            </div>
+            <div class="testi-grid">
+                <div class="testi-card"><img src="IMG-20260731-WA0008.jpg" alt="Testimoni 1"></div>
+                <div class="testi-card"><img src="IMG-20260731-WA0009.jpg" alt="Testimoni 2"></div>
+                <div class="testi-card"><img src="IMG-20260731-WA0010.jpg" alt="Testimoni 3"></div>
+                <div class="testi-card"><img src="IMG-20260731-WA0011.jpg" alt="Testimoni 4"></div>
+                <div class="testi-card"><img src="IMG-20260731-WA0012.jpg" alt="Testimoni 5"></div>
+                <div class="testi-card"><img src="IMG-20260731-WA0013.jpg" alt="Testimoni 6"></div>
+            </div>
         </div>
     </div>
 
@@ -684,7 +727,7 @@
             }
         }
 
-        // --- MODAL FUNCTIONS ---
+        // --- MODAL PEMBELIAN FUNCTIONS ---
         function openOrderModal(itemId, itemName, itemPrice) {
             let currentCount = localStocks[itemId] || 0;
             if (currentCount <= 0) {
@@ -715,7 +758,7 @@
                 return;
             }
 
-            // 1. Kurangi stok di Firebase secara background
+            // 1. Kurangi stok di Firebase
             db.ref('stocks/' + selectedItem.id).transaction((current) => {
                 if (current === null) return 10;
                 return Math.max(0, current - 1);
@@ -732,9 +775,17 @@
 
             let url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
 
-            // 3. Alihkan ke WhatsApp
             closeOrderModal();
             window.location.href = url;
+        }
+
+        // --- MODAL TESTIMONI FUNCTIONS ---
+        function openTestiModal() {
+            document.getElementById('testiModal').style.display = "flex";
+        }
+
+        function closeTestiModal() {
+            document.getElementById('testiModal').style.display = "none";
         }
 
         // --- ADMIN QUICK RESTOCK (KLIK FOTO KILLUA 5X) ---
