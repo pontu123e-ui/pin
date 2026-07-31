@@ -77,8 +77,6 @@
             width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 8px auto;
             border: 2px solid #00f0ff; box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); overflow: hidden;
             cursor: pointer;
-            background: #171c2e;
-            display: flex; justify-content: center; align-items: center;
         }
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
         .name { font-size: 20px; font-weight: 700; color: #ffffff; margin-bottom: 2px; }
@@ -130,7 +128,7 @@
             box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
         }
 
-        /* --- BOX ITEM ICON (GANTI FOTO) --- */
+        /* --- BOX ITEM ICON --- */
         .item-img-box {
             width: 100%;
             height: 90px;
@@ -259,10 +257,10 @@
 
     <div class="container">
         
-        <!-- HEADER PROFIL -->
+        <!-- HEADER PROFIL (FOTO KILLUA BALIK KEMBALI) -->
         <div class="profile">
             <div class="avatar" onclick="quickRestock()">
-                <span style="font-size: 32px;">⚡</span>
+                <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
             <h1 class="name">pin gantenk</h1>
             <p class="sub-name">Official Roblox Item Store & Payment</p>
@@ -332,7 +330,7 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: QRIS & PAYMENT HASIL KARYAMU -->
+            <!-- KOLOM KANAN: QRIS & PAYMENT -->
             <div class="layout-right">
                 <div class="section-title">💳 Payment Method / QRIS</div>
                 <div class="qris-box">
@@ -428,7 +426,7 @@
             window.location.href = url;
         }
 
-        // --- ADMIN QUICK RESTOCK (KLIK LOGO PETIR PROFIL 5X) ---
+        // --- ADMIN QUICK RESTOCK (KLIK FOTO KILLUA 5X) ---
         let clickProfile = 0;
         function quickRestock() {
             clickProfile++;
