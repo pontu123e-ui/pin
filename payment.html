@@ -78,7 +78,7 @@
             z-index: 2;
         }
 
-        /* --- PROFIL ATAS (POLOS & BERSIH) --- */
+        /* --- PROFIL ATAS --- */
         .profile {
             text-align: center;
             margin-bottom: 20px;
@@ -116,7 +116,7 @@
             margin-bottom: 10px;
         }
 
-        /* --- HERO BANNER CHAT BOT (BOT STATUS FITUR) --- */
+        /* --- HERO BANNER CHAT BOT --- */
         .chat-hero-banner {
             background: linear-gradient(135deg, #171c2e, #1e293b);
             border: 2px solid #00f0ff;
@@ -178,7 +178,7 @@
             100% { transform: translateY(-5px); }
         }
 
-        /* LAMPU INDIKATOR STATUS (DOT BOT) */
+        /* LAMPU INDIKATOR STATUS */
         .status-dot {
             position: absolute;
             bottom: 2px;
@@ -201,7 +201,7 @@
             box-shadow: 0 0 8px #ff4d4d;
         }
 
-        /* ANIMASI ZZZ MELAYANG SAAT BOT BOBO */
+        /* ANIMASI ZZZ */
         .zzz-container {
             position: absolute;
             top: -12px;
@@ -230,7 +230,6 @@
             100% { opacity: 0; transform: translate(12px, -25px) scale(1.2); }
         }
 
-        /* EFEK SAAT BOT OFFLINE */
         .chat-hero-banner.is-offline {
             border-color: #ff4d4d !important;
             box-shadow: 0 0 20px rgba(255, 77, 77, 0.25) !important;
@@ -864,38 +863,27 @@
     <div class="electric-aura"></div>
     
     <div class="container">
-        <!-- HEADER PROFIL (BERSIH & POLOS) -->
+        <!-- HEADER PROFIL -->
         <div class="profile">
-            <!-- Foto Profil Killua Atas -->
-            <div class="avatar" onclick="quickRestock()">
+            <div class="avatar" onclick="adminAccessPrompt()">
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
-
             <h1 class="name">pin gantenk</h1>
             <p class="sub-name">Official Roblox Item Store & Payment</p>
-
-            <!-- Tombol Toggle Status Bot -->
-            <div>
-                <button onclick="toggleBotStatus()" style="background: rgba(0, 240, 255, 0.12); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.4); padding: 5px 14px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
-                    ⚙️ Toggle Status Bot (Online/Offline)
-                </button>
-            </div>
         </div>
 
-        <!-- BANNER HERO CHAT BOT (HANYA DI SINI ADA STATUS BOT/SLEEP) -->
+        <!-- BANNER HERO CHAT BOT -->
         <div class="chat-hero-banner" onclick="toggleChat()">
             <div class="chibi-left">
                 <div class="avatar-wrapper">
                     <div class="chibi-img-box">
                         <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
                     </div>
-                    <!-- Animasi ZZZ Melayang Saat Bobo -->
                     <div class="zzz-container">
                         <span>Z</span>
                         <span>z</span>
                         <span>z</span>
                     </div>
-                    <!-- Lampu Indikator Status Dot Bot -->
                     <div class="status-dot online" id="bannerStatusDot"></div>
                 </div>
                 <div class="banner-info">
@@ -910,11 +898,9 @@
 
         <!-- MAIN LAYOUT 2 KOLOM -->
         <div class="main-layout">
-            <!-- KOLOM KIRI: KATALOG ITEM KATEGORI MAP -->
             <div class="layout-left">
                 <div class="section-title">📂 Pilih Map / Kategori Item</div>
 
-                <!-- KATEGORI 1: MAP GROW GARDEN 2 -->
                 <div class="category-box">
                     <div class="category-header" onclick="toggleCategory('cat-grow-garden')">
                         <span>🌱 Map: Grow Garden 2</span>
@@ -944,7 +930,6 @@
                     </div>
                 </div>
 
-                <!-- KATEGORI 2: SPECIAL & OTHER MAPS -->
                 <div class="category-box">
                     <div class="category-header" onclick="toggleCategory('cat-special')">
                         <span>🎁 Special & Other Items</span>
@@ -975,7 +960,6 @@
                 </div>
             </div>
 
-            <!-- KOLOM KANAN: QRIS & PAYMENT -->
             <div class="layout-right">
                 <div class="section-title">💳 Payment Method / QRIS</div>
                 <div class="qris-box">
@@ -999,7 +983,6 @@
             </div>
         </div>
 
-        <!-- SECTION TOMBOL TESTIMONI -->
         <div class="testi-container">
             <button class="btn-show-testi" onclick="openTestiModal()">
                 📸 Lihat Bukti Transfer & Testimoni Pembeli
@@ -1103,6 +1086,7 @@
 
         let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
         let selectedItem = null;
+        let isBotOnline = true; // Variable status bot lokal
 
         // --- LISTEN REALTIME STOCK ---
         db.ref('stocks').on('value', (snapshot) => {
@@ -1132,11 +1116,15 @@
             }
         });
 
-        // --- SYSTEM STATUS BOT (HANYA MENGATUR BOT BANNER DI BAWAH) ---
-        let isBotOnline = true;
+        // --- LISTEN REALTIME BOT STATUS (ONLINE / OFFLINE) DARI FIREBASE ---
+        db.ref('botStatus/isOnline').on('value', (snapshot) => {
+            let isOnline = snapshot.val();
+            if (isOnline === null) {
+                db.ref('botStatus').set({ isOnline: true });
+                return;
+            }
 
-        function toggleBotStatus() {
-            isBotOnline = !isBotOnline;
+            isBotOnline = isOnline; // Simpan status terkini
 
             let bannerBox = document.querySelector('.chat-hero-banner');
             let bannerDot = document.getElementById('bannerStatusDot');
@@ -1163,6 +1151,33 @@
                 if (bannerTitle) bannerTitle.innerText = "😴 pinpin lagi bobo...";
                 if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, tapi pesanan kamu tetap bisa dikirim ke WA! 📩";
                 if (bannerBtn) bannerBtn.innerText = "Tinggalkan Pesan 💤";
+            }
+        });
+
+        // --- ADMIN ACCESS (KLIK 5x PADA FOTO PROFIL ATAS) ---
+        let profileClickCount = 0;
+        function adminAccessPrompt() {
+            profileClickCount++;
+            if (profileClickCount >= 5) {
+                let pin = prompt("🔐 Masukkan PIN Admin Owner:");
+                if (pin === "1234") {
+                    let menu = prompt("✅ PIN Benar!\nPilih Menu Admin:\n1. Restok Semua Stok Item\n2. Toggle Status Bot (Online/Off)");
+                    if (menu === "1") {
+                        let resetData = { item1: 10, item2: 5, item3: 20, item4: 8 };
+                        db.ref('stocks').set(resetData);
+                        alert("✅ Berhasil! Stok item telah di-reset penuh.");
+                    } else if (menu === "2") {
+                        db.ref('botStatus/isOnline').once('value', (snap) => {
+                            let current = snap.val();
+                            let newState = !current;
+                            db.ref('botStatus').set({ isOnline: newState });
+                            alert(`✅ Status Bot berhasil diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE / BOBO 😴"}`);
+                        });
+                    }
+                } else if (pin !== null) {
+                    alert("❌ PIN Salah!");
+                }
+                profileClickCount = 0;
             }
         }
 
@@ -1275,6 +1290,21 @@
         function resetChatSystem() {
             localStorage.removeItem('pin_store_chat_session');
             botData = { item: "", price: 0, username: "", hasScreenshot: false };
+            
+            if (!isBotOnline) {
+                document.getElementById('chatBody').innerHTML = `
+                    <div class="chat-msg bot">
+                        pinpin lgi bobo kamu gabisa beli dulu😡😡
+                    </div>
+                `;
+                document.getElementById('chatFooter').innerHTML = `
+                    <div style="text-align:center; font-size:11px; color:#ff4d4d; font-weight:700; padding:6px;">
+                        😴 Bot Offline / Bobo
+                    </div>
+                `;
+                return;
+            }
+
             document.getElementById('chatBody').innerHTML = `
                 <div class="chat-msg bot">
                     Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
@@ -1294,6 +1324,19 @@
             let widget = document.getElementById('chatWidget');
             let isFlex = (widget.style.display === 'flex');
             widget.style.display = isFlex ? 'none' : 'flex';
+
+            // Jika bot offline dan chat dibuka pertama kali / baru di-toggle
+            if (!isBotOnline) {
+                addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
+                let footer = document.getElementById('chatFooter');
+                if (footer) {
+                    footer.innerHTML = `
+                        <div style="text-align:center; font-size:11px; color:#ff4d4d; font-weight:700; padding:6px;">
+                            😴 Bot Offline / Bobo
+                        </div>
+                    `;
+                }
+            }
             saveChatState();
         }
 
@@ -1308,6 +1351,15 @@
         }
 
         function botSelectItem(itemName, price) {
+            // JIKA BOT SEDANG OFFLINE / BOBO
+            if (!isBotOnline) {
+                addMessage('user', `Saya mau beli ${itemName}`);
+                setTimeout(() => {
+                    addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
+                }, 300);
+                return;
+            }
+
             botData.item = itemName;
             botData.price = price;
             addMessage('user', `Saya mau beli ${itemName}`);
@@ -1347,6 +1399,10 @@
         }
 
         function processBotSubmission() {
+            if (!isBotOnline) {
+                addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
+                return;
+            }
             let usnInput = document.getElementById('bot-usn-input').value.trim();
             if (!usnInput) {
                 alert("Harap isi Username Roblox kamu terlebih dahulu!");
@@ -1373,23 +1429,6 @@
                 </a>
             `;
             saveChatState();
-        }
-
-        // --- ADMIN QUICK RESTOCK ---
-        let clickProfile = 0;
-        function quickRestock() {
-            clickProfile++;
-            if (clickProfile >= 5) {
-                let pin = prompt("🔐 Masukkan PIN Restock Admin:");
-                if (pin === "1234") {
-                    let resetData = { item1: 10, item2: 5, item3: 20, item4: 8 };
-                    db.ref('stocks').set(resetData);
-                    alert("✅ Berhasil! Semua stok item telah di-RESTOCK otomatis!");
-                } else if (pin !== null) {
-                    alert("PIN Salah!");
-                }
-                clickProfile = 0;
-            }
         }
 
         function copyText(text, btn) {
