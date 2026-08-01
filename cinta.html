@@ -13,15 +13,14 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        body {
-            background-color: #0f051d;
+        html, body {
+            background-color: #0d0417;
             color: #ffffff;
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            overflow-x: hidden;
+            /* Scroll dikunci di awal, dibuka setelah masuk portal */
+            overflow-y: hidden; 
         }
 
         /* --- STAGE 1: INTRO SCREEN --- */
@@ -32,8 +31,8 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle, #290a38 0%, #0f051d 100%);
-            z-index: 10;
+            background: radial-gradient(circle, #2a083b 0%, #0d0417 100%);
+            z-index: 100;
             transition: opacity 0.8s ease, visibility 0.8s;
         }
 
@@ -46,15 +45,14 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 25px rgba(255, 46, 147, 0.6), 0 0 50px rgba(255, 117, 140, 0.4);
+            box-shadow: 0 0 25px rgba(255, 46, 147, 0.7), 0 0 50px rgba(255, 117, 140, 0.5);
             animation: pulseLove 1.8s infinite ease-in-out;
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: transform 0.3s;
             outline: none;
         }
 
         .btn-love:hover {
             transform: scale(1.1);
-            box-shadow: 0 0 35px rgba(255, 46, 147, 0.9), 0 0 70px rgba(255, 117, 140, 0.7);
         }
 
         @keyframes pulseLove {
@@ -63,87 +61,66 @@
             100% { transform: scale(1); }
         }
 
-        /* --- STAGE 2: ANIMASI PORTAL --- */
+        /* --- STAGE 2: ANIMASI PORTAL TRANSISI --- */
         #portal-overlay {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: radial-gradient(circle, #ff2e93 0%, #a855f7 40%, transparent 70%);
-            border: 4px solid #ff758c;
-            box-shadow: 0 0 50px #ff2e93, inset 0 0 50px #a855f7;
-            transform: translate(-50%, -50%) scale(0) rotate(0deg);
-            z-index: 20;
-            pointer-events: none;
+            inset: 0;
+            background: radial-gradient(circle at center, #ff2e93 0%, #7e22ce 50%, #0d0417 100%);
+            z-index: 90;
             opacity: 0;
+            pointer-events: none;
+            transform: scale(0);
+            border-radius: 50%;
+            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
         }
 
         .portal-active {
-            animation: openPortal 1.8s cubic-bezier(0.77, 0, 0.175, 1) forwards;
-        }
-
-        @keyframes openPortal {
-            0% {
-                transform: translate(-50%, -50%) scale(0) rotate(0deg);
-                opacity: 1;
-            }
-            50% {
-                box-shadow: 0 0 100px #ff2e93, 0 0 200px #a855f7, inset 0 0 80px #ffffff;
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(300) rotate(720deg);
-                opacity: 1;
-            }
+            opacity: 1 !important;
+            transform: scale(3) !important;
         }
 
         /* --- STAGE 3: MAIN LOVE SCENE --- */
         #main-screen {
-            position: fixed;
-            inset: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
             opacity: 0;
-            pointer-events: none;
             transition: opacity 1.5s ease;
-            background: radial-gradient(circle, #20052b 0%, #08020f 100%);
-            z-index: 5;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px 80px 20px;
         }
 
         #main-screen.visible {
             opacity: 1;
-            pointer-events: auto;
         }
 
+        /* CANVAS BACKGROUND LOVE */
         canvas {
-            position: absolute;
+            position: fixed;
             inset: 0;
             pointer-events: none;
+            z-index: 1;
         }
 
-        /* KARTU PESAN ROMANTIS */
+        /* KARTU SAMBUTAN UTAMA */
         .love-card {
             position: relative;
-            z-index: 6;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 117, 140, 0.3);
+            z-index: 5;
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 117, 140, 0.4);
             border-radius: 24px;
-            padding: 40px 30px;
+            padding: 35px 25px;
             text-align: center;
             max-width: 450px;
-            width: 90%;
+            width: 100%;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 46, 147, 0.2);
-            transform: translateY(30px);
-            animation: floatCard 4s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatCard {
-            0% { transform: translateY(0px); }
-            100% { transform: translateY(-12px); }
+            margin-top: 30px;
+            margin-bottom: 50px;
         }
 
         .love-card h1 {
@@ -155,24 +132,100 @@
         }
 
         .love-card p {
-            font-size: 14px;
-            color: #e2e8f0;
-            line-height: 1.7;
-            margin-bottom: 20px;
+            font-size: 15px;
+            color: #f1f5f9;
+            line-height: 1.8;
         }
 
-        .heart-badge {
-            display: inline-block;
-            font-size: 32px;
-            animation: beat 1s infinite alternate;
+        /* SECTION GALERI FOTO KENANGAN */
+        .gallery-title {
+            position: relative;
+            z-index: 5;
+            font-size: 22px;
+            font-weight: 600;
+            color: #ff758c;
+            margin-bottom: 30px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(255, 117, 140, 0.5);
         }
 
-        @keyframes beat {
-            to { transform: scale(1.3); }
+        .gallery-container {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            width: 100%;
+            max-width: 420px;
+            align-items: center;
+        }
+
+        /* BINGKAI POLAROID FOTO */
+        .polaroid-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px 15px 25px 15px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 46, 147, 0.2);
+            width: 100%;
+            transform: rotate(-2deg);
+            transition: transform 0.3s ease;
+        }
+
+        .polaroid-card:nth-child(even) {
+            transform: rotate(2deg);
+        }
+
+        .polaroid-card:hover {
+            transform: scale(1.03) rotate(0deg);
+        }
+
+        .polaroid-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .polaroid-caption {
+            font-family: 'Sacramento', cursive;
+            font-size: 28px;
+            color: #333333;
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 700;
+        }
+
+        /* TOMBOL MUSIK FLOATING */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            background: rgba(255, 46, 147, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 46, 147, 0.5);
+            display: none; /* Muncul setelah masuk */
         }
     </style>
 </head>
 <body>
+
+    <!-- LAGU SAILOR SONG (AUDIO) -->
+    <!-- Kamu bisa ganti src di bawah ini dengan file sailor-song.mp3 milikmu nanti -->
+    <audio id="bg-music" loop src="https://files.catbox.moe/k3b02r.mp3"></audio>
+
+    <!-- TOMBOL MUSIK PLAY/PAUSE -->
+    <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
 
     <!-- STAGE 1: INTRO -->
     <div id="intro-screen">
@@ -182,45 +235,104 @@
     <!-- STAGE 2: ANIMASI PORTAL -->
     <div id="portal-overlay"></div>
 
-    <!-- STAGE 3: TAMPIALAN UTAMA CINTA -->
+    <!-- STAGE 3: TAMPILAN UTAMA -->
     <div id="main-screen">
         <canvas id="heartCanvas"></canvas>
         
+        <!-- KARTU UCAPAN -->
         <div class="love-card">
-            <span class="heart-badge">💖</span>
+            <span>💖✨</span>
             <h1>I Love You So Much</h1>
             <p>
                 Terima kasih ya sudah hadir dan mewarnai hari-hariku.<br>
-                Setiap detik sama kamu itu terasa berharga banget buat aku. 💕
+                Setiap momen sama kamu selalu jadi hal terfavorit buat aku! 💕
             </p>
+        </div>
+
+        <div class="gallery-title">📜 Kenangan Indah Kita 📜</div>
+
+        <!-- GALERI FOTO KENANGAN (BISA DI-SCROLL) -->
+        <div class="gallery-container">
+            
+            <!-- FOTO 1 -->
+            <div class="polaroid-card">
+                <!-- Ganti src="foto1.jpg" nanti saat foto kamu sudah siap -->
+                <img src="https://picsum.photos/400/500?random=1" alt="Foto 1">
+                <div class="polaroid-caption">Momen Pertama Kita 🌸</div>
+            </div>
+
+            <!-- FOTO 2 -->
+            <div class="polaroid-card">
+                <!-- Ganti src="foto2.jpg" nanti -->
+                <img src="https://picsum.photos/400/500?random=2" alt="Foto 2">
+                <div class="polaroid-caption">Senyuman Favoritku 😊</div>
+            </div>
+
+            <!-- FOTO 3 -->
+            <div class="polaroid-card">
+                <!-- Ganti src="foto3.jpg" nanti -->
+                <img src="https://picsum.photos/400/500?random=3" alt="Foto 3">
+                <div class="polaroid-caption">Jalan-jalan Bareng 💕</div>
+            </div>
+
+            <!-- FOTO 4 -->
+            <div class="polaroid-card">
+                <!-- Ganti src="foto4.jpg" nanti -->
+                <img src="https://picsum.photos/400/500?random=4" alt="Foto 4">
+                <div class="polaroid-caption">Selalu Sama Kamu Selamanya 🔒</div>
+            </div>
+
         </div>
     </div>
 
     <script>
-        // --- 1. FUNGSI MASUK PORTAL ---
+        const bgMusic = document.getElementById('bg-music');
+        const musicBtn = document.getElementById('musicBtn');
+
+        // FUNGSI MASUK PORTAL & PUTAR MUSIK
         function enterPortal() {
             const introScreen = document.getElementById('intro-screen');
             const portal = document.getElementById('portal-overlay');
             const mainScreen = document.getElementById('main-screen');
 
-            // Jalankan animasi portal
+            // 1. Putar Musik Sailor Song
+            bgMusic.play().then(() => {
+                musicBtn.style.display = 'flex';
+            }).catch(err => console.log("Audio play error:", err));
+
+            // 2. Jalankan Animasi Portal Transisi
             portal.classList.add('portal-active');
 
-            // Sembunyikan tombol intro secara perlahan
-            introScreen.style.opacity = '0';
+            // Sembunyikan Intro
+            setTimeout(() => {
+                introScreen.style.opacity = '0';
+            }, 300);
 
+            // Buka Layar Utama & Aktifkan Scroll Layar
             setTimeout(() => {
                 introScreen.style.visibility = 'hidden';
-            }, 800);
-
-            // Setelah portal membesar penuh (1.5 detik), buka layar utama
-            setTimeout(() => {
+                portal.style.opacity = '0';
+                
+                // BUKA SCROLL BODY
+                document.body.style.overflowY = 'auto'; 
+                
                 mainScreen.classList.add('visible');
-                initHeartParticles(); // Jalankan hujan love
-            }, 1500);
+                initHeartParticles(); // Hujan partikel love
+            }, 1000);
         }
 
-        // --- 2. SISTEM PARTIKEL HUJAN LOVE (CANVAS) ---
+        // CONTROL MUSIK (PLAY / PAUSE)
+        function toggleMusic() {
+            if (bgMusic.paused) {
+                bgMusic.play();
+                musicBtn.innerHTML = '🎵';
+            } else {
+                bgMusic.pause();
+                musicBtn.innerHTML = '🔇';
+            }
+        }
+
+        // SISTEM PARTIKEL HUJAN LOVE (CANVAS)
         function initHeartParticles() {
             const canvas = document.getElementById('heartCanvas');
             const ctx = canvas.getContext('2d');
@@ -233,7 +345,7 @@
             window.addEventListener('resize', resizeCanvas);
 
             const hearts = [];
-            const heartCount = 65; // Jumlah love di layar
+            const heartCount = 50;
 
             class Heart {
                 constructor() {
@@ -243,21 +355,19 @@
                 reset(firstRun = false) {
                     this.x = Math.random() * canvas.width;
                     this.y = firstRun ? Math.random() * canvas.height : canvas.height + 20;
-                    this.size = Math.random() * 18 + 10; // Ukuran love
-                    this.speedY = Math.random() * 1.5 + 0.8; // Kecepatan naik
-                    this.speedX = Math.sin(Math.random() * Math.PI) * 0.8;
+                    this.size = Math.random() * 16 + 8;
+                    this.speedY = Math.random() * 1.5 + 0.8;
                     this.opacity = Math.random() * 0.7 + 0.3;
                     this.rotation = Math.random() * Math.PI * 2;
                     this.rotSpeed = (Math.random() - 0.5) * 0.02;
                     
-                    // Variasi warna pink/merah/ungu romantis
-                    const colors = ['#ff2e93', '#ff758c', '#a855f7', '#ff4d6d', '#ffffff'];
+                    const colors = ['#ff2e93', '#ff758c', '#a855f7', '#ff4d6d'];
                     this.color = colors[Math.floor(Math.random() * colors.length)];
                 }
 
                 update() {
                     this.y -= this.speedY;
-                    this.x += Math.sin(this.y * 0.01) * 0.5; // Efek meliuk-liuk
+                    this.x += Math.sin(this.y * 0.01) * 0.5;
                     this.rotation += this.rotSpeed;
 
                     if (this.y < -30) {
@@ -271,10 +381,9 @@
                     ctx.rotate(this.rotation);
                     ctx.globalAlpha = this.opacity;
                     ctx.fillStyle = this.color;
-                    ctx.shadowBlur = 12;
+                    ctx.shadowBlur = 10;
                     ctx.shadowColor = this.color;
 
-                    // Menggambar bentuk Heart / Love dengan Path
                     ctx.beginPath();
                     const topCurveHeight = this.size * 0.3;
                     ctx.moveTo(0, topCurveHeight);
@@ -289,12 +398,10 @@
                 }
             }
 
-            // Buat partikel love
             for (let i = 0; i < heartCount; i++) {
                 hearts.push(new Heart());
             }
 
-            // Loop Animasi
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 hearts.forEach(heart => {
