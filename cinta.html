@@ -19,8 +19,7 @@
             width: 100%;
             min-height: 100vh;
             overflow-x: hidden;
-            /* Scroll dikunci di awal, dibuka setelah masuk portal */
-            overflow-y: hidden; 
+            overflow-y: hidden; /* Scroll dikunci di awal */
         }
 
         /* --- STAGE 1: INTRO SCREEN --- */
@@ -31,9 +30,17 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: radial-gradient(circle, #2a083b 0%, #0d0417 100%);
+            background: radial-gradient(circle, #3b074a 0%, #0d0417 100%);
             z-index: 100;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.84, 0), opacity 0.8s ease;
+        }
+
+        /* ANIMASI EFEK PORTAL MASUK */
+        .portal-zoom-out {
+            transform: scale(5) !important;
+            opacity: 0 !important;
+            filter: brightness(2) drop-shadow(0 0 30px #ff2e93);
+            pointer-events: none;
         }
 
         .btn-love {
@@ -45,7 +52,7 @@
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 25px rgba(255, 46, 147, 0.7), 0 0 50px rgba(255, 117, 140, 0.5);
+            box-shadow: 0 0 25px rgba(255, 46, 147, 0.8), 0 0 50px rgba(255, 117, 140, 0.5);
             animation: pulseLove 1.8s infinite ease-in-out;
             transition: transform 0.3s;
             outline: none;
@@ -61,31 +68,14 @@
             100% { transform: scale(1); }
         }
 
-        /* --- STAGE 2: ANIMASI PORTAL TRANSISI --- */
-        #portal-overlay {
-            position: fixed;
-            inset: 0;
-            background: radial-gradient(circle at center, #ff2e93 0%, #7e22ce 50%, #0d0417 100%);
-            z-index: 90;
-            opacity: 0;
-            pointer-events: none;
-            transform: scale(0);
-            border-radius: 50%;
-            transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.8s ease;
-        }
-
-        .portal-active {
-            opacity: 1 !important;
-            transform: scale(3) !important;
-        }
-
-        /* --- STAGE 3: MAIN LOVE SCENE --- */
+        /* --- STAGE 2: MAIN LOVE SCENE --- */
         #main-screen {
             position: relative;
             width: 100%;
             min-height: 100vh;
             opacity: 0;
-            transition: opacity 1.5s ease;
+            transform: scale(0.9);
+            transition: opacity 1s ease, transform 1s ease;
             z-index: 10;
             display: flex;
             flex-direction: column;
@@ -95,6 +85,7 @@
 
         #main-screen.visible {
             opacity: 1;
+            transform: scale(1);
         }
 
         /* CANVAS BACKGROUND LOVE */
@@ -109,7 +100,7 @@
         .love-card {
             position: relative;
             z-index: 5;
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 117, 140, 0.4);
@@ -119,13 +110,13 @@
             max-width: 450px;
             width: 100%;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 46, 147, 0.2);
-            margin-top: 30px;
-            margin-bottom: 50px;
+            margin-top: 20px;
+            margin-bottom: 40px;
         }
 
         .love-card h1 {
             font-family: 'Sacramento', cursive;
-            font-size: 52px;
+            font-size: 50px;
             color: #ff758c;
             margin-bottom: 10px;
             text-shadow: 0 0 15px rgba(255, 117, 140, 0.6);
@@ -201,27 +192,25 @@
             bottom: 20px;
             right: 20px;
             z-index: 99;
-            background: rgba(255, 46, 147, 0.8);
+            background: rgba(255, 46, 147, 0.85);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.4);
             color: white;
-            width: 45px;
-            height: 45px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            display: flex;
+            display: none;
             justify-content: center;
             align-items: center;
-            font-size: 18px;
+            font-size: 20px;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(255, 46, 147, 0.5);
-            display: none; /* Muncul setelah masuk */
+            box-shadow: 0 0 15px rgba(255, 46, 147, 0.6);
         }
     </style>
 </head>
 <body>
 
     <!-- LAGU SAILOR SONG (AUDIO) -->
-    <!-- Kamu bisa ganti src di bawah ini dengan file sailor-song.mp3 milikmu nanti -->
     <audio id="bg-music" loop src="https://files.catbox.moe/k3b02r.mp3"></audio>
 
     <!-- TOMBOL MUSIK PLAY/PAUSE -->
@@ -232,16 +221,13 @@
         <button class="btn-love" onclick="enterPortal()">Pencet ini sayang 💖</button>
     </div>
 
-    <!-- STAGE 2: ANIMASI PORTAL -->
-    <div id="portal-overlay"></div>
-
-    <!-- STAGE 3: TAMPILAN UTAMA -->
+    <!-- STAGE 2: TAMPILAN UTAMA -->
     <div id="main-screen">
         <canvas id="heartCanvas"></canvas>
         
         <!-- KARTU UCAPAN -->
         <div class="love-card">
-            <span>💖✨</span>
+            <span style="font-size: 30px;">💖✨</span>
             <h1>I Love You So Much</h1>
             <p>
                 Terima kasih ya sudah hadir dan mewarnai hari-hariku.<br>
@@ -256,28 +242,24 @@
             
             <!-- FOTO 1 -->
             <div class="polaroid-card">
-                <!-- Ganti src="foto1.jpg" nanti saat foto kamu sudah siap -->
                 <img src="https://picsum.photos/400/500?random=1" alt="Foto 1">
                 <div class="polaroid-caption">Momen Pertama Kita 🌸</div>
             </div>
 
             <!-- FOTO 2 -->
             <div class="polaroid-card">
-                <!-- Ganti src="foto2.jpg" nanti -->
                 <img src="https://picsum.photos/400/500?random=2" alt="Foto 2">
                 <div class="polaroid-caption">Senyuman Favoritku 😊</div>
             </div>
 
             <!-- FOTO 3 -->
             <div class="polaroid-card">
-                <!-- Ganti src="foto3.jpg" nanti -->
                 <img src="https://picsum.photos/400/500?random=3" alt="Foto 3">
                 <div class="polaroid-caption">Jalan-jalan Bareng 💕</div>
             </div>
 
             <!-- FOTO 4 -->
             <div class="polaroid-card">
-                <!-- Ganti src="foto4.jpg" nanti -->
                 <img src="https://picsum.photos/400/500?random=4" alt="Foto 4">
                 <div class="polaroid-caption">Selalu Sama Kamu Selamanya 🔒</div>
             </div>
@@ -292,33 +274,28 @@
         // FUNGSI MASUK PORTAL & PUTAR MUSIK
         function enterPortal() {
             const introScreen = document.getElementById('intro-screen');
-            const portal = document.getElementById('portal-overlay');
             const mainScreen = document.getElementById('main-screen');
 
             // 1. Putar Musik Sailor Song
-            bgMusic.play().then(() => {
-                musicBtn.style.display = 'flex';
-            }).catch(err => console.log("Audio play error:", err));
+            if (bgMusic) {
+                bgMusic.play().then(() => {
+                    musicBtn.style.display = 'flex';
+                }).catch(err => {
+                    console.log("Autoplay diproteksi browser:", err);
+                    musicBtn.style.display = 'flex';
+                });
+            }
 
-            // 2. Jalankan Animasi Portal Transisi
-            portal.classList.add('portal-active');
+            // 2. Efek Portal Zoom-In
+            introScreen.classList.add('portal-zoom-out');
 
-            // Sembunyikan Intro
+            // 3. Tampilkan Layar Utama & Buka Scroll
             setTimeout(() => {
-                introScreen.style.opacity = '0';
-            }, 300);
-
-            // Buka Layar Utama & Aktifkan Scroll Layar
-            setTimeout(() => {
-                introScreen.style.visibility = 'hidden';
-                portal.style.opacity = '0';
-                
-                // BUKA SCROLL BODY
-                document.body.style.overflowY = 'auto'; 
-                
+                introScreen.style.display = 'none'; // Hapus intro agar tidak menghalangi
+                document.body.style.overflowY = 'auto'; // Aktifkan Scroll HP/Laptop
                 mainScreen.classList.add('visible');
-                initHeartParticles(); // Hujan partikel love
-            }, 1000);
+                initHeartParticles(); // Jalankan Hujan Love
+            }, 700);
         }
 
         // CONTROL MUSIK (PLAY / PAUSE)
@@ -345,7 +322,7 @@
             window.addEventListener('resize', resizeCanvas);
 
             const hearts = [];
-            const heartCount = 50;
+            const heartCount = 45;
 
             class Heart {
                 constructor() {
