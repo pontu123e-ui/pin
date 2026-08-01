@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pin gantenk - Roblox Item Store & Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <!-- FIREBASE REALTIME DATABASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-
     <style>
         * {
             margin: 0;
@@ -28,7 +26,6 @@
             padding: 20px;
             position: relative;
             overflow-x: hidden;
-            /* Mencegah seleksi teks di seluruh halaman */
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
@@ -42,8 +39,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
             background-size: 30px 30px;
             z-index: 1;
             pointer-events: none;
@@ -87,23 +83,130 @@
             margin-bottom: 16px;
         }
 
+        /* --- AVATAR & STATUS BOT ANIMATION (KILLUA SLEEP) --- */
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 4px;
+        }
+
         .avatar {
-            width: 80px;
-            height: 80px;
+            width: 85px;
+            height: 85px;
             border-radius: 50%;
-            margin: 0 auto 8px auto;
+            margin: 0 auto;
             border: 2px solid #00f0ff;
             box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
             overflow: hidden;
             cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            /* Mencegah gambar di-drag/ditarik ke tab baru */
             pointer-events: none;
+            transition: filter 0.3s ease;
+        }
+
+        /* LAMPU INDIKATOR STATUS (DOT) */
+        .status-dot {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid #101422;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .status-dot.online {
+            background-color: #00ff88;
+            box-shadow: 0 0 10px #00ff88;
+        }
+
+        .status-dot.offline {
+            background-color: #ff4d4d;
+            box-shadow: 0 0 10px #ff4d4d;
+        }
+
+        /* SPEECH BUBBLE (BALON TEKS) */
+        .speech-bubble {
+            position: relative;
+            background: #171c2e;
+            border: 1px solid #00f0ff;
+            border-radius: 12px;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #00f0ff;
+            display: inline-block;
+            box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px 6px 0;
+            border-style: solid;
+            border-color: #00f0ff transparent;
+        }
+
+        /* ANIMASI ZZZ MELAYANG SAAT BOBO */
+        .zzz-container {
+            position: absolute;
+            top: -12px;
+            right: -8px;
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+        }
+
+        .zzz-container span {
+            position: absolute;
+            font-weight: bold;
+            color: #60a5fa;
+            font-size: 16px;
+            opacity: 0;
+            animation: floatZ 2.5s infinite linear;
+        }
+
+        .zzz-container span:nth-child(1) { animation-delay: 0s; right: 0px; }
+        .zzz-container span:nth-child(2) { animation-delay: 0.8s; right: 8px; }
+        .zzz-container span:nth-child(3) { animation-delay: 1.6s; right: 16px; }
+
+        @keyframes floatZ {
+            0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(15px, -30px) scale(1.2); }
+        }
+
+        /* MINTA EFFECT SAAT OFFLINE */
+        .is-offline .avatar img,
+        .is-offline .chibi-img-box img {
+            filter: grayscale(45%) brightness(70%);
+        }
+
+        .is-offline .zzz-container {
+            display: block !important;
+        }
+
+        .is-offline .speech-bubble {
+            border-color: #ff4d4d;
+            color: #ff4d4d;
+            box-shadow: 0 0 12px rgba(255, 77, 77, 0.3);
+        }
+
+        .is-offline .speech-bubble::after {
+            border-color: #ff4d4d transparent;
         }
 
         .name {
@@ -128,6 +231,7 @@
             border-radius: 15px;
             border: 1px solid rgba(0, 255, 136, 0.3);
             font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         /* --- HERO BANNER CHAT AUTO LOOK --- */
@@ -570,7 +674,7 @@
             color: #ffffff;
             font-size: 12px;
             outline: none;
-            user-select: text; /* Tetap mengizinkan ketik input */
+            user-select: text;
         }
 
         .form-group input:focus, .form-group textarea:focus {
@@ -599,9 +703,7 @@
         }
 
         @media (max-width: 480px) {
-            .testi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+            .testi-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         .testi-card {
@@ -792,33 +894,65 @@
     </style>
 </head>
 <body>
-
     <div class="bg-grid"></div>
     <div class="electric-aura"></div>
-
+    
     <div class="container">
-        <!-- HEADER PROFIL -->
-        <div class="profile">
-            <div class="avatar" onclick="quickRestock()">
-                <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
+        <!-- HEADER PROFIL + STATUS KILLUA -->
+        <div class="profile" id="profileBox">
+            <!-- Balon Teks Status Bot -->
+            <div class="speech-bubble" id="botSpeechBubble">
+                pinpin siap melayani! ⚡
             </div>
+
+            <!-- Avatar Wrapper (Lampu Merah/Hijau + ZZZ Animation) -->
+            <div class="avatar-wrapper">
+                <div class="avatar" onclick="quickRestock()">
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
+                </div>
+                <!-- Animasi ZZZ Melayang -->
+                <div class="zzz-container">
+                    <span>Z</span>
+                    <span>z</span>
+                    <span>z</span>
+                </div>
+                <!-- Lampu Indikator Status -->
+                <div class="status-dot online" id="mainStatusDot"></div>
+            </div>
+
             <h1 class="name">pin gantenk</h1>
             <p class="sub-name">Official Roblox Item Store & Payment</p>
-            <span class="status-badge" id="live-indicator">🔴 LIVE REALTIME STOCK ACTIVE</span>
+            <span class="status-badge" id="live-indicator">🟢 BOT ONLINE / READY</span>
+
+            <!-- Tombol Toggle Pengubah Status Bot (Online/Offline) -->
+            <div style="margin-top: 8px;">
+                <button onclick="toggleBotStatus()" style="background: rgba(0, 240, 255, 0.12); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.4); padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+                    ⚙️ Toggle Status Bot (Online/Offline)
+                </button>
+            </div>
         </div>
 
         <!-- BANNER HERO CHAT BOT -->
         <div class="chat-hero-banner" onclick="toggleChat()">
             <div class="chibi-left">
-                <div class="chibi-img-box">
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
+                <div class="avatar-wrapper">
+                    <div class="chibi-img-box">
+                        <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
+                    </div>
+                    <!-- Animasi ZZZ Banner -->
+                    <div class="zzz-container">
+                        <span>Z</span>
+                        <span>z</span>
+                        <span>z</span>
+                    </div>
+                    <div class="status-dot online" id="bannerStatusDot"></div>
                 </div>
                 <div class="banner-info">
-                    <h3>🍡 Jajan Item Roblox / Chat Aku!!</h3>
-                    <p>Mau beli item / butuh bantuan? Klik di sini aja bro! 💬</p>
+                    <h3 id="banner-title">🍡 Jajan Item Roblox / Chat Aku!!</h3>
+                    <p id="banner-desc">Mau beli item / butuh bantuan? Klik di sini aja bro! 💬</p>
                 </div>
             </div>
-            <div class="banner-btn-action">
+            <div class="banner-btn-action" id="banner-btn">
                 Chat Sekarang ⚡
             </div>
         </div>
@@ -846,7 +980,6 @@
                                 <button id="btn-item1" class="btn-buy-item" onclick="openOrderModal('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">🛒 Beli</button>
                             </div>
                         </div>
-
                         <div class="item-row">
                             <div class="item-info">
                                 <div class="item-title">Hypno Bloom Item</div>
@@ -877,7 +1010,6 @@
                                 <button id="btn-item3" class="btn-buy-item" onclick="openOrderModal('item3', 'Roblox Coin / Special', 'Rp 10.000')">🛒 Beli</button>
                             </div>
                         </div>
-
                         <div class="item-row">
                             <div class="item-info">
                                 <div class="item-title">Custom Trade Item</div>
@@ -890,7 +1022,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
 
             <!-- KOLOM KANAN: QRIS & PAYMENT -->
@@ -901,11 +1032,9 @@
                     <div class="qris-img-wrap">
                         <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
                     </div>
-                    
                     <a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" class="btn-download-qris">
                         📥 Download QRIS
                     </a>
-
                     <div class="manual-pay-list">
                         <div class="pay-row">
                             <div class="pay-details">
@@ -938,17 +1067,14 @@
                 <span class="modal-title" id="modal-item-title">Konfirmasi Pembelian</span>
                 <button class="modal-close" onclick="closeOrderModal()">&times;</button>
             </div>
-            
             <div class="form-group">
                 <label for="roblox-username">Username Roblox <span style="color:#ff4d4d;">*</span></label>
                 <input type="text" id="roblox-username" placeholder="Contoh: PinGantenk123" required>
             </div>
-
             <div class="form-group">
                 <label for="order-notes">Catatan Tambahan (Opsional)</label>
                 <textarea id="order-notes" rows="2" placeholder="Contoh: Sertakan jam pengiriman atau pesan khusus..."></textarea>
             </div>
-
             <button class="btn-submit-order" onclick="submitOrderToWA()">
                 🚀 Kirim Pesanan ke WhatsApp
             </button>
@@ -977,7 +1103,7 @@
     <div class="chat-widget" id="chatWidget">
         <div class="chat-header">
             <div style="display:flex; align-items:center; gap:8px;">
-                <div style="width:10px; height:10px; background:#00ff88; border-radius:50%;"></div>
+                <div style="width:10px; height:10px; background:#00ff88; border-radius:50%;" id="chatHeaderDot"></div>
                 <strong>pin Store Assistant</strong>
             </div>
             <div class="chat-header-actions">
@@ -985,13 +1111,11 @@
                 <button onclick="toggleChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:18px;">&times;</button>
             </div>
         </div>
-
         <div class="chat-body" id="chatBody">
-            <div class="chat-msg bot">
+            <div class="chat-msg bot" id="botGreetingMsg">
                 Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
             </div>
         </div>
-
         <div class="chat-footer" id="chatFooter">
             <div class="chat-options" id="chatOptions">
                 <button class="opt-btn" onclick="botSelectItem('Dragon\'s Breath Item', 15000)">🌱 Dragon's Breath (Rp 15.000)</button>
@@ -1004,15 +1128,10 @@
 
     <script>
         // --- 🛡️ SCRIPT ANTI-INSPECT & PROTEKSI KODE WEB ---
-        // 1. Mematikan Klik Kanan
-        document.addEventListener('contextmenu', function(e) {
-            e.preventDefault();
-        });
-
-        // 2. Mematikan Shortcut F12, Ctrl+Shift+I/J/C, Ctrl+U, Ctrl+S
+        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
             if (
-                e.key === 'F12' || 
+                e.key === 'F12' ||
                 (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
                 (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
             ) {
@@ -1020,12 +1139,9 @@
                 return false;
             }
         });
-
-        // 3. Mencegah Gambar Ditarik / Saved via Drag
         document.querySelectorAll('img').forEach(img => {
             img.addEventListener('dragstart', (e) => e.preventDefault());
         });
-
 
         // --- FIREBASE REALTIME DATABASE CONFIG ---
         const firebaseConfig = {
@@ -1049,7 +1165,6 @@
                 let badge = document.getElementById('stock-' + id);
                 let btn = document.getElementById('btn-' + id);
                 let count = localStocks[id];
-                
                 if (badge && btn) {
                     if (count > 0) {
                         badge.innerText = `⚡ Stock: ${count}`;
@@ -1066,10 +1181,67 @@
             }
         });
 
+        // --- SYSTEM STATUS BOT (ONLINE / SLEEPING OFFLINE) ---
+        let isBotOnline = true;
+
+        function toggleBotStatus() {
+            isBotOnline = !isBotOnline;
+
+            let profileBox = document.getElementById('profileBox');
+            let bannerBox = document.querySelector('.chat-hero-banner');
+            let mainDot = document.getElementById('mainStatusDot');
+            let bannerDot = document.getElementById('bannerStatusDot');
+            let chatHeaderDot = document.getElementById('chatHeaderDot');
+            let speechBubble = document.getElementById('botSpeechBubble');
+            let liveIndicator = document.getElementById('live-indicator');
+            let bannerTitle = document.getElementById('banner-title');
+            let bannerDesc = document.getElementById('banner-desc');
+            let bannerBtn = document.getElementById('banner-btn');
+
+            if (isBotOnline) {
+                // Mode ONLINE (Lampu Hijau)
+                if (profileBox) profileBox.classList.remove('is-offline');
+                if (bannerBox) bannerBox.classList.remove('is-offline');
+
+                if (mainDot) mainDot.className = 'status-dot online';
+                if (bannerDot) bannerDot.className = 'status-dot online';
+                if (chatHeaderDot) chatHeaderDot.style.background = '#00ff88';
+
+                if (speechBubble) speechBubble.innerText = "pinpin siap melayani! ⚡";
+                if (liveIndicator) {
+                    liveIndicator.innerText = "🟢 BOT ONLINE / READY";
+                    liveIndicator.style.color = "#00ff88";
+                    liveIndicator.style.background = "rgba(0, 255, 136, 0.1)";
+                    liveIndicator.style.borderColor = "rgba(0, 255, 136, 0.3)";
+                }
+                if (bannerTitle) bannerTitle.innerText = "🍡 Jajan Item Roblox / Chat Aku!!";
+                if (bannerDesc) bannerDesc.innerText = "Mau beli item / butuh bantuan? Klik di sini aja bro! 💬";
+                if (bannerBtn) bannerBtn.innerText = "Chat Sekarang ⚡";
+            } else {
+                // Mode OFFLINE (Lampu Merah + ZZZ Sleeping)
+                if (profileBox) profileBox.classList.add('is-offline');
+                if (bannerBox) bannerBox.classList.add('is-offline');
+
+                if (mainDot) mainDot.className = 'status-dot offline';
+                if (bannerDot) bannerDot.className = 'status-dot offline';
+                if (chatHeaderDot) chatHeaderDot.style.background = '#ff4d4d';
+
+                if (speechBubble) speechBubble.innerText = "pinpin lagi bobo 😴";
+                if (liveIndicator) {
+                    liveIndicator.innerText = "🔴 BOT OFFLINE / LAGI BOBO";
+                    liveIndicator.style.color = "#ff4d4d";
+                    liveIndicator.style.background = "rgba(255, 77, 77, 0.15)";
+                    liveIndicator.style.borderColor = "rgba(255, 77, 77, 0.4)";
+                }
+                if (bannerTitle) bannerTitle.innerText = "😴 pinpin Lagi Bobo...";
+                if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, tapi pesanan kamu tetap bisa dikirim ke WA! 📩";
+                if (bannerBtn) bannerBtn.innerText = "Tinggalkan Pesan 💤";
+            }
+        }
+
         function toggleCategory(catId) {
             let content = document.getElementById(catId);
             let arrow = document.getElementById('arrow-' + catId);
-            
             if (content.classList.contains('active')) {
                 content.classList.remove('active');
                 arrow.innerText = '🔻';
@@ -1085,7 +1257,6 @@
                 alert("Maaf bro, stok item ini baru saja habis!");
                 return;
             }
-
             selectedItem = { id: itemId, name: itemName, price: itemPrice };
             document.getElementById('modal-item-title').innerText = `Beli: ${itemName}`;
             document.getElementById('roblox-username').value = "";
@@ -1100,7 +1271,6 @@
 
         function submitOrderToWA() {
             if (!selectedItem) return;
-
             let username = document.getElementById('roblox-username').value.trim();
             let notes = document.getElementById('order-notes').value.trim();
 
@@ -1123,7 +1293,6 @@
                        `\nSaya siap melakukan pembayaran & kirim bukti transfer!`;
 
             let url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
-
             closeOrderModal();
             window.location.href = url;
         }
@@ -1137,19 +1306,13 @@
         }
 
         // --- CHATBOT WIDGET SYSTEM WITH AUTO-SAVE (LOCALSTORAGE) ---
-        let botData = {
-            item: "",
-            price: 0,
-            username: "",
-            hasScreenshot: false
-        };
+        let botData = { item: "", price: 0, username: "", hasScreenshot: false };
 
         function saveChatState() {
             let usnInput = document.getElementById('bot-usn-input');
             if (usnInput) {
                 botData.username = usnInput.value;
             }
-
             let chatState = {
                 body: document.getElementById('chatBody').innerHTML,
                 footer: document.getElementById('chatFooter').innerHTML,
@@ -1173,7 +1336,6 @@
                     if (usnInput && botData.username) {
                         usnInput.value = botData.username;
                     }
-
                     if (usnInput) {
                         usnInput.addEventListener('input', saveChatState);
                     }
@@ -1186,13 +1348,11 @@
         function resetChatSystem() {
             localStorage.removeItem('pin_store_chat_session');
             botData = { item: "", price: 0, username: "", hasScreenshot: false };
-            
             document.getElementById('chatBody').innerHTML = `
                 <div class="chat-msg bot">
                     Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
                 </div>
             `;
-            
             document.getElementById('chatFooter').innerHTML = `
                 <div class="chat-options" id="chatOptions">
                     <button class="opt-btn" onclick="botSelectItem('Dragon\\'s Breath Item', 15000)">🌱 Dragon's Breath (Rp 15.000)</button>
@@ -1223,22 +1383,17 @@
         function botSelectItem(itemName, price) {
             botData.item = itemName;
             botData.price = price;
-
             addMessage('user', `Saya mau beli ${itemName}`);
-            
             setTimeout(() => {
                 addMessage('bot', `Sip! Totalnya <b>Rp ${price.toLocaleString('id-ID')}</b>.<br><br>Silakan <b>download QRIS</b> di samping untuk scan bayar. Atau kalau mau lewati & transfer manual juga bisa, itu nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br><b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`);
-                
                 let footer = document.getElementById('chatFooter');
                 footer.innerHTML = `
                     <div class="chat-form">
                         <input type="text" id="bot-usn-input" placeholder="Masukkan Username Roblox..." oninput="saveChatState()" />
-                        
                         <label for="tf-file" id="file-label">
                             📸 Pilih Foto Bukti Transfer
                         </label>
                         <input type="file" id="tf-file" accept="image/*" style="display:none;" onchange="previewScreenshot(this)">
-                        
                         <button class="btn-submit-bot" onclick="processBotSubmission()">Lanjut ke WhatsApp 🚀</button>
                     </div>
                 `;
@@ -1249,12 +1404,10 @@
         function previewScreenshot(input) {
             if (!input.files || !input.files[0]) return;
             let file = input.files[0];
-
             let reader = new FileReader();
             reader.onload = function (e) {
                 addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${e.target.result}" alt="Bukti Transfer">`);
                 botData.hasScreenshot = true;
-
                 let label = document.getElementById('file-label');
                 if (label) {
                     label.innerText = "✅ Foto Berhasil Diunggah! (Ganti)";
@@ -1268,21 +1421,16 @@
 
         function processBotSubmission() {
             let usnInput = document.getElementById('bot-usn-input').value.trim();
-
             if (!usnInput) {
                 alert("Harap isi Username Roblox kamu terlebih dahulu!");
                 return;
             }
-
             if (!botData.hasScreenshot) {
                 alert("Harap sertakan / lampirkan foto bukti transfer!");
                 return;
             }
-
             botData.username = usnInput;
-
             addMessage('bot', `Sip, data sudah lengkap! Klik tombol di bawah ini untuk membuka WhatsApp. <b>Jangan lupa kirimkan foto bukti transfer kamu di chat WA ya!</b>`);
-
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
                          `Saya sudah transfer via Web Store:\n` +
@@ -1290,9 +1438,7 @@
                          `Harga: *Rp ${botData.price.toLocaleString('id-ID')}*\n` +
                          `Username Roblox: *${botData.username}*\n\n` +
                          `Berikut saya lampirkan foto bukti transfernya. Tolong diproses ya!`;
-
             let waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textWa)}`;
-
             let footer = document.getElementById('chatFooter');
             footer.innerHTML = `
                 <a href="${waUrl}" target="_blank" onclick="localStorage.removeItem('pin_store_chat_session')" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none;">
