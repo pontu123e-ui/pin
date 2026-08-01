@@ -1086,9 +1086,66 @@
 
         let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
         let selectedItem = null;
-        let isBotOnline = true; // Variable status bot lokal
 
-        // --- LISTEN REALTIME STOCK ---
+        // --- STATUS BOT INSTAN (BACA DARI LOCALSTORAGE AGAR TIDAK KEMBALI ON SAAT REFRESH) ---
+        let savedStatus = localStorage.getItem('isBotOnline');
+        let isBotOnline = savedStatus !== null ? (savedStatus === 'true') : true;
+
+        // --- FUNGSI UPDATE UI TAMPILAN BOT ONLINE / OFFLINE ---
+        function applyBotStatusUI(online) {
+            isBotOnline = online;
+            localStorage.setItem('isBotOnline', online); // Simpan permanen di browser
+
+            let bannerBox = document.querySelector('.chat-hero-banner');
+            let bannerDot = document.getElementById('bannerStatusDot');
+            let chatHeaderDot = document.getElementById('chatHeaderDot');
+            let bannerTitle = document.getElementById('banner-title');
+            let bannerDesc = document.getElementById('banner-desc');
+            let bannerBtn = document.getElementById('banner-btn');
+
+            if (online) {
+                // Mode ONLINE
+                if (bannerBox) bannerBox.classList.remove('is-offline');
+                if (bannerDot) bannerDot.className = 'status-dot online';
+                if (chatHeaderDot) chatHeaderDot.style.background = '#00ff88';
+
+                if (bannerTitle) bannerTitle.innerText = "🍡 Jajan Item Roblox / Chat Aku!!";
+                if (bannerDesc) bannerDesc.innerText = "Mau beli item / butuh bantuan? Klik di sini aja bro! 💬";
+                if (bannerBtn) bannerBtn.innerText = "Chat Sekarang ⚡";
+            } else {
+                // Mode OFFLINE (Bobo)
+                if (bannerBox) bannerBox.classList.add('is-offline');
+                if (bannerDot) bannerDot.className = 'status-dot offline';
+                if (chatHeaderDot) chatHeaderDot.style.background = '#ff4d4d';
+
+                if (bannerTitle) bannerTitle.innerText = "😴 pinpin lagi bobo...";
+                if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, tapi pesanan kamu tetap bisa dikirim ke WA! 📩";
+                if (bannerBtn) bannerBtn.innerText = "Tinggalkan Pesan 💤";
+
+                // Update tampilan dalam jendela chat jika sedang terbuka
+                let chatBody = document.getElementById('chatBody');
+                let chatFooter = document.getElementById('chatFooter');
+                if (chatBody) {
+                    chatBody.innerHTML = `
+                        <div class="chat-msg bot">
+                            pinpin lgi bobo kamu gabisa beli dulu😡😡
+                        </div>
+                    `;
+                }
+                if (chatFooter) {
+                    chatFooter.innerHTML = `
+                        <div style="text-align:center; font-size:11px; color:#ff4d4d; font-weight:700; padding:6px;">
+                            😴 Bot Offline / Bobo
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        // Terapkan status awal sesegera mungkin dari localStorage
+        applyBotStatusUI(isBotOnline);
+
+        // --- LISTEN REALTIME STOCK FIREBASE ---
         db.ref('stocks').on('value', (snapshot) => {
             const data = snapshot.val();
             if (!data) {
@@ -1116,42 +1173,14 @@
             }
         });
 
-        // --- LISTEN REALTIME BOT STATUS (ONLINE / OFFLINE) DARI FIREBASE ---
+        // --- LISTEN REALTIME BOT STATUS DARI FIREBASE ---
         db.ref('botStatus/isOnline').on('value', (snapshot) => {
             let isOnline = snapshot.val();
             if (isOnline === null) {
-                db.ref('botStatus').set({ isOnline: true });
-                return;
+                db.ref('botStatus/isOnline').set(true);
+                isOnline = true;
             }
-
-            isBotOnline = isOnline; // Simpan status terkini
-
-            let bannerBox = document.querySelector('.chat-hero-banner');
-            let bannerDot = document.getElementById('bannerStatusDot');
-            let chatHeaderDot = document.getElementById('chatHeaderDot');
-            let bannerTitle = document.getElementById('banner-title');
-            let bannerDesc = document.getElementById('banner-desc');
-            let bannerBtn = document.getElementById('banner-btn');
-
-            if (isBotOnline) {
-                // Mode ONLINE (Lampu Hijau)
-                if (bannerBox) bannerBox.classList.remove('is-offline');
-                if (bannerDot) bannerDot.className = 'status-dot online';
-                if (chatHeaderDot) chatHeaderDot.style.background = '#00ff88';
-
-                if (bannerTitle) bannerTitle.innerText = "🍡 Jajan Item Roblox / Chat Aku!!";
-                if (bannerDesc) bannerDesc.innerText = "Mau beli item / butuh bantuan? Klik di sini aja bro! 💬";
-                if (bannerBtn) bannerBtn.innerText = "Chat Sekarang ⚡";
-            } else {
-                // Mode OFFLINE (Lampu Merah + ZZZ Sleeping)
-                if (bannerBox) bannerBox.classList.add('is-offline');
-                if (bannerDot) bannerDot.className = 'status-dot offline';
-                if (chatHeaderDot) chatHeaderDot.style.background = '#ff4d4d';
-
-                if (bannerTitle) bannerTitle.innerText = "😴 pinpin lagi bobo...";
-                if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, tapi pesanan kamu tetap bisa dikirim ke WA! 📩";
-                if (bannerBtn) bannerBtn.innerText = "Tinggalkan Pesan 💤";
-            }
+            applyBotStatusUI(isOnline);
         });
 
         // --- ADMIN ACCESS (KLIK 5x PADA FOTO PROFIL ATAS) ---
@@ -1167,9 +1196,9 @@
                         db.ref('stocks').set(resetData);
                         alert("✅ Berhasil! Stok item telah di-reset penuh.");
                     } else if (menu === "2") {
-                        // TOGGLE LANGSUNG DAN SINKRON DENGAN DOKUMEN FIREBASE
                         let newState = !isBotOnline; 
-                        db.ref('botStatus/isOnline').set(newState);
+                        applyBotStatusUI(newState); // Terapkan instan
+                        db.ref('botStatus/isOnline').set(newState); // Simpan ke Firebase Database
                         alert(`✅ Status Bot berhasil diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE / BOBO 😴"}`);
                     }
                 } else if (pin !== null) {
@@ -1245,7 +1274,7 @@
             document.getElementById('testiModal').style.display = "none";
         }
 
-        // --- CHATBOT WIDGET SYSTEM WITH AUTO-SAVE (LOCALSTORAGE) ---
+        // --- CHATBOT WIDGET SYSTEM WITH AUTO-SAVE ---
         let botData = { item: "", price: 0, username: "", hasScreenshot: false };
 
         function saveChatState() {
@@ -1263,6 +1292,12 @@
         }
 
         function loadChatState() {
+            // Jika bot offline, jangan muat sesi chat online lama!
+            if (!isBotOnline) {
+                applyBotStatusUI(false);
+                return;
+            }
+
             let saved = localStorage.getItem('pin_store_chat_session');
             if (saved) {
                 try {
@@ -1290,16 +1325,7 @@
             botData = { item: "", price: 0, username: "", hasScreenshot: false };
             
             if (!isBotOnline) {
-                document.getElementById('chatBody').innerHTML = `
-                    <div class="chat-msg bot">
-                        pinpin lgi bobo kamu gabisa beli dulu😡😡
-                    </div>
-                `;
-                document.getElementById('chatFooter').innerHTML = `
-                    <div style="text-align:center; font-size:11px; color:#ff4d4d; font-weight:700; padding:6px;">
-                        😴 Bot Offline / Bobo
-                    </div>
-                `;
+                applyBotStatusUI(false);
                 return;
             }
 
@@ -1323,17 +1349,8 @@
             let isFlex = (widget.style.display === 'flex');
             widget.style.display = isFlex ? 'none' : 'flex';
 
-            // Jika bot offline dan chat dibuka
             if (!isBotOnline) {
-                addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
-                let footer = document.getElementById('chatFooter');
-                if (footer) {
-                    footer.innerHTML = `
-                        <div style="text-align:center; font-size:11px; color:#ff4d4d; font-weight:700; padding:6px;">
-                            😴 Bot Offline / Bobo
-                        </div>
-                    `;
-                }
+                applyBotStatusUI(false);
             }
             saveChatState();
         }
@@ -1349,7 +1366,6 @@
         }
 
         function botSelectItem(itemName, price) {
-            // JIKA BOT SEDANG OFFLINE / BOBO
             if (!isBotOnline) {
                 addMessage('user', `Saya mau beli ${itemName}`);
                 setTimeout(() => {
