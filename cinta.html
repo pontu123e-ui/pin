@@ -24,13 +24,12 @@
             min-height: 100vh;
         }
 
-        /* Tampilan awal saat belum pencet tombol (kunci scroll) */
         body.no-scroll {
             overflow: hidden !important;
             height: 100vh !important;
         }
 
-        /* --- STAGE 1: INTRO SCREEN --- */
+        /* INTRO SCREEN */
         #intro-screen {
             position: fixed;
             top: 0;
@@ -72,7 +71,7 @@
             100% { transform: scale(1); }
         }
 
-        /* --- STAGE 2: MAIN LOVE SCENE --- */
+        /* MAIN SCREEN */
         #main-screen {
             position: relative;
             width: 100%;
@@ -90,7 +89,6 @@
             opacity: 1;
         }
 
-        /* BACKGROUND CANVA PARTIKEL */
         canvas {
             position: fixed;
             top: 0;
@@ -101,7 +99,6 @@
             z-index: 1;
         }
 
-        /* KARTU UCAPAN */
         .love-card {
             position: relative;
             z-index: 5;
@@ -133,7 +130,6 @@
             line-height: 1.8;
         }
 
-        /* GALERI FOTO */
         .gallery-title {
             position: relative;
             z-index: 5;
@@ -156,7 +152,6 @@
             align-items: center;
         }
 
-        /* POLAROID CARD */
         .polaroid-card {
             background: rgba(255, 255, 255, 0.95);
             padding: 15px 15px 25px 15px;
@@ -200,7 +195,7 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
-            display: none;
+            display: flex;
             justify-content: center;
             align-items: center;
             font-size: 20px;
@@ -211,25 +206,22 @@
 </head>
 <body class="no-scroll">
 
-    <!-- AUDIO: SAILOR SONG - GIGI PEREZ -->
-    <audio id="bg-music" loop preload="auto">
-        <source src="https://files.catbox.moe/k3b02r.mp3" type="audio/mpeg">
-        <source src="sailor_song.mp3" type="audio/mpeg">
+    <!-- TAG AUDIO DENGAN NAMA FILE GIGI PEREZ KAMU -->
+    <audio id="bg-music" loop playsinline preload="auto">
+        <source src="Gigi Perez - Sailor Song (Lyrics).mp3" type="audio/mpeg">
     </audio>
 
-    <!-- TOMBOL PLAY/PAUSE MUSIK -->
     <button class="music-btn" id="musicBtn" onclick="toggleMusic()">🎵</button>
 
-    <!-- STAGE 1: INTRO -->
+    <!-- INTRO -->
     <div id="intro-screen">
         <button class="btn-love" onclick="enterPortal()">Pencet ini sayang 💖</button>
     </div>
 
-    <!-- STAGE 2: UTAMA -->
+    <!-- UTAMA -->
     <div id="main-screen">
         <canvas id="heartCanvas"></canvas>
         
-        <!-- KARTU UCAPAN -->
         <div class="love-card">
             <span style="font-size: 32px;">💖✨</span>
             <h1>I Love You So Much</h1>
@@ -241,9 +233,7 @@
 
         <div class="gallery-title">📜 Kenangan Indah Kita 📜</div>
 
-        <!-- GALERI FOTO (BISA DI-SCROLL KE BAWAH) -->
         <div class="gallery-container">
-            
             <div class="polaroid-card">
                 <img src="https://picsum.photos/400/500?random=1" alt="Foto 1">
                 <div class="polaroid-caption">Momen Pertama Kita 🌸</div>
@@ -263,7 +253,6 @@
                 <img src="https://picsum.photos/400/500?random=4" alt="Foto 4">
                 <div class="polaroid-caption">Selalu Sama Kamu Selamanya 🔒</div>
             </div>
-
         </div>
     </div>
 
@@ -275,22 +264,20 @@
             const introScreen = document.getElementById('intro-screen');
             const mainScreen = document.getElementById('main-screen');
 
-            // 1. LANGSUNG PUTAR MUSIK SAILOR SONG
-            bgMusic.play().then(() => {
-                musicBtn.style.display = 'flex';
-            }).catch(err => {
-                console.log("Audio play error:", err);
-                musicBtn.style.display = 'flex';
-            });
+            if (bgMusic) {
+                bgMusic.volume = 0.9;
+                bgMusic.play().then(() => {
+                    musicBtn.innerHTML = '🎵';
+                }).catch(error => {
+                    console.log("Autoplay issue:", error);
+                });
+            }
 
-            // 2. LEPAS KUNCI SCROLL BODY
             document.body.classList.remove('no-scroll');
-
-            // 3. ANIMASI MASUK PORTAL
             introScreen.classList.add('portal-zoom-out');
 
             setTimeout(() => {
-                introScreen.style.display = 'none'; // Hapus elemen intro agar tidak menghalangi sentuhan
+                introScreen.style.display = 'none';
                 mainScreen.classList.add('visible');
                 initHeartParticles();
             }, 700);
@@ -306,7 +293,6 @@
             }
         }
 
-        // HUJAN PARTIKEL LOVE
         function initHeartParticles() {
             const canvas = document.getElementById('heartCanvas');
             const ctx = canvas.getContext('2d');
