@@ -1167,12 +1167,10 @@
                         db.ref('stocks').set(resetData);
                         alert("✅ Berhasil! Stok item telah di-reset penuh.");
                     } else if (menu === "2") {
-                        db.ref('botStatus/isOnline').once('value', (snap) => {
-                            let current = snap.val();
-                            let newState = !current;
-                            db.ref('botStatus').set({ isOnline: newState });
-                            alert(`✅ Status Bot berhasil diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE / BOBO 😴"}`);
-                        });
+                        // TOGGLE LANGSUNG DAN SINKRON DENGAN DOKUMEN FIREBASE
+                        let newState = !isBotOnline; 
+                        db.ref('botStatus/isOnline').set(newState);
+                        alert(`✅ Status Bot berhasil diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE / BOBO 😴"}`);
                     }
                 } else if (pin !== null) {
                     alert("❌ PIN Salah!");
@@ -1325,7 +1323,7 @@
             let isFlex = (widget.style.display === 'flex');
             widget.style.display = isFlex ? 'none' : 'flex';
 
-            // Jika bot offline dan chat dibuka pertama kali / baru di-toggle
+            // Jika bot offline dan chat dibuka
             if (!isBotOnline) {
                 addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
                 let footer = document.getElementById('chatFooter');
@@ -1385,7 +1383,7 @@
             let file = input.files[0];
             let reader = new FileReader();
             reader.onload = function (e) {
-                addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${e.target.result}" alt="Bukti Transfer">`);
+                addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${e.result}" alt="Bukti Transfer">`);
                 botData.hasScreenshot = true;
                 let label = document.getElementById('file-label');
                 if (label) {
