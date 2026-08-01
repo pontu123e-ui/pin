@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Codes Hub | By Pontu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #0b0e14;
+            color: #ffffff;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #1e1b4b, #312e81);
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 2px solid #6366f1;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        header h1 span {
+            color: #818cf8;
+        }
+
+        .creator-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #38bdf8;
+            margin-top: 10px;
+        }
+
+        /* SEARCH BAR */
+        .search-container {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid #374151;
+            background-color: #1f2937;
+            color: white;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: #6366f1;
+        }
+
+        /* CONTAINER KARTU KODE */
+        .code-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* KARTU KODE */
+        .code-card {
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 16px;
+            padding: 20px;
+            position: relative;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .code-card:hover {
+            transform: translateY(-5px);
+            border-color: #6366f1;
+        }
+
+        .game-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #f3f4f6;
+            margin-bottom: 5px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        .status-active {
+            background: rgba(34, 197, 94, 0.2);
+            color: #4ade80;
+            border: 1px solid #22c55e;
+        }
+
+        .status-expired {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid #ef4444;
+        }
+
+        .code-box {
+            background: #030712;
+            border: 1px dashed #374151;
+            padding: 12px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .code-text {
+            font-family: monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 1px;
+        }
+
+        .copy-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: #4338ca;
+        }
+
+        .reward-text {
+            font-size: 13px;
+            color: #9ca3af;
+        }
+
+        /* TOAST NOTIFIKASI */
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #10b981;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 12px;
+            position: fixed;
+            z-index: 99;
+            left: 50%;
+            bottom: 30px;
+            transform: translateX(-50%);
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        #toast.show {
+            visibility: visible;
+            animation: fadeInOut 2.5s;
+        }
+
+        @keyframes fadeInOut {
+            0% { bottom: 0; opacity: 0; }
+            20% { bottom: 30px; opacity: 1; }
+            80% { bottom: 30px; opacity: 1; }
+            100% { bottom: 0; opacity: 0; }
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎮 Roblox <span>Code Hub</span></h1>
+        <p style="color: #94a3b8; font-size: 14px;">Kumpulan Kode Redeem Roblox Terbaru & Terupdate!</p>
+        <div class="creator-badge">Developed by <b>Pontu</b> ✨</div>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-bar" placeholder="Cari nama game (contoh: Blox Fruits)..." onkeyup="filterCodes()">
+    </div>
+
+    <div class="code-container" id="codeContainer">
+        <!-- Kartu kode akan dimuat otomatis dari JavaScript di bawah -->
+    </div>
+
+    <div id="toast">✅ Kode Berhasil Disalin!</div>
+
+    <footer>
+        <p>© 2026 <b>Pontu Roblox Hub</b>. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // DAFTAR KODE ROBLOX (Tinggal Edit Di Sini!)
+        // ==========================================
+        const robloxCodes = [
+            {
+                game: "Blox Fruits",
+                code: "SUB2GAMERROBOT_EXP1",
+                reward: "2x EXP (30 Menit)",
+                status: "ACTIVE"
+            },
+            {
+                game: "Blox Fruits",
+                code: "KITT_RESET",
+                reward: "Stat Reset Gratis",
+                status: "ACTIVE"
+            },
+            {
+                game: "Fisch",
+                code: "FISCH2026",
+                reward: "Free Coins & Bait",
+                status: "ACTIVE"
+            },
+            {
+                game: "Rivals",
+                code: "COMMUNITY",
+                reward: "50x Keys & Community Wrap",
+                status: "ACTIVE"
+            },
+            {
+                game: "Anime Defenders",
+                code: "SUMMER2025",
+                reward: "500 Gems",
+                status: "EXPIRED"
+            }
+        ];
+
+        // FUNGSI UNTUK MENAMPILKAN KARTU KODE
+        function renderCodes(data) {
+            const container = document.getElementById('codeContainer');
+            container.innerHTML = '';
+
+            if (data.length === 0) {
+                container.innerHTML = '<p style="text-align:center; grid-column: 1/-1; color: #6b7280;">Kode game tidak ditemukan... 😢</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const isExpired = item.status === "EXPIRED";
+                const card = document.createElement('div');
+                card.className = 'code-card';
+
+                card.innerHTML = `
+                    <div class="game-title">${item.game}</div>
+                    <span class="status-badge ${isExpired ? 'status-expired' : 'status-active'}">
+                        ${isExpired ? '❌ EXPIRED' : '✅ ACTIVE'}
+                    </span>
+                    <div class="code-box">
+                        <span class="code-text">${item.code}</span>
+                        <button class="copy-btn" onclick="copyCode('${item.code}')">COPY</button>
+                    </div>
+                    <div class="reward-text">🎁 Hadiah: <b>${item.reward}</b></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // FUNGSI COPY KODE
+        function copyCode(code) {
+            navigator.clipboard.writeText(code);
+            const toast = document.getElementById("toast");
+            toast.className = "show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 2500);
+        }
+
+        // FUNGSI CARI GAME
+        function filterCodes() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = robloxCodes.filter(item => 
+                item.game.toLowerCase().includes(query) || 
+                item.code.toLowerCase().includes(query)
+            );
+            renderCodes(filtered);
+        }
+
+        // JALANKAN SAAT WEB DIBUKA
+        renderCodes(robloxCodes);
+    </script>
+</body>
+</html>
