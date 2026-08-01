@@ -136,9 +136,19 @@
             font-size: 22px;
             font-weight: 600;
             color: #ff758c;
-            margin-bottom: 30px;
+            margin-bottom: 10px;
             text-align: center;
             text-shadow: 0 0 10px rgba(255, 117, 140, 0.5);
+        }
+
+        .gallery-hint {
+            position: relative;
+            z-index: 5;
+            font-size: 13px;
+            color: #f1f5f9;
+            opacity: 0.8;
+            margin-bottom: 30px;
+            text-align: center;
         }
 
         .gallery-container {
@@ -152,6 +162,7 @@
             align-items: center;
         }
 
+        /* POLAROID CARD */
         .polaroid-card {
             background: rgba(255, 255, 255, 0.95);
             padding: 15px 15px 25px 15px;
@@ -159,11 +170,17 @@
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 15px rgba(255, 46, 147, 0.2);
             width: 100%;
             transform: rotate(-2deg);
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
         }
 
         .polaroid-card:nth-child(even) {
             transform: rotate(2deg);
+        }
+
+        .polaroid-card:hover {
+            transform: scale(1.03) rotate(0deg);
+            box-shadow: 0 15px 35px rgba(255, 46, 147, 0.4);
         }
 
         .polaroid-card img {
@@ -180,6 +197,88 @@
             text-align: center;
             margin-top: 15px;
             font-weight: 700;
+        }
+
+        /* POPUP MODAL (ANIMASI FOKUS FOTO) */
+        #photo-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(13, 4, 23, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        #photo-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 117, 140, 0.5);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 0 40px rgba(255, 46, 147, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            text-align: center;
+        }
+
+        #photo-modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content img {
+            width: 100%;
+            max-height: 280px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-text h3 {
+            font-family: 'Sacramento', cursive;
+            font-size: 34px;
+            color: #ff758c;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(255, 117, 140, 0.5);
+        }
+
+        .modal-text p {
+            font-size: 14px;
+            color: #e2e8f0;
+            line-height: 1.7;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 18px;
+            font-size: 30px;
+            color: #ff758c;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.2);
         }
 
         /* TOMBOL MUSIK FLOATING */
@@ -206,7 +305,7 @@
 </head>
 <body class="no-scroll">
 
-    <!-- TAG AUDIO DENGAN NAMA FILE GIGI PEREZ KAMU -->
+    <!-- AUDIO: SAILOR SONG GIGI PEREZ -->
     <audio id="bg-music" loop playsinline preload="auto">
         <source src="Gigi Perez - Sailor Song (Lyrics).mp3" type="audio/mpeg">
     </audio>
@@ -218,7 +317,7 @@
         <button class="btn-love" onclick="enterPortal()">Pencet ini sayang 💖</button>
     </div>
 
-    <!-- UTAMA -->
+    <!-- MAIN CONTAINER -->
     <div id="main-screen">
         <canvas id="heartCanvas"></canvas>
         
@@ -232,26 +331,62 @@
         </div>
 
         <div class="gallery-title">📜 Kenangan Indah Kita 📜</div>
+        <div class="gallery-hint">(Klik fotonya untuk lihat pesan manisnya 💌)</div>
 
+        <!-- GALERI FOTO POLAROID -->
         <div class="gallery-container">
-            <div class="polaroid-card">
+            
+            <!-- FOTO 1 -->
+            <div class="polaroid-card" onclick="openModal(
+                'https://picsum.photos/400/500?random=1', 
+                'Awal Dari Segalanya 🌸', 
+                'Ingat gak momen ini? Hari di mana aku pertama kali sadar kalau hadirnya kamu di hidupku itu hal yang paling indah. Makasih ya udah mau mulai cerita ini bareng aku! 💕'
+            )">
                 <img src="https://picsum.photos/400/500?random=1" alt="Foto 1">
                 <div class="polaroid-caption">Momen Pertama Kita 🌸</div>
             </div>
 
-            <div class="polaroid-card">
+            <!-- FOTO 2 -->
+            <div class="polaroid-card" onclick="openModal(
+                'https://picsum.photos/400/500?random=2', 
+                'Senyuman Favoritku 😊', 
+                'Setiap kali kamu senyum kaya gini, semua rasa capek aku langsung hilang. Senyum kamu itu selalu jadi alasan aku buat bahagia tiap hari. Tetap senyum terus ya sayang! ✨'
+            )">
                 <img src="https://picsum.photos/400/500?random=2" alt="Foto 2">
                 <div class="polaroid-caption">Senyuman Favoritku 😊</div>
             </div>
 
-            <div class="polaroid-card">
+            <!-- FOTO 3 -->
+            <div class="polaroid-card" onclick="openModal(
+                'https://picsum.photos/400/500?random=3', 
+                'Jalan-jalan Bareng 💕', 
+                'Mau kemana aja tujuannya, asal jalannya sama kamu, semuanya selalu terasa seru dan berkesan. Gak sabar buat explore banyak tempat baru lagi bareng kamu! 🗺️💖'
+            )">
                 <img src="https://picsum.photos/400/500?random=3" alt="Foto 3">
                 <div class="polaroid-caption">Jalan-jalan Bareng 💕</div>
             </div>
 
-            <div class="polaroid-card">
+            <!-- FOTO 4 -->
+            <div class="polaroid-card" onclick="openModal(
+                'https://picsum.photos/400/500?random=4', 
+                'Selalu Sama Kamu Selamanya 🔒', 
+                'Terima kasih sudah bertahan dan selalu ada buat aku sejauh ini. Aku janji bakal terus jaga kamu dan ukir kenangan-kenangan manis baru bareng kamu selamanya. I love you! 💖'
+            )">
                 <img src="https://picsum.photos/400/500?random=4" alt="Foto 4">
                 <div class="polaroid-caption">Selalu Sama Kamu Selamanya 🔒</div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- POPUP MODAL LIGHTBOX FOKUS FOTO -->
+    <div id="photo-modal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="closeModalDirect()">&times;</span>
+            <img id="modal-img" src="" alt="Detail Foto">
+            <div class="modal-text">
+                <h3 id="modal-title">Judul Foto</h3>
+                <p id="modal-desc">Pesan khusus foto akan muncul di sini.</p>
             </div>
         </div>
     </div>
@@ -293,6 +428,26 @@
             }
         }
 
+        // FUNGSI POPUP MODAL FOTO
+        function openModal(imgSrc, title, desc) {
+            document.getElementById('modal-img').src = imgSrc;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-desc').innerText = desc;
+            document.getElementById('photo-modal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            // Tutup jika klik area luar kartu modal
+            if (event.target.id === 'photo-modal') {
+                document.getElementById('photo-modal').classList.remove('active');
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('photo-modal').classList.remove('active');
+        }
+
+        // PARTIKEL HUJAN LOVE
         function initHeartParticles() {
             const canvas = document.getElementById('heartCanvas');
             const ctx = canvas.getContext('2d');
