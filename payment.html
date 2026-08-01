@@ -78,23 +78,17 @@
             z-index: 2;
         }
 
+        /* --- PROFIL ATAS (POLOS & BERSIH) --- */
         .profile {
             text-align: center;
-            margin-bottom: 16px;
-        }
-
-        /* --- AVATAR & STATUS BOT ANIMATION (KILLUA SLEEP) --- */
-        .avatar-wrapper {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 4px;
+            margin-bottom: 20px;
         }
 
         .avatar {
             width: 85px;
             height: 85px;
             border-radius: 50%;
-            margin: 0 auto;
+            margin: 0 auto 10px auto;
             border: 2px solid #00f0ff;
             box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
             overflow: hidden;
@@ -107,106 +101,6 @@
             height: 100%;
             object-fit: cover;
             pointer-events: none;
-            transition: filter 0.3s ease;
-        }
-
-        /* LAMPU INDIKATOR STATUS (DOT) */
-        .status-dot {
-            position: absolute;
-            bottom: 4px;
-            right: 4px;
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid #101422;
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-
-        .status-dot.online {
-            background-color: #00ff88;
-            box-shadow: 0 0 10px #00ff88;
-        }
-
-        .status-dot.offline {
-            background-color: #ff4d4d;
-            box-shadow: 0 0 10px #ff4d4d;
-        }
-
-        /* SPEECH BUBBLE (BALON TEKS) */
-        .speech-bubble {
-            position: relative;
-            background: #171c2e;
-            border: 1px solid #00f0ff;
-            border-radius: 12px;
-            padding: 5px 12px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #00f0ff;
-            display: inline-block;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
-            margin-bottom: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 6px 6px 0;
-            border-style: solid;
-            border-color: #00f0ff transparent;
-        }
-
-        /* ANIMASI ZZZ MELAYANG SAAT BOBO */
-        .zzz-container {
-            position: absolute;
-            top: -12px;
-            right: -8px;
-            pointer-events: none;
-            display: none;
-            z-index: 10;
-        }
-
-        .zzz-container span {
-            position: absolute;
-            font-weight: bold;
-            color: #60a5fa;
-            font-size: 16px;
-            opacity: 0;
-            animation: floatZ 2.5s infinite linear;
-        }
-
-        .zzz-container span:nth-child(1) { animation-delay: 0s; right: 0px; }
-        .zzz-container span:nth-child(2) { animation-delay: 0.8s; right: 8px; }
-        .zzz-container span:nth-child(3) { animation-delay: 1.6s; right: 16px; }
-
-        @keyframes floatZ {
-            0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: translate(15px, -30px) scale(1.2); }
-        }
-
-        /* MINTA EFFECT SAAT OFFLINE */
-        .is-offline .avatar img,
-        .is-offline .chibi-img-box img {
-            filter: grayscale(45%) brightness(70%);
-        }
-
-        .is-offline .zzz-container {
-            display: block !important;
-        }
-
-        .is-offline .speech-bubble {
-            border-color: #ff4d4d;
-            color: #ff4d4d;
-            box-shadow: 0 0 12px rgba(255, 77, 77, 0.3);
-        }
-
-        .is-offline .speech-bubble::after {
-            border-color: #ff4d4d transparent;
         }
 
         .name {
@@ -219,22 +113,10 @@
         .sub-name {
             font-size: 11px;
             color: #94a3b8;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
 
-        .status-badge {
-            font-size: 10px;
-            color: #00ff88;
-            background: rgba(0, 255, 136, 0.1);
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 15px;
-            border: 1px solid rgba(0, 255, 136, 0.3);
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        /* --- HERO BANNER CHAT AUTO LOOK --- */
+        /* --- HERO BANNER CHAT BOT (BOT STATUS FITUR) --- */
         .chat-hero-banner {
             background: linear-gradient(135deg, #171c2e, #1e293b);
             border: 2px solid #00f0ff;
@@ -248,7 +130,7 @@
             cursor: pointer;
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
             animation: pulseBanner 2.5s infinite alternate ease-in-out;
-            transition: transform 0.2s;
+            transition: transform 0.2s, border-color 0.3s;
         }
 
         .chat-hero-banner:hover {
@@ -267,6 +149,11 @@
             gap: 12px;
         }
 
+        .avatar-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
         .chibi-img-box {
             width: 50px;
             height: 50px;
@@ -283,6 +170,7 @@
             height: 100%;
             object-fit: cover;
             pointer-events: none;
+            transition: filter 0.3s ease;
         }
 
         @keyframes bounceChibi {
@@ -290,11 +178,82 @@
             100% { transform: translateY(-5px); }
         }
 
+        /* LAMPU INDIKATOR STATUS (DOT BOT) */
+        .status-dot {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid #101422;
+            transition: all 0.3s ease;
+            z-index: 5;
+        }
+
+        .status-dot.online {
+            background-color: #00ff88;
+            box-shadow: 0 0 8px #00ff88;
+        }
+
+        .status-dot.offline {
+            background-color: #ff4d4d;
+            box-shadow: 0 0 8px #ff4d4d;
+        }
+
+        /* ANIMASI ZZZ MELAYANG SAAT BOT BOBO */
+        .zzz-container {
+            position: absolute;
+            top: -12px;
+            right: -6px;
+            pointer-events: none;
+            display: none;
+            z-index: 10;
+        }
+
+        .zzz-container span {
+            position: absolute;
+            font-weight: bold;
+            color: #60a5fa;
+            font-size: 14px;
+            opacity: 0;
+            animation: floatZ 2.5s infinite linear;
+        }
+
+        .zzz-container span:nth-child(1) { animation-delay: 0s; right: 0px; }
+        .zzz-container span:nth-child(2) { animation-delay: 0.8s; right: 6px; }
+        .zzz-container span:nth-child(3) { animation-delay: 1.6s; right: 12px; }
+
+        @keyframes floatZ {
+            0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translate(12px, -25px) scale(1.2); }
+        }
+
+        /* EFEK SAAT BOT OFFLINE */
+        .chat-hero-banner.is-offline {
+            border-color: #ff4d4d !important;
+            box-shadow: 0 0 20px rgba(255, 77, 77, 0.25) !important;
+        }
+
+        .chat-hero-banner.is-offline .chibi-img-box img {
+            filter: grayscale(50%) brightness(70%);
+        }
+
+        .chat-hero-banner.is-offline .zzz-container {
+            display: block !important;
+        }
+
         .banner-info h3 {
             font-size: 13px;
             color: #00f0ff;
             font-weight: 700;
             margin-bottom: 2px;
+            transition: color 0.3s;
+        }
+
+        .chat-hero-banner.is-offline .banner-info h3 {
+            color: #ff4d4d;
         }
 
         .banner-info p {
@@ -311,6 +270,13 @@
             border-radius: 8px;
             white-space: nowrap;
             box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
+            transition: all 0.3s;
+        }
+
+        .chat-hero-banner.is-offline .banner-btn-action {
+            background: linear-gradient(135deg, #ff4d4d, #991b1b);
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
         }
 
         @media (max-width: 480px) {
@@ -898,53 +864,38 @@
     <div class="electric-aura"></div>
     
     <div class="container">
-        <!-- HEADER PROFIL + STATUS KILLUA -->
-        <div class="profile" id="profileBox">
-            <!-- Balon Teks Status Bot -->
-            <div class="speech-bubble" id="botSpeechBubble">
-                pinpin siap melayani! ⚡
-            </div>
-
-            <!-- Avatar Wrapper (Lampu Merah/Hijau + ZZZ Animation) -->
-            <div class="avatar-wrapper">
-                <div class="avatar" onclick="quickRestock()">
-                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
-                </div>
-                <!-- Animasi ZZZ Melayang -->
-                <div class="zzz-container">
-                    <span>Z</span>
-                    <span>z</span>
-                    <span>z</span>
-                </div>
-                <!-- Lampu Indikator Status -->
-                <div class="status-dot online" id="mainStatusDot"></div>
+        <!-- HEADER PROFIL (BERSIH & POLOS) -->
+        <div class="profile">
+            <!-- Foto Profil Killua Atas -->
+            <div class="avatar" onclick="quickRestock()">
+                <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
 
             <h1 class="name">pin gantenk</h1>
             <p class="sub-name">Official Roblox Item Store & Payment</p>
-            <span class="status-badge" id="live-indicator">🟢 BOT ONLINE / READY</span>
 
-            <!-- Tombol Toggle Pengubah Status Bot (Online/Offline) -->
-            <div style="margin-top: 8px;">
-                <button onclick="toggleBotStatus()" style="background: rgba(0, 240, 255, 0.12); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.4); padding: 4px 12px; border-radius: 6px; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
+            <!-- Tombol Toggle Status Bot -->
+            <div>
+                <button onclick="toggleBotStatus()" style="background: rgba(0, 240, 255, 0.12); color: #00f0ff; border: 1px solid rgba(0, 240, 255, 0.4); padding: 5px 14px; border-radius: 8px; font-size: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s;">
                     ⚙️ Toggle Status Bot (Online/Offline)
                 </button>
             </div>
         </div>
 
-        <!-- BANNER HERO CHAT BOT -->
+        <!-- BANNER HERO CHAT BOT (HANYA DI SINI ADA STATUS BOT/SLEEP) -->
         <div class="chat-hero-banner" onclick="toggleChat()">
             <div class="chibi-left">
                 <div class="avatar-wrapper">
                     <div class="chibi-img-box">
                         <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
                     </div>
-                    <!-- Animasi ZZZ Banner -->
+                    <!-- Animasi ZZZ Melayang Saat Bobo -->
                     <div class="zzz-container">
                         <span>Z</span>
                         <span>z</span>
                         <span>z</span>
                     </div>
+                    <!-- Lampu Indikator Status Dot Bot -->
                     <div class="status-dot online" id="bannerStatusDot"></div>
                 </div>
                 <div class="banner-info">
@@ -1181,59 +1132,35 @@
             }
         });
 
-        // --- SYSTEM STATUS BOT (ONLINE / SLEEPING OFFLINE) ---
+        // --- SYSTEM STATUS BOT (HANYA MENGATUR BOT BANNER DI BAWAH) ---
         let isBotOnline = true;
 
         function toggleBotStatus() {
             isBotOnline = !isBotOnline;
 
-            let profileBox = document.getElementById('profileBox');
             let bannerBox = document.querySelector('.chat-hero-banner');
-            let mainDot = document.getElementById('mainStatusDot');
             let bannerDot = document.getElementById('bannerStatusDot');
             let chatHeaderDot = document.getElementById('chatHeaderDot');
-            let speechBubble = document.getElementById('botSpeechBubble');
-            let liveIndicator = document.getElementById('live-indicator');
             let bannerTitle = document.getElementById('banner-title');
             let bannerDesc = document.getElementById('banner-desc');
             let bannerBtn = document.getElementById('banner-btn');
 
             if (isBotOnline) {
                 // Mode ONLINE (Lampu Hijau)
-                if (profileBox) profileBox.classList.remove('is-offline');
                 if (bannerBox) bannerBox.classList.remove('is-offline');
-
-                if (mainDot) mainDot.className = 'status-dot online';
                 if (bannerDot) bannerDot.className = 'status-dot online';
                 if (chatHeaderDot) chatHeaderDot.style.background = '#00ff88';
 
-                if (speechBubble) speechBubble.innerText = "pinpin siap melayani! ⚡";
-                if (liveIndicator) {
-                    liveIndicator.innerText = "🟢 BOT ONLINE / READY";
-                    liveIndicator.style.color = "#00ff88";
-                    liveIndicator.style.background = "rgba(0, 255, 136, 0.1)";
-                    liveIndicator.style.borderColor = "rgba(0, 255, 136, 0.3)";
-                }
                 if (bannerTitle) bannerTitle.innerText = "🍡 Jajan Item Roblox / Chat Aku!!";
                 if (bannerDesc) bannerDesc.innerText = "Mau beli item / butuh bantuan? Klik di sini aja bro! 💬";
                 if (bannerBtn) bannerBtn.innerText = "Chat Sekarang ⚡";
             } else {
                 // Mode OFFLINE (Lampu Merah + ZZZ Sleeping)
-                if (profileBox) profileBox.classList.add('is-offline');
                 if (bannerBox) bannerBox.classList.add('is-offline');
-
-                if (mainDot) mainDot.className = 'status-dot offline';
                 if (bannerDot) bannerDot.className = 'status-dot offline';
                 if (chatHeaderDot) chatHeaderDot.style.background = '#ff4d4d';
 
-                if (speechBubble) speechBubble.innerText = "pinpin lagi bobo 😴";
-                if (liveIndicator) {
-                    liveIndicator.innerText = "🔴 BOT OFFLINE / LAGI BOBO";
-                    liveIndicator.style.color = "#ff4d4d";
-                    liveIndicator.style.background = "rgba(255, 77, 77, 0.15)";
-                    liveIndicator.style.borderColor = "rgba(255, 77, 77, 0.4)";
-                }
-                if (bannerTitle) bannerTitle.innerText = "😴 pinpin Lagi Bobo...";
+                if (bannerTitle) bannerTitle.innerText = "😴 pinpin lagi bobo...";
                 if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, tapi pesanan kamu tetap bisa dikirim ke WA! 📩";
                 if (bannerBtn) bannerBtn.innerText = "Tinggalkan Pesan 💤";
             }
