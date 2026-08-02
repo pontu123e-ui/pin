@@ -578,8 +578,8 @@
         }
 
         .chat-msg {
-            max-width: 85%;
-            padding: 8px 12px;
+            max-width: 88%;
+            padding: 10px 12px;
             border-radius: 12px;
             font-size: 11px;
             line-height: 1.4;
@@ -619,13 +619,14 @@
             display: flex;
             flex-direction: column;
             gap: 6px;
+            margin-top: 10px;
         }
 
         .opt-btn {
             background: #101422;
             color: #00f0ff;
             border: 1px solid rgba(0, 240, 255, 0.3);
-            padding: 8px;
+            padding: 8px 10px;
             border-radius: 8px;
             font-size: 11px;
             cursor: pointer;
@@ -802,10 +803,12 @@
         <div class="chat-body" id="chatBody">
             <div class="chat-msg bot" id="botGreetingMsg">
                 Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
+                <!-- Pilihan item langsung dirender di dalam bubble bot ini -->
+                <div class="chat-options" id="chatOptions"></div>
             </div>
         </div>
         <div class="chat-footer" id="chatFooter">
-            <!-- Opsi Item Beserta Stok Dimuat di Sini secara Dinamis -->
+            <!-- Footer siap untuk form / instruksi -->
         </div>
     </div>
 
@@ -895,17 +898,27 @@
 
         applyBotStatusUI(isBotOnline);
 
-        // --- RENDER OPSI ITEM ---
+        // --- RENDER OPSI ITEM DI DALAM CHAT BUBBLE ---
         function renderChatOptions(force = false) {
             if (!isBotOnline) return;
-
-            let chatFooter = document.getElementById('chatFooter');
-            if (!chatFooter) return;
-
-            // Jika sedang isi form/sudah siap WA, jangan timpa footer kecuali dipaksa (force == true)
             if (!force && botData.step && botData.step !== 'select') return;
 
-            let optionsHTML = '<div class="chat-options" id="chatOptions">';
+            let optionsContainer = document.getElementById('chatOptions');
+            
+            // Jika elemen penampung tombol tidak ada, buat di dalam gelembung greeting bot
+            if (!optionsContainer) {
+                let greetingMsg = document.getElementById('botGreetingMsg');
+                if (greetingMsg) {
+                    optionsContainer = document.createElement('div');
+                    optionsContainer.id = 'chatOptions';
+                    optionsContainer.className = 'chat-options';
+                    greetingMsg.appendChild(optionsContainer);
+                }
+            }
+
+            if (!optionsContainer) return;
+
+            let optionsHTML = '';
             for (let key in itemListData) {
                 let item = itemListData[key];
                 let stock = localStocks[key] !== undefined ? localStocks[key] : 10;
@@ -920,8 +933,13 @@
                     </button>
                 `;
             }
-            optionsHTML += '</div>';
-            chatFooter.innerHTML = optionsHTML;
+            optionsContainer.innerHTML = optionsHTML;
+
+            // Kosongkan / atur keterangan footer saat memilih item
+            let chatFooter = document.getElementById('chatFooter');
+            if (chatFooter && botData.step === 'select') {
+                chatFooter.innerHTML = '<div style="text-align:center; font-size:10px; color:#64748b;">Silakan pilih item di atas 👆</div>';
+            }
         }
 
         // --- REALTIME SYNC FIREBASE STOK ---
@@ -990,7 +1008,7 @@
                 footer: document.getElementById('chatFooter').innerHTML,
                 botData: botData,
                 isOpen: document.getElementById('chatWidget').style.display === 'flex',
-                v: "3.0"
+                v: "4.0"
             };
             localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
         }
@@ -1004,7 +1022,7 @@
             if (saved) {
                 try {
                     let state = JSON.parse(saved);
-                    if (state.v !== "3.0") {
+                    if (state.v !== "4.0") {
                         resetChatSystem();
                         return;
                     }
@@ -1038,13 +1056,19 @@
                 return;
             }
 
+            // Kembalikan area chat ke gelembung sambutan pertama + wadah tombol
             document.getElementById('chatBody').innerHTML = `
-                <div class="chat-msg bot">
+                <div class="chat-msg bot" id="botGreetingMsg">
                     Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
+                    <div class="chat-options" id="chatOptions"></div>
                 </div>
             `;
             
-            // Paksa render opsi pilihan item dan simpan state
+            let chatFooter = document.getElementById('chatFooter');
+            if (chatFooter) {
+                chatFooter.innerHTML = '<div style="text-align:center; font-size:10px; color:#64748b;">Silakan pilih item di atas 👆</div>';
+            }
+
             renderChatOptions(true);
             saveChatState();
         }
