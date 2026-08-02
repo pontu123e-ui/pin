@@ -30,11 +30,8 @@
             overflow-x: hidden;
             user-select: none;
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
 
-        /* --- BACKGROUND EFFECT --- */
         .bg-grid {
             position: fixed;
             top: 0;
@@ -69,7 +66,6 @@
             100% { transform: scale(1.3); opacity: 0.8; }
         }
 
-        /* --- CONTAINER UTAMA --- */
         .container {
             width: 100%;
             max-width: 520px;
@@ -82,7 +78,6 @@
             z-index: 2;
         }
 
-        /* --- PROFIL ATAS --- */
         .profile {
             text-align: center;
             margin-bottom: 20px;
@@ -96,7 +91,6 @@
             border: 2px solid #00f0ff;
             box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
             overflow: hidden;
-            cursor: pointer;
         }
 
         .avatar img {
@@ -119,7 +113,6 @@
             margin-bottom: 10px;
         }
 
-        /* --- HERO BANNER CHAT BOT --- */
         .chat-hero-banner {
             background: linear-gradient(135deg, #171c2e, #1e293b);
             border: 2px solid #00f0ff;
@@ -133,12 +126,6 @@
             cursor: pointer;
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
             animation: pulseBanner 2.5s infinite alternate ease-in-out;
-            transition: transform 0.2s, border-color 0.3s;
-        }
-
-        .chat-hero-banner:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.45);
         }
 
         @keyframes pulseBanner {
@@ -152,11 +139,6 @@
             gap: 12px;
         }
 
-        .avatar-wrapper {
-            position: relative;
-            display: inline-block;
-        }
-
         .chibi-img-box {
             width: 50px;
             height: 50px;
@@ -165,35 +147,12 @@
             overflow: hidden;
             background: #000;
             flex-shrink: 0;
-            animation: bounceChibi 1.5s infinite alternate ease-in-out;
         }
 
         .chibi-img-box img {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            pointer-events: none;
-        }
-
-        @keyframes bounceChibi {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-5px); }
-        }
-
-        .status-dot {
-            position: absolute;
-            bottom: 2px;
-            right: 2px;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            border: 2px solid #101422;
-            z-index: 5;
-        }
-
-        .status-dot.online {
-            background-color: #00ff88;
-            box-shadow: 0 0 8px #00ff88;
         }
 
         .banner-info h3 {
@@ -216,22 +175,9 @@
             padding: 8px 14px;
             border-radius: 8px;
             white-space: nowrap;
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
         }
 
-        .section-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: #00f0ff;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        /* --- STYLES LIVE LOGS BERJALAN --- */
+        /* --- KOTAK LIVE LOGS --- */
         .logs-box {
             background: #171c2e;
             border-radius: 14px;
@@ -267,12 +213,6 @@
             font-weight: 700;
             padding: 2px 6px;
             border-radius: 6px;
-            animation: pulseBadge 1.5s infinite alternate;
-        }
-
-        @keyframes pulseBadge {
-            0% { opacity: 0.6; }
-            100% { opacity: 1; }
         }
 
         .logs-wrapper {
@@ -281,15 +221,6 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            padding-right: 4px;
-        }
-
-        .logs-wrapper::-webkit-scrollbar {
-            width: 4px;
-        }
-        .logs-wrapper::-webkit-scrollbar-thumb {
-            background: #00f0ff;
-            border-radius: 4px;
         }
 
         .log-item {
@@ -309,21 +240,9 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .log-details strong {
-            color: #ffffff;
-        }
-
-        .log-details span {
-            color: #00f0ff;
-            font-weight: 600;
-        }
-
-        .log-time {
-            font-size: 9px;
-            color: #64748b;
-            text-align: right;
-            white-space: nowrap;
-        }
+        .log-details strong { color: #ffffff; }
+        .log-details span { color: #00f0ff; font-weight: 600; }
+        .log-time { font-size: 9px; color: #64748b; text-align: right; }
 
         /* --- QRIS & PAYMENT --- */
         .qris-box {
@@ -344,16 +263,12 @@
             margin: 10px auto 6px auto;
             border-radius: 10px;
             padding: 8px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .qris-img-wrap img {
             width: 100%;
             height: auto;
             border-radius: 6px;
-            pointer-events: none;
         }
 
         .btn-download-qris {
@@ -366,17 +281,9 @@
             padding: 8px 16px;
             border-radius: 8px;
             text-decoration: none;
-            box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
         }
 
-        .manual-pay-list {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 4px;
-        }
-
+        .manual-pay-list { width: 100%; margin-top: 4px; }
         .pay-row {
             background: #101422;
             border-radius: 8px;
@@ -387,19 +294,8 @@
             border: 1px dashed rgba(0, 240, 255, 0.2);
         }
 
-        .pay-details span {
-            font-size: 9px;
-            color: #8a99ad;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-
-        .pay-details strong {
-            display: block;
-            font-size: 12px;
-            color: #00f0ff;
-            letter-spacing: 0.5px;
-        }
+        .pay-details span { font-size: 9px; color: #8a99ad; text-transform: uppercase; font-weight: 700; }
+        .pay-details strong { display: block; font-size: 12px; color: #00f0ff; }
 
         .btn-action {
             background: linear-gradient(135deg, #00f0ff, #0077ff);
@@ -412,7 +308,7 @@
             cursor: pointer;
         }
 
-        /* --- CHATBOT POPUP MODAL --- */
+        /* --- CHATBOT WIDGET --- */
         .chat-widget {
             position: fixed;
             top: 50%;
@@ -464,22 +360,16 @@
             color: #ffffff;
             align-self: flex-start;
             border: 1px solid rgba(0, 240, 255, 0.2);
-            border-bottom-left-radius: 2px;
         }
 
         .chat-msg.user {
             background: linear-gradient(135deg, #00f0ff, #0077ff);
             color: #ffffff;
             align-self: flex-end;
-            border-bottom-right-radius: 2px;
             font-weight: 600;
         }
 
-        .chat-msg img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin-top: 5px;
-        }
+        .chat-msg img { max-width: 100%; border-radius: 8px; margin-top: 5px; }
 
         .chat-footer {
             padding: 10px;
@@ -487,12 +377,7 @@
             border-top: 1px solid rgba(0, 240, 255, 0.15);
         }
 
-        .chat-options {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            margin-top: 10px;
-        }
+        .chat-options { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
 
         .opt-btn {
             background: #101422;
@@ -504,19 +389,9 @@
             cursor: pointer;
             display: flex;
             justify-content: space-between;
-            align-items: center;
         }
 
-        .opt-btn:hover {
-            background: #00f0ff;
-            color: #000;
-        }
-
-        .chat-form {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .chat-form { display: flex; flex-direction: column; gap: 8px; }
 
         .chat-form input[type="text"] {
             background: #101422;
@@ -526,7 +401,6 @@
             border-radius: 6px;
             font-size: 11px;
             outline: none;
-            user-select: text;
         }
 
         .chat-form label {
@@ -552,12 +426,7 @@
             cursor: pointer;
         }
 
-        .footer {
-            text-align: center;
-            margin-top: 22px;
-            font-size: 10px;
-            color: #55657e;
-        }
+        .footer { text-align: center; margin-top: 22px; font-size: 10px; color: #55657e; }
     </style>
 </head>
 <body>
@@ -566,7 +435,6 @@
     <div class="electric-aura"></div>
 
     <div class="container">
-        <!-- HEADER PROFIL -->
         <div class="profile">
             <div class="avatar">
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
@@ -575,31 +443,23 @@
             <p class="sub-name">Official Roblox Item Store & Payment</p>
         </div>
 
-        <!-- BANNER HERO CHAT BOT -->
         <div class="chat-hero-banner" onclick="toggleChat()">
             <div class="chibi-left">
-                <div class="avatar-wrapper">
-                    <div class="chibi-img-box">
-                        <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
-                    </div>
-                    <div class="status-dot online"></div>
+                <div class="chibi-img-box">
+                    <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
                 </div>
                 <div class="banner-info">
                     <h3>🍡 Jajan Item Roblox / Chat Aku!!</h3>
                     <p>Mau beli item / butuh bantuan? Klik di sini aja bro! 💬</p>
                 </div>
             </div>
-            <div class="banner-btn-action">
-                Chat Sekarang ⚡
-            </div>
+            <div class="banner-btn-action">Chat Sekarang ⚡</div>
         </div>
 
-        <!-- ⚡ KOTAK LIVE LOGS BERJALAN (REALTIME LOGS) -->
+        <!-- ⚡ KOTAK LIVE LOGS BERJALAN -->
         <div class="logs-box">
             <div class="logs-header">
-                <div class="logs-title">
-                    ⚡ Live Transaksi Berjalan
-                </div>
+                <div class="logs-title">⚡ Live Transaksi Berjalan</div>
                 <div class="logs-live-badge">REALTIME 🟢</div>
             </div>
             <div class="logs-wrapper" id="liveLogsContainer">
@@ -609,8 +469,6 @@
             </div>
         </div>
 
-        <!-- PAYMENT METHOD & QRIS SECTION -->
-        <div class="section-title">💳 Payment Method / QRIS</div>
         <div class="qris-box">
             <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
             <div class="qris-img-wrap">
@@ -631,9 +489,7 @@
             </div>
         </div>
 
-        <div class="footer">
-            &copy; 2026 pin gantenk. Realtime Roblox Item Store.
-        </div>
+        <div class="footer">&copy; 2026 pin gantenk. Realtime Roblox Item Store.</div>
     </div>
 
     <!-- JENDELA CHATBOT POPUP -->
@@ -657,44 +513,40 @@
     </div>
 
     <script>
-        // --- PROTEKSI & ANTI-INSPECT ---
-        document.addEventListener('contextmenu', e => e.preventDefault());
-        document.addEventListener('keydown', e => {
-            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))) {
-                e.preventDefault();
-            }
-        });
-
-        // --- FIREBASE INITIALIZATION ---
+        // INIT FIREBASE
         const firebaseConfig = {
             databaseURL: "https://pingantenk-roblox-store-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
+        
+        let db = null;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            db = firebase.database();
+        } catch(e) {
+            console.error("Firebase init error:", e);
+        }
 
-        // MASTER DATA ITEM
         const itemListData = {
             item1: { name: "500sp", price: 3000, icon: "⚡" },
             item2: { name: "1oc", price: 5000, icon: "🔮" }
         };
 
         let botData = { step: "select", itemId: "", item: "", price: 0, username: "", screenshotBase64: "" };
+        let localLogsArr = JSON.parse(localStorage.getItem('local_logs_backup') || '[]');
 
-        // --- ⚡ FITUR LOGS BERJALAN (LISTEN FIREBASE REALTIME) ---
-        db.ref('logs').limitToLast(15).on('value', (snapshot) => {
+        // FUNGSI TAMPILKAN LOGS KE LAYAR
+        function renderLogsUI(logsList) {
             const logsContainer = document.getElementById('liveLogsContainer');
-            const logsData = snapshot.val();
-
-            if (!logsData) {
+            if (!logsList || logsList.length === 0) {
                 logsContainer.innerHTML = `<div style="font-size:10px; color:#64748b; text-align:center; padding:10px;">Belum ada transaksi terbaru...</div>`;
                 return;
             }
 
             let logsHTML = '';
-            let logKeys = Object.keys(logsData).reverse(); // Yang terbaru di paling atas
+            // Tampilkan transaksi terbaru di paling atas
+            let reversed = [...logsList].reverse();
 
-            logKeys.forEach(key => {
-                let log = logsData[key];
+            reversed.forEach(log => {
                 logsHTML += `
                     <div class="log-item">
                         <div class="log-details">
@@ -709,9 +561,26 @@
             });
 
             logsContainer.innerHTML = logsHTML;
-        });
+        }
 
-        // RENDER OPSI ITEM DI CHAT
+        // AMBIL DARI FIREBASE KALAU TERHUBUNG
+        if (db) {
+            db.ref('logs').limitToLast(15).on('value', (snapshot) => {
+                const logsData = snapshot.val();
+                if (logsData) {
+                    let arr = Object.values(logsData);
+                    renderLogsUI(arr);
+                } else {
+                    renderLogsUI(localLogsArr);
+                }
+            }, (error) => {
+                console.warn("Firebase Read Error (Rules terkunci?):", error);
+                renderLogsUI(localLogsArr);
+            });
+        } else {
+            renderLogsUI(localLogsArr);
+        }
+
         function renderChatOptions() {
             let container = document.getElementById('chatOptions');
             if (!container) return;
@@ -786,7 +655,7 @@
             reader.readAsDataURL(input.files[0]);
         }
 
-        // --- ⚡ PROSES KETIKA BOT BILANG "SIP" & KIRIM KE WA + DITAMBAHKAN KE LOGS ---
+        // PROSES KIRIM DATA LOG
         function processBotSubmission() {
             let usnInput = document.getElementById('bot-usn-input').value.trim();
             if (!usnInput) {
@@ -800,21 +669,31 @@
 
             botData.username = usnInput;
 
-            // 1. DITAMBAHKAN KE FIREBASE "LOGS" UNTUK TAMPIL DI LIVE LOGS REALTIME
             const now = new Date();
             const timeFormatted = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WITA";
 
-            db.ref('logs').push({
+            let newLogObj = {
                 username: botData.username,
                 item: botData.item,
                 price: botData.price,
                 time: timeFormatted
-            });
+            };
 
-            // 2. BOT MENGATAKAN "SIP"
+            // 1. TAMBAHKAN KE LOCAL STORAGE BACKUP
+            localLogsArr.push(newLogObj);
+            localStorage.setItem('local_logs_backup', JSON.stringify(localLogsArr));
+            renderLogsUI(localLogsArr);
+
+            // 2. KIRIM KE FIREBASE
+            if (db) {
+                db.ref('logs').push(newLogObj).catch((err) => {
+                    console.error("Gagal kirim ke Firebase:", err);
+                });
+            }
+
+            // 3. PESAN BOT
             addMessage('bot', `Sip, pesanan kamu sudah tercatat di sistem! Klik tombol hijau di bawah untuk terhubung ke WhatsApp.`);
 
-            // 3. KIRIM PESAN WA
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
                          `Saya sudah transfer via Web Store:\n` +
