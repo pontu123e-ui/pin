@@ -836,15 +836,13 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // MASTER DATA ITEM
+        // MASTER DATA ITEM DIPERBARUI
         const itemListData = {
-            item1: { name: "Dragon's Breath Item", price: 15000, icon: "🌱" },
-            item2: { name: "Hypno Bloom Item", price: 25000, icon: "🌺" },
-            item3: { name: "Roblox Coin Special", price: 10000, icon: "🪙" },
-            item4: { name: "Custom Trade Item", price: 20000, icon: "🎁" }
+            item1: { name: "500sp", price: 3000, icon: "⚡" },
+            item2: { name: "1oc", price: 5000, icon: "🔮" }
         };
 
-        let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
+        let localStocks = { item1: 10, item2: 10 };
 
         // --- STATUS BOT INSTAN ( BACA BROWSER LOCALSTORAGE ) ---
         let savedStatus = localStorage.getItem('isBotOnline');
@@ -959,7 +957,7 @@
                 if (pin === "1234") {
                     let menu = prompt("✅ PIN Benar!\nPilih Menu Admin:\n1. Restok Semua Stok Item\n2. Toggle Status Bot (Online/Off)");
                     if (menu === "1") {
-                        let resetData = { item1: 10, item2: 5, item3: 20, item4: 8 };
+                        let resetData = { item1: 10, item2: 10 };
                         db.ref('stocks').set(resetData);
                         alert("✅ Berhasil! Stok item telah di-reset penuh.");
                     } else if (menu === "2") {
