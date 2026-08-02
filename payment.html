@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pin gantenk - Roblox Item Store & Payment</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
     <!-- FIREBASE REALTIME DATABASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
     <style>
         * {
             margin: 0;
@@ -39,7 +41,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
+            background-image: 
+                linear-gradient(rgba(0, 240, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.05) 1px, transparent 1px);
             background-size: 30px 30px;
             z-index: 1;
             pointer-events: none;
@@ -68,7 +72,7 @@
         /* --- CONTAINER UTAMA --- */
         .container {
             width: 100%;
-            max-width: 860px;
+            max-width: 520px;
             background: #101422;
             border-radius: 20px;
             padding: 24px;
@@ -178,7 +182,6 @@
             100% { transform: translateY(-5px); }
         }
 
-        /* LAMPU INDIKATOR STATUS */
         .status-dot {
             position: absolute;
             bottom: 2px;
@@ -201,7 +204,6 @@
             box-shadow: 0 0 8px #ff4d4d;
         }
 
-        /* ANIMASI ZZZ */
         .zzz-container {
             position: absolute;
             top: -12px;
@@ -291,20 +293,6 @@
             }
         }
 
-        /* --- LAYOUT UTAMA --- */
-        .main-layout {
-            display: grid;
-            grid-template-columns: 1.2fr 0.8fr;
-            gap: 20px;
-            align-items: start;
-        }
-
-        @media (max-width: 768px) {
-            .main-layout {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .section-title {
             font-size: 12px;
             font-weight: 700;
@@ -317,118 +305,6 @@
             gap: 6px;
         }
 
-        /* --- KATEGORI & ITEM LIST --- */
-        .category-box {
-            background: #171c2e;
-            border-radius: 12px;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .category-header {
-            padding: 14px 16px;
-            background: linear-gradient(135deg, #171c2e, #1a2238);
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
-            font-weight: 700;
-            color: #00f0ff;
-            user-select: none;
-            transition: background 0.2s ease;
-        }
-
-        .category-header:hover {
-            background: #202740;
-        }
-
-        .category-content {
-            display: none;
-            padding: 10px 14px;
-            background: #101422;
-            border-top: 1px solid rgba(0, 240, 255, 0.1);
-        }
-
-        .category-content.active {
-            display: block;
-        }
-
-        .item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
-            gap: 10px;
-        }
-
-        .item-row:last-child {
-            border-bottom: none;
-        }
-
-        .item-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .item-title {
-            font-size: 12px;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .item-price {
-            font-size: 11px;
-            font-weight: 600;
-            color: #00f0ff;
-        }
-
-        .item-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stock-badge {
-            background: rgba(6, 8, 16, 0.85);
-            color: #00ff88;
-            font-size: 9px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            border: 1px solid rgba(0, 255, 136, 0.4);
-            white-space: nowrap;
-        }
-
-        .stock-badge.empty {
-            color: #ff4d4d;
-            border-color: rgba(255, 77, 77, 0.4);
-            background: rgba(255, 0, 0, 0.25);
-        }
-
-        .btn-buy-item {
-            padding: 6px 12px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: #ffffff;
-            border: none;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            cursor: pointer;
-            white-space: nowrap;
-            transition: all 0.2s ease;
-        }
-
-        .btn-buy-item.disabled {
-            background: #334155 !important;
-            color: #94a3b8 !important;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
         /* --- QRIS & PAYMENT --- */
         .qris-box {
             text-align: center;
@@ -436,10 +312,8 @@
             border-radius: 14px;
             padding: 16px;
             border: 1px solid rgba(0, 240, 255, 0.2);
-            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             align-items: center;
         }
 
@@ -577,16 +451,12 @@
             border-radius: 16px;
             padding: 22px;
             width: 100%;
-            max-width: 400px;
-            border: 1px solid #00f0ff;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
-            animation: fadeInModal 0.25s ease-out;
-        }
-
-        .modal-box.modal-large {
             max-width: 520px;
             max-height: 85vh;
             overflow-y: auto;
+            border: 1px solid #00f0ff;
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+            animation: fadeInModal 0.25s ease-out;
         }
 
         @keyframes fadeInModal {
@@ -617,49 +487,6 @@
             cursor: pointer;
         }
 
-        .form-group {
-            margin-bottom: 12px;
-            text-align: left;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 11px;
-            color: #cbd5e1;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .form-group input, .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            background: #171c2e;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            border-radius: 8px;
-            color: #ffffff;
-            font-size: 12px;
-            outline: none;
-            user-select: text;
-        }
-
-        .form-group input:focus, .form-group textarea:focus {
-            border-color: #00f0ff;
-            box-shadow: 0 0 8px rgba(0, 240, 255, 0.2);
-        }
-
-        .btn-submit-order {
-            width: 100%;
-            padding: 10px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: #ffffff;
-            border: none;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 6px;
-        }
-
         .testi-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -668,7 +495,9 @@
         }
 
         @media (max-width: 480px) {
-            .testi-grid { grid-template-columns: repeat(2, 1fr); }
+            .testi-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .testi-card {
@@ -695,7 +524,7 @@
             transform: translate(-50%, -50%);
             width: 90%;
             max-width: 380px;
-            height: 500px;
+            height: 520px;
             background: #101422;
             border: 2px solid #00f0ff;
             border-radius: 20px;
@@ -803,11 +632,21 @@
             cursor: pointer;
             text-align: left;
             transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .opt-btn:hover {
             background: #00f0ff;
             color: #000;
+        }
+
+        .opt-btn.disabled {
+            background: #1e293b;
+            color: #64748b;
+            border-color: #334155;
+            cursor: not-allowed;
         }
 
         .chat-form {
@@ -859,9 +698,10 @@
     </style>
 </head>
 <body>
+
     <div class="bg-grid"></div>
     <div class="electric-aura"></div>
-    
+
     <div class="container">
         <!-- HEADER PROFIL -->
         <div class="profile">
@@ -896,93 +736,29 @@
             </div>
         </div>
 
-        <!-- MAIN LAYOUT 2 KOLOM -->
-        <div class="main-layout">
-            <div class="layout-left">
-                <div class="section-title">📂 Pilih Map / Kategori Item</div>
-
-                <div class="category-box">
-                    <div class="category-header" onclick="toggleCategory('cat-grow-garden')">
-                        <span>🌱 Map: Grow Garden 2</span>
-                        <span id="arrow-cat-grow-garden">🔻</span>
-                    </div>
-                    <div class="category-content active" id="cat-grow-garden">
-                        <div class="item-row">
-                            <div class="item-info">
-                                <div class="item-title">Dragon's Breath Item</div>
-                                <div class="item-price">Rp 15.000</div>
-                            </div>
-                            <div class="item-action">
-                                <span id="stock-item1" class="stock-badge">⚡ Stock: ...</span>
-                                <button id="btn-item1" class="btn-buy-item" onclick="openOrderModal('item1', 'Dragon\'s Breath Item', 'Rp 15.000')">🛒 Beli</button>
-                            </div>
-                        </div>
-                        <div class="item-row">
-                            <div class="item-info">
-                                <div class="item-title">Hypno Bloom Item</div>
-                                <div class="item-price">Rp 25.000</div>
-                            </div>
-                            <div class="item-action">
-                                <span id="stock-item2" class="stock-badge">⚡ Stock: ...</span>
-                                <button id="btn-item2" class="btn-buy-item" onclick="openOrderModal('item2', 'Hypno Bloom Item', 'Rp 25.000')">🛒 Beli</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="category-box">
-                    <div class="category-header" onclick="toggleCategory('cat-special')">
-                        <span>🎁 Special & Other Items</span>
-                        <span id="arrow-cat-special">🔻</span>
-                    </div>
-                    <div class="category-content" id="cat-special">
-                        <div class="item-row">
-                            <div class="item-info">
-                                <div class="item-title">Roblox Coin / Special</div>
-                                <div class="item-price">Rp 10.000</div>
-                            </div>
-                            <div class="item-action">
-                                <span id="stock-item3" class="stock-badge">⚡ Stock: ...</span>
-                                <button id="btn-item3" class="btn-buy-item" onclick="openOrderModal('item3', 'Roblox Coin / Special', 'Rp 10.000')">🛒 Beli</button>
-                            </div>
-                        </div>
-                        <div class="item-row">
-                            <div class="item-info">
-                                <div class="item-title">Custom Trade Item</div>
-                                <div class="item-price">Rp 20.000</div>
-                            </div>
-                            <div class="item-action">
-                                <span id="stock-item4" class="stock-badge">⚡ Stock: ...</span>
-                                <button id="btn-item4" class="btn-buy-item" onclick="openOrderModal('item4', 'Custom Trade Item', 'Rp 20.000')">🛒 Beli</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <!-- PAYMENT METHOD & QRIS SECTION -->
+        <div class="section-title">💳 Payment Method / QRIS</div>
+        <div class="qris-box">
+            <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
+            <div class="qris-img-wrap">
+                <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
             </div>
-
-            <div class="layout-right">
-                <div class="section-title">💳 Payment Method / QRIS</div>
-                <div class="qris-box">
-                    <p style="font-size: 11px; color: #8a99ad;">Scan QRIS atau transfer via DANA di bawah</p>
-                    <div class="qris-img-wrap">
-                        <img src="IMG-20260731-WA0007.jpg" alt="QRIS All Payment">
+            <a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" class="btn-download-qris">
+                📥 Download QRIS
+            </a>
+            
+            <div class="manual-pay-list">
+                <div class="pay-row">
+                    <div class="pay-details">
+                        <span>DANA / GoPay / OVO</span>
+                        <strong>0858-2353-8521</strong>
                     </div>
-                    <a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" class="btn-download-qris">
-                        📥 Download QRIS
-                    </a>
-                    <div class="manual-pay-list">
-                        <div class="pay-row">
-                            <div class="pay-details">
-                                <span>DANA / GoPay / OVO</span>
-                                <strong>0858-2353-8521</strong>
-                            </div>
-                            <button class="btn-action" onclick="copyText('085823538521', this)">Salin</button>
-                        </div>
-                    </div>
+                    <button class="btn-action" onclick="copyText('085823538521', this)">Salin</button>
                 </div>
             </div>
         </div>
 
+        <!-- TESTIMONI BUTTON -->
         <div class="testi-container">
             <button class="btn-show-testi" onclick="openTestiModal()">
                 📸 Lihat Bukti Transfer & Testimoni Pembeli
@@ -994,30 +770,9 @@
         </div>
     </div>
 
-    <!-- MODAL POPUP INPUT USERNAME ROBLOX -->
-    <div id="buyModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span class="modal-title" id="modal-item-title">Konfirmasi Pembelian</span>
-                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
-            </div>
-            <div class="form-group">
-                <label for="roblox-username">Username Roblox <span style="color:#ff4d4d;">*</span></label>
-                <input type="text" id="roblox-username" placeholder="Contoh: PinGantenk123" required>
-            </div>
-            <div class="form-group">
-                <label for="order-notes">Catatan Tambahan (Opsional)</label>
-                <textarea id="order-notes" rows="2" placeholder="Contoh: Sertakan jam pengiriman atau pesan khusus..."></textarea>
-            </div>
-            <button class="btn-submit-order" onclick="submitOrderToWA()">
-                🚀 Kirim Pesanan ke WhatsApp
-            </button>
-        </div>
-    </div>
-
     <!-- MODAL POPUP BUKTI TRANSFER & TESTIMONI -->
     <div id="testiModal" class="modal-overlay">
-        <div class="modal-box modal-large">
+        <div class="modal-box">
             <div class="modal-header">
                 <span class="modal-title">📸 Bukti Transfer & Testimoni</span>
                 <button class="modal-close" onclick="closeTestiModal()">&times;</button>
@@ -1052,10 +807,7 @@
         </div>
         <div class="chat-footer" id="chatFooter">
             <div class="chat-options" id="chatOptions">
-                <button class="opt-btn" onclick="botSelectItem('Dragon\'s Breath Item', 15000)">🌱 Dragon's Breath (Rp 15.000)</button>
-                <button class="opt-btn" onclick="botSelectItem('Hypno Bloom Item', 25000)">🌺 Hypno Bloom (Rp 25.000)</button>
-                <button class="opt-btn" onclick="botSelectItem('Roblox Coin Special', 10000)">🪙 Roblox Coin (Rp 10.000)</button>
-                <button class="opt-btn" onclick="botSelectItem('Custom Trade Item', 20000)">🎁 Custom Trade Item (Rp 20.000)</button>
+                <!-- Tombol Opsi Item Dimuat Dinamis Beserta Stok Dari Firebase -->
             </div>
         </div>
     </div>
@@ -1065,7 +817,7 @@
         document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
         document.addEventListener('keydown', function(e) {
             if (
-                e.key === 'F12' ||
+                e.key === 'F12' || 
                 (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
                 (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
             ) {
@@ -1084,17 +836,24 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
-        let selectedItem = null;
+        // MASTER DATA ITEM
+        const itemListData = {
+            item1: { name: "Dragon's Breath Item", price: 15000, icon: "🌱" },
+            item2: { name: "Hypno Bloom Item", price: 25000, icon: "🌺" },
+            item3: { name: "Roblox Coin Special", price: 10000, icon: "🪙" },
+            item4: { name: "Custom Trade Item", price: 20000, icon: "🎁" }
+        };
 
-        // --- STATUS BOT INSTAN (BACA DARI LOCALSTORAGE AGAR TIDAK KEMBALI ON SAAT REFRESH) ---
+        let localStocks = { item1: 10, item2: 5, item3: 20, item4: 8 };
+
+        // --- STATUS BOT INSTAN ( BACA BROWSER LOCALSTORAGE ) ---
         let savedStatus = localStorage.getItem('isBotOnline');
         let isBotOnline = savedStatus !== null ? (savedStatus === 'true') : true;
 
-        // --- FUNGSI UPDATE UI TAMPILAN BOT ONLINE / OFFLINE ---
+        // --- FUNGSI UPDATE TAMPILAN BOT ONLINE / OFFLINE ---
         function applyBotStatusUI(online) {
             isBotOnline = online;
-            localStorage.setItem('isBotOnline', online); // Simpan permanen di browser
+            localStorage.setItem('isBotOnline', online);
 
             let bannerBox = document.querySelector('.chat-hero-banner');
             let bannerDot = document.getElementById('bannerStatusDot');
@@ -1104,25 +863,20 @@
             let bannerBtn = document.getElementById('banner-btn');
 
             if (online) {
-                // Mode ONLINE
                 if (bannerBox) bannerBox.classList.remove('is-offline');
                 if (bannerDot) bannerDot.className = 'status-dot online';
                 if (chatHeaderDot) chatHeaderDot.style.background = '#00ff88';
-
                 if (bannerTitle) bannerTitle.innerText = "🍡 Jajan Item Roblox / Chat Aku!!";
                 if (bannerDesc) bannerDesc.innerText = "Mau beli item / butuh bantuan? Klik di sini aja bro! 💬";
                 if (bannerBtn) bannerBtn.innerText = "Chat Sekarang ⚡";
             } else {
-                // Mode OFFLINE (Bobo)
                 if (bannerBox) bannerBox.classList.add('is-offline');
                 if (bannerDot) bannerDot.className = 'status-dot offline';
                 if (chatHeaderDot) chatHeaderDot.style.background = '#ff4d4d';
-
                 if (bannerTitle) bannerTitle.innerText = "😴 pinpin lagi bobo...";
-                if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, tapi pesanan kamu tetap bisa dikirim ke WA! 📩";
-                if (bannerBtn) bannerBtn.innerText = "Tinggalkan Pesan 💤";
+                if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, pembelian sementara tidak tersedia! 💤";
+                if (bannerBtn) bannerBtn.innerText = "Bot Offline 💤";
 
-                // Update tampilan dalam jendela chat jika sedang terbuka
                 let chatBody = document.getElementById('chatBody');
                 let chatFooter = document.getElementById('chatFooter');
                 if (chatBody) {
@@ -1142,8 +896,37 @@
             }
         }
 
-        // Terapkan status awal sesegera mungkin dari localStorage
         applyBotStatusUI(isBotOnline);
+
+        // --- FUNGSI RENDER OPSI ITEM DI CHATBOT BERDASARKAN STOK ---
+        function renderChatOptions() {
+            if (!isBotOnline) return;
+
+            let chatFooter = document.getElementById('chatFooter');
+            if (!chatFooter) return;
+
+            // Hanya render jika pilihan item sedang ditampilkan (tidak dalam mode form input)
+            let isFormVisible = document.getElementById('bot-usn-input');
+            if (isFormVisible) return;
+
+            let optionsHTML = '<div class="chat-options" id="chatOptions">';
+            for (let key in itemListData) {
+                let item = itemListData[key];
+                let stock = localStocks[key] || 0;
+                let isOut = stock <= 0;
+
+                optionsHTML += `
+                    <button class="opt-btn ${isOut ? 'disabled' : ''}" onclick="botSelectItem('${key}')">
+                        <span>${item.icon} ${item.name} (Rp ${item.price.toLocaleString('id-ID')})</span>
+                        <b style="color: ${isOut ? '#ff4d4d' : '#00ff88'}; font-size:10px;">
+                            ${isOut ? 'HABIS' : 'Stok: ' + stock}
+                        </b>
+                    </button>
+                `;
+            }
+            optionsHTML += '</div>';
+            chatFooter.innerHTML = optionsHTML;
+        }
 
         // --- LISTEN REALTIME STOCK FIREBASE ---
         db.ref('stocks').on('value', (snapshot) => {
@@ -1153,27 +936,10 @@
                 return;
             }
             localStocks = data;
-            for (let id in localStocks) {
-                let badge = document.getElementById('stock-' + id);
-                let btn = document.getElementById('btn-' + id);
-                let count = localStocks[id];
-                if (badge && btn) {
-                    if (count > 0) {
-                        badge.innerText = `⚡ Stock: ${count}`;
-                        badge.classList.remove('empty');
-                        btn.innerText = "🛒 Beli";
-                        btn.classList.remove('disabled');
-                    } else {
-                        badge.innerText = `❌ HABIS`;
-                        badge.classList.add('empty');
-                        btn.innerText = "🚫 Habis";
-                        btn.classList.add('disabled');
-                    }
-                }
-            }
+            renderChatOptions();
         });
 
-        // --- LISTEN REALTIME BOT STATUS DARI FIREBASE ---
+        // --- LISTEN REALTIME BOT STATUS FIREBASE ---
         db.ref('botStatus/isOnline').on('value', (snapshot) => {
             let isOnline = snapshot.val();
             if (isOnline === null) {
@@ -1181,9 +947,10 @@
                 isOnline = true;
             }
             applyBotStatusUI(isOnline);
+            if (isOnline) renderChatOptions();
         });
 
-        // --- ADMIN ACCESS (KLIK 5x PADA FOTO PROFIL ATAS) ---
+        // --- ADMIN ACCESS (KLIK 5x FOTO PROFIL) ---
         let profileClickCount = 0;
         function adminAccessPrompt() {
             profileClickCount++;
@@ -1196,9 +963,9 @@
                         db.ref('stocks').set(resetData);
                         alert("✅ Berhasil! Stok item telah di-reset penuh.");
                     } else if (menu === "2") {
-                        let newState = !isBotOnline; 
-                        applyBotStatusUI(newState); // Terapkan instan
-                        db.ref('botStatus/isOnline').set(newState); // Simpan ke Firebase Database
+                        let newState = !isBotOnline;
+                        applyBotStatusUI(newState);
+                        db.ref('botStatus/isOnline').set(newState);
                         alert(`✅ Status Bot berhasil diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE / BOBO 😴"}`);
                     }
                 } else if (pin !== null) {
@@ -1206,64 +973,6 @@
                 }
                 profileClickCount = 0;
             }
-        }
-
-        function toggleCategory(catId) {
-            let content = document.getElementById(catId);
-            let arrow = document.getElementById('arrow-' + catId);
-            if (content.classList.contains('active')) {
-                content.classList.remove('active');
-                arrow.innerText = '🔻';
-            } else {
-                content.classList.add('active');
-                arrow.innerText = '🔺';
-            }
-        }
-
-        function openOrderModal(itemId, itemName, itemPrice) {
-            let currentCount = localStocks[itemId] || 0;
-            if (currentCount <= 0) {
-                alert("Maaf bro, stok item ini baru saja habis!");
-                return;
-            }
-            selectedItem = { id: itemId, name: itemName, price: itemPrice };
-            document.getElementById('modal-item-title').innerText = `Beli: ${itemName}`;
-            document.getElementById('roblox-username').value = "";
-            document.getElementById('order-notes').value = "";
-            document.getElementById('buyModal').style.display = "flex";
-        }
-
-        function closeOrderModal() {
-            document.getElementById('buyModal').style.display = "none";
-            selectedItem = null;
-        }
-
-        function submitOrderToWA() {
-            if (!selectedItem) return;
-            let username = document.getElementById('roblox-username').value.trim();
-            let notes = document.getElementById('order-notes').value.trim();
-
-            if (!username) {
-                alert("Harap isi Username Roblox kamu terlebih dahulu!");
-                return;
-            }
-
-            db.ref('stocks/' + selectedItem.id).transaction((current) => {
-                if (current === null) return 10;
-                return Math.max(0, current - 1);
-            });
-
-            let phone = "6285823538521";
-            let text = `Halo pin gantenk!\n` +
-                       `Saya mau beli: *${selectedItem.name}*\n` +
-                       `Harga: *${selectedItem.price}*\n` +
-                       `Username Roblox: *${username}*\n` +
-                       (notes ? `Catatan: ${notes}\n` : "") +
-                       `\nSaya siap melakukan pembayaran & kirim bukti transfer!`;
-
-            let url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(text)}`;
-            closeOrderModal();
-            window.location.href = url;
         }
 
         function openTestiModal() {
@@ -1274,8 +983,8 @@
             document.getElementById('testiModal').style.display = "none";
         }
 
-        // --- CHATBOT WIDGET SYSTEM WITH AUTO-SAVE ---
-        let botData = { item: "", price: 0, username: "", hasScreenshot: false };
+        // --- CHATBOT WIDGET SYSTEM ---
+        let botData = { itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
 
         function saveChatState() {
             let usnInput = document.getElementById('bot-usn-input');
@@ -1292,12 +1001,10 @@
         }
 
         function loadChatState() {
-            // Jika bot offline, jangan muat sesi chat online lama!
             if (!isBotOnline) {
                 applyBotStatusUI(false);
                 return;
             }
-
             let saved = localStorage.getItem('pin_store_chat_session');
             if (saved) {
                 try {
@@ -1317,13 +1024,15 @@
                 } catch(e) {
                     console.error("Gagal memuat sesi chat", e);
                 }
+            } else {
+                renderChatOptions();
             }
         }
 
         function resetChatSystem() {
             localStorage.removeItem('pin_store_chat_session');
-            botData = { item: "", price: 0, username: "", hasScreenshot: false };
-            
+            botData = { itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
+
             if (!isBotOnline) {
                 applyBotStatusUI(false);
                 return;
@@ -1334,14 +1043,7 @@
                     Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
                 </div>
             `;
-            document.getElementById('chatFooter').innerHTML = `
-                <div class="chat-options" id="chatOptions">
-                    <button class="opt-btn" onclick="botSelectItem('Dragon\\'s Breath Item', 15000)">🌱 Dragon's Breath (Rp 15.000)</button>
-                    <button class="opt-btn" onclick="botSelectItem('Hypno Bloom Item', 25000)">🌺 Hypno Bloom (Rp 25.000)</button>
-                    <button class="opt-btn" onclick="botSelectItem('Roblox Coin Special', 10000)">🪙 Roblox Coin (Rp 10.000)</button>
-                    <button class="opt-btn" onclick="botSelectItem('Custom Trade Item', 20000)">🎁 Custom Trade Item (Rp 20.000)</button>
-                </div>
-            `;
+            renderChatOptions();
         }
 
         function toggleChat() {
@@ -1351,6 +1053,10 @@
 
             if (!isBotOnline) {
                 applyBotStatusUI(false);
+            } else {
+                if (!localStorage.getItem('pin_store_chat_session')) {
+                    renderChatOptions();
+                }
             }
             saveChatState();
         }
@@ -1365,20 +1071,38 @@
             saveChatState();
         }
 
-        function botSelectItem(itemName, price) {
+        // --- PILIH ITEM DI CHATBOT ---
+        function botSelectItem(key) {
             if (!isBotOnline) {
-                addMessage('user', `Saya mau beli ${itemName}`);
+                addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
+                return;
+            }
+
+            let item = itemListData[key];
+            let currentStock = localStocks[key] || 0;
+
+            if (currentStock <= 0) {
+                addMessage('user', `Saya mau beli ${item.name}`);
                 setTimeout(() => {
-                    addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
+                    addMessage('bot', `Aduh maaf bro, item <b>${item.name}</b> stoknya lagi <b>HABIS (0)</b>! ❌<br>Silakan pilih item lainnya ya.`);
                 }, 300);
                 return;
             }
 
-            botData.item = itemName;
-            botData.price = price;
-            addMessage('user', `Saya mau beli ${itemName}`);
+            botData.itemId = key;
+            botData.item = item.name;
+            botData.price = item.price;
+
+            addMessage('user', `Saya mau beli ${item.name}`);
+
             setTimeout(() => {
-                addMessage('bot', `Sip! Totalnya <b>Rp ${price.toLocaleString('id-ID')}</b>.<br><br>Silakan <b>download QRIS</b> di samping untuk scan bayar. Atau kalau mau lewati & transfer manual juga bisa, itu nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br><b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`);
+                addMessage('bot', 
+                    `Sip! Total harganya: <b>Rp ${item.price.toLocaleString('id-ID')}</b>.<br><br>` +
+                    `📦 <b>Informasi Stok Item Ini:</b> Tersisa <b style="color:#00ff88;">${currentStock} Pcs</b><br><br>` +
+                    `Silakan <b>download QRIS</b> di samping untuk scan bayar. Atau kalau mau lewati & transfer manual juga bisa, itu nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br>` +
+                    `<b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`
+                );
+
                 let footer = document.getElementById('chatFooter');
                 footer.innerHTML = `
                     <div class="chat-form">
@@ -1417,17 +1141,28 @@
                 addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
                 return;
             }
+
             let usnInput = document.getElementById('bot-usn-input').value.trim();
             if (!usnInput) {
                 alert("Harap isi Username Roblox kamu terlebih dahulu!");
                 return;
             }
+
             if (!botData.hasScreenshot) {
                 alert("Harap sertakan / lampirkan foto bukti transfer!");
                 return;
             }
+
             botData.username = usnInput;
+
+            // Kurangi stok di Firebase Realtime Database
+            db.ref('stocks/' + botData.itemId).transaction((current) => {
+                if (current === null) return 0;
+                return Math.max(0, current - 1);
+            });
+
             addMessage('bot', `Sip, data sudah lengkap! Klik tombol di bawah ini untuk membuka WhatsApp. <b>Jangan lupa kirimkan foto bukti transfer kamu di chat WA ya!</b>`);
+
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
                          `Saya sudah transfer via Web Store:\n` +
@@ -1435,7 +1170,9 @@
                          `Harga: *Rp ${botData.price.toLocaleString('id-ID')}*\n` +
                          `Username Roblox: *${botData.username}*\n\n` +
                          `Berikut saya lampirkan foto bukti transfernya. Tolong diproses ya!`;
+
             let waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textWa)}`;
+
             let footer = document.getElementById('chatFooter');
             footer.innerHTML = `
                 <a href="${waUrl}" target="_blank" onclick="localStorage.removeItem('pin_store_chat_session')" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none;">
