@@ -129,6 +129,35 @@
         .output-line.fire { color: #ff6600; font-weight: bold; text-shadow: 0 0 10px #ff6600; }
         .output-line.zap { color: #ffff00; font-weight: bold; text-shadow: 0 0 10px #ffff00; }
 
+        /* ANIMASI PIXEL PASUKAN BERGERAK / IDLE */
+        .army-idle {
+            display: inline-block;
+            animation: pixelBounce 0.6s infinite alternate ease-in-out;
+            color: #00f0ff;
+            font-weight: bold;
+            font-size: 14px;
+            text-shadow: 0 0 8px #00f0ff;
+        }
+
+        @keyframes pixelBounce {
+            0% { transform: translateY(0px) scale(1); }
+            100% { transform: translateY(-4px) scale(1.1); }
+        }
+
+        /* ANIMASI LEMPAR BOLA API */
+        .throw-fire {
+            display: inline-block;
+            animation: fireballFly 0.4s linear;
+            color: #ff6600;
+            font-weight: bold;
+        }
+
+        @keyframes fireballFly {
+            0% { opacity: 0; transform: translateX(-20px); }
+            50% { opacity: 1; }
+            100% { transform: translateX(30px); }
+        }
+
         /* QUICK ACTION BUTTONS BAR */
         .quick-bar {
             background: #090e17;
@@ -284,7 +313,7 @@
             <!-- BOOT LOGS WILL BE TYPED HERE AUTOMATICALLY -->
         </div>
 
-        <!-- QUICK ACTION BUTTONS BAR (SANGAT COCOK UNTUK HP) -->
+        <!-- QUICK ACTION BUTTONS BAR -->
         <div class="quick-bar">
             <button class="btn-quick monster-btn" onclick="execQuick('monster')">👹 Boss</button>
             <button class="btn-quick" onclick="execQuick('pasukan')">👾 Pasukan (1)</button>
@@ -455,8 +484,6 @@
             div.className = `output-line ${className}`;
             div.innerHTML = text;
             terminalBody.appendChild(div);
-            
-            // Smooth Auto-scroll
             terminalBody.scrollTop = terminalBody.scrollHeight;
         }
 
@@ -482,7 +509,7 @@
 
             if (monsterHP <= 0) {
                 setTimeout(() => {
-                    appendOutput("☠️ BOOMMM! CYBER MONSTER HANCUR LLEBUR!", "success");
+                    appendOutput("☠️ BOOMMM! CYBER MONSTER HANCUR LEBUR!", "success");
                     appendOutput("🏆 PASUKAN PIXEL MENANG! Hadiah Vault terbuka...", "cyan");
                     playBeep(1200, 'sawtooth', 0.3);
                     setTimeout(() => {
@@ -507,7 +534,7 @@
                 case 'help':
                     appendOutput("--- PERINTAH TERSEDIA ---", "cyan");
                     appendOutput("Pencet tombol di bawah atau gunakan angka singkat:", "system");
-                    appendOutput("<b>1</b> / pasukan : Panggil Pasukan Pixel 👾", "cyan");
+                    appendOutput("<b>1</b> / pasukan : Panggil Pasukan Pixel 👾 (Idle Moving)", "cyan");
                     appendOutput("<b>2</b> / api     : Skill Bola Api 🔥 (-35 HP)", "fire");
                     appendOutput("<b>3</b> / listrik : Skill Petir Cyber ⚡ (-45 HP)", "zap");
                     appendOutput("<b>4</b> / serang  : Pukulan Pasukan (-20 HP)", "success");
@@ -531,24 +558,37 @@
 👹 BOSS LEVEL 99 [ ${renderHPBar()} ]
 `;
                     appendOutput(monsterArt, "monster");
+                    if (hasArmy) {
+                        appendOutput(`    <span class="army-idle">👾 👾 👾</span> (Pasukan Pixel bersiap di samping Boss!)`, "cyan");
+                    }
                     appendOutput("👹 'SIAPA BERANI MELAWANKU?!'", "error");
                     break;
 
                 case 'pasukan':
                     hasArmy = true;
                     playBeep(900, 'triangle', 0.1);
-                    appendOutput("👾👾👾 PASUKAN PIXEL CYBER DIPANGGIL!", "cyan");
+                    appendOutput("👾👾👾 PASUKAN PIXEL BERGERAK MAJU!", "cyan");
+                    appendOutput(`    <span class="army-idle">👾 👾 👾</span> <- Pasukan bergerak siap melempar skill!`, "cyan");
                     break;
 
                 case 'api':
                     playFireSound();
-                    appendOutput("🔥 (════════►) BOLA API MELUNCUR!", "fire");
+                    if (hasArmy) {
+                        // Animasi Pasukan Melempar Api
+                        appendOutput(`    <span class="army-idle">👾</span> <span class="throw-fire">🔥🔥🔥 (════►)</span> 👹 BOOM!!`, "fire");
+                    } else {
+                        appendOutput("🔥 (════════►) BOLA API MELUNCUR!", "fire");
+                    }
                     applyDamage(35, "SKILL BOLA API", "fire");
                     break;
 
                 case 'listrik':
                     playZapSound();
-                    appendOutput("⚡⚡⚡ PETIR CYBER MENYENGAT!", "zap");
+                    if (hasArmy) {
+                        appendOutput(`    <span class="army-idle">👾 👾</span> ⚡⚡⚡ (SENGATAN PETIR) ⚡⚡⚡ ==> 👹 ZZZT!`, "zap");
+                    } else {
+                        appendOutput("⚡⚡⚡ PETIR CYBER MENYENGAT!", "zap");
+                    }
                     applyDamage(45, "SKILL PETIR CYBER", "zap");
                     break;
 
@@ -558,7 +598,7 @@
                         break;
                     }
                     playBeep(700, 'square', 0.08);
-                    appendOutput("⚔️ 👾👾👾 PASUKAN MAJU MENGEROYOK BOSS!", "cyan");
+                    appendOutput(`⚔️ <span class="army-idle">👾 👾 👾</span> MAJU MENGEROYOK BOSS!`, "cyan");
                     applyDamage(20, "SERANGAN PASUKAN", "cyan");
                     break;
 
