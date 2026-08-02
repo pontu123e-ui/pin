@@ -516,6 +516,43 @@
             pointer-events: none;
         }
 
+        /* --- DASHBOARD OWNER / ADMIN MODAL STYLES --- */
+        .order-card {
+            background: #171c2e;
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .order-info {
+            font-size: 11px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        .order-info b {
+            color: #00f0ff;
+        }
+
+        .order-time {
+            font-size: 10px;
+            color: #64748b;
+            font-style: italic;
+        }
+
+        .order-img-preview {
+            width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #000;
+            border: 1px solid rgba(0, 240, 255, 0.2);
+        }
+
         /* --- JENDELA CHATBOT POPUP MODAL --- */
         .chat-widget {
             position: fixed;
@@ -788,6 +825,22 @@
         </div>
     </div>
 
+    <!-- MODAL KHUSUS OWNER: DASHBOARD RIWAYAT & SS BUKTI TF -->
+    <div id="adminOrdersModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-title">👑 Panel Owner - Bukti TF & Data Pembeli</span>
+                <button class="modal-close" onclick="closeAdminOrdersModal()">&times;</button>
+            </div>
+            <div id="adminOrdersList">
+                <p style="font-size:11px; color:#8a99ad; text-align:center;">Memuat data transaksi...</p>
+            </div>
+            <button onclick="clearAllOrdersHistory()" style="width:100%; margin-top:10px; background:rgba(255,77,77,0.2); border:1px solid #ff4d4d; color:#ff4d4d; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
+                🗑️ Hapus Semua Riwayat Transaksi
+            </button>
+        </div>
+    </div>
+
     <!-- JENDELA CHATBOT POPUP -->
     <div class="chat-widget" id="chatWidget">
         <div class="chat-header">
@@ -968,7 +1021,12 @@
             if (profileClickCount >= 5) {
                 let pin = prompt("🔐 Masukkan PIN Admin Owner:");
                 if (pin === "1234") {
-                    let menu = prompt("✅ PIN Benar!\nPilih Menu Admin:\n1. Restok Semua Stok Item\n2. Toggle Status Bot (Online/Off)");
+                    let menu = prompt(
+                        "✅ PIN Benar!\nPilih Menu Admin:\n" +
+                        "1. Restok Semua Stok Item\n" +
+                        "2. Toggle Status Bot (Online/Off)\n" +
+                        "3. 📋 Lihat Bukti TF & Data Pembeli (DATABASE OWNER)"
+                    );
                     if (menu === "1") {
                         let resetData = { item1: 10, item2: 10 };
                         db.ref('stocks').set(resetData);
@@ -978,11 +1036,62 @@
                         applyBotStatusUI(newState);
                         db.ref('botStatus/isOnline').set(newState);
                         alert(`✅ Status Bot diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE 😴"}`);
+                    } else if (menu === "3") {
+                        openAdminOrdersModal();
                     }
                 } else if (pin !== null) {
                     alert("❌ PIN Salah!");
                 }
                 profileClickCount = 0;
+            }
+        }
+
+        // --- DITAMBAHKAN: FUNGSI OWNER UNTUK MEMBUKA BUKTI TF & DATA TRANSAKSI ---
+        function openAdminOrdersModal() {
+            let modal = document.getElementById('adminOrdersModal');
+            let container = document.getElementById('adminOrdersList');
+            modal.style.display = 'flex';
+            container.innerHTML = '<p style="font-size:11px; color:#8a99ad; text-align:center;">Mengambil data transaksi dari Firebase...</p>';
+
+            db.ref('orders').once('value', (snapshot) => {
+                const orders = snapshot.val();
+                if (!orders) {
+                    container.innerHTML = '<p style="font-size:11px; color:#ff4d4d; text-align:center; padding:15px;">Belum ada riwayat transaksi / bukti transfer yang masuk.</p>';
+                    return;
+                }
+
+                let html = '';
+                // Looping dari transaksi terbaru (reverse)
+                let orderKeys = Object.keys(orders).reverse();
+
+                orderKeys.forEach(key => {
+                    let order = orders[key];
+                    html += `
+                        <div class="order-card">
+                            <div class="order-info">
+                                👤 Username Roblox: <b>${order.username}</b><br>
+                                📦 Item Beli: <b>${order.item}</b> (Rp ${order.price ? order.price.toLocaleString('id-ID') : 0})<br>
+                                🕒 Waktu TF: <span class="order-time">${order.timestamp}</span>
+                            </div>
+                            ${order.image ? `<img src="${order.image}" class="order-img-preview" alt="SS Bukti TF">` : '<i style="font-size:10px; color:#ff4d4d;">Foto Bukti Tidak Ada</i>'}
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+            });
+        }
+
+        function closeAdminOrdersModal() {
+            document.getElementById('adminOrdersModal').style.display = 'none';
+        }
+
+        function clearAllOrdersHistory() {
+            if (confirm("Apakah kamu yakin ingin menghapus semua riwayat transaksi dari database?")) {
+                db.ref('orders').remove().then(() => {
+                    alert("✅ Semua riwayat transaksi berhasil dihapus!");
+                    openAdminOrdersModal();
+                });
             }
         }
 
@@ -1005,7 +1114,7 @@
                 footer: document.getElementById('chatFooter').innerHTML,
                 botData: botData,
                 isOpen: document.getElementById('chatWidget').style.display === 'flex',
-                v: "5.0"
+                v: "6.0"
             };
             localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
         }
@@ -1019,7 +1128,7 @@
             if (saved) {
                 try {
                     let state = JSON.parse(saved);
-                    if (state.v !== "5.0") {
+                    if (state.v !== "6.0") {
                         resetChatSystem();
                         return;
                     }
@@ -1147,21 +1256,47 @@
             }, 400);
         }
 
+        // --- FUNGSI PROSES DAN KOMPRESI GUMBAR BUKTI TF SEMENTARA DIBACA ---
         function previewScreenshot(input) {
             if (!input.files || !input.files[0]) return;
             let file = input.files[0];
+
+            // Gunakan canvas untuk mengompresi gambar (biar ringan masuk ke database)
             let reader = new FileReader();
             reader.onload = function (e) {
-                botData.screenshotBase64 = e.target.result; // Simpan Base64 foto
-                addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${botData.screenshotBase64}" alt="Bukti Transfer">`);
-                
-                let label = document.getElementById('file-label');
-                if (label) {
-                    label.innerText = "✅ Foto Berhasil Diunggah! (Ganti)";
-                    label.style.borderColor = "#00ff88";
-                    label.style.color = "#00ff88";
-                }
-                saveChatState();
+                let img = new Image();
+                img.onload = function () {
+                    let canvas = document.createElement('canvas');
+                    let ctx = canvas.getContext('2d');
+
+                    // Resize ke maksimal lebar 600px
+                    let maxWidth = 600;
+                    let scaleRatio = maxWidth / img.width;
+                    if (scaleRatio < 1) {
+                        canvas.width = maxWidth;
+                        canvas.height = img.height * scaleRatio;
+                    } else {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                    }
+
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // Konversi ke Base64 dengan kualitas 0.7 (ringan & jelas)
+                    let compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+                    botData.screenshotBase64 = compressedBase64;
+                    addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${compressedBase64}" alt="Bukti Transfer">`);
+                    
+                    let label = document.getElementById('file-label');
+                    if (label) {
+                        label.innerText = "✅ Foto Berhasil Diunggah! (Ganti)";
+                        label.style.borderColor = "#00ff88";
+                        label.style.color = "#00ff88";
+                    }
+                    saveChatState();
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -1186,13 +1321,26 @@
             botData.username = usnInput;
             botData.step = "done";
 
-            // Kurangi stok di Firebase Realtime
+            // 1. DITAMBAHKAN: SIMPAN OTOMATIS DATA DAN SS FOTO BUKTI TF KE DATABASE FIREBASE
+            const now = new Date();
+            const timeFormatted = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + 
+                                 " - " + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WITA";
+
+            db.ref('orders').push({
+                username: botData.username,
+                item: botData.item,
+                price: botData.price,
+                timestamp: timeFormatted,
+                image: botData.screenshotBase64
+            });
+
+            // 2. Kurangi stok item di Firebase
             db.ref('stocks/' + botData.itemId).transaction((current) => {
                 if (current === null) return 0;
                 return Math.max(0, current - 1);
             });
 
-            addMessage('bot', `Sip, data & foto bukti transfer sudah lengkap! Klik tombol di bawah untuk kirim ke WhatsApp.`);
+            addMessage('bot', `Sip, data & foto bukti transfer sudah tersimpan di sistem! Klik tombol di bawah untuk kirim pesanan ke WhatsApp.`);
 
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
@@ -1200,7 +1348,7 @@
                          `Item: *${botData.item}*\n` +
                          `Harga: *Rp ${botData.price.toLocaleString('id-ID')}*\n` +
                          `Username Roblox: *${botData.username}*\n\n` +
-                         `*(Catatan: Foto bukti transfer telah diunggah melalui Web Store)*`;
+                         `*(Catatan: Foto Bukti TF sudah tersimpan otomatis di Database Web)*`;
 
             let waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textWa)}`;
 
