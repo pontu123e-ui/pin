@@ -125,6 +125,8 @@
         .output-line.error { color: #ff4d4d; text-shadow: 0 0 8px rgba(255, 77, 77, 0.6); }
         .output-line.warning { color: #ffbd2e; }
         .output-line.monster { color: #ff0055; font-weight: bold; text-shadow: 0 0 12px #ff0055; }
+        .output-line.fire { color: #ff6600; font-weight: bold; text-shadow: 0 0 10px #ff6600; }
+        .output-line.zap { color: #ffff00; font-weight: bold; text-shadow: 0 0 10px #ffff00; }
 
         /* INPUT PROMPT */
         .input-line {
@@ -262,8 +264,12 @@
     </div>
 
     <script>
-        // --- 1. AUDIO SYNTHESIZER ---
+        // --- 1. GAME DATA & AUDIO SYNTHESIZER ---
         let isSoundEnabled = true;
+        let monsterHP = 0;
+        const monsterMaxHP = 100;
+        let hasArmy = false;
+
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         
         function playBeep(freq = 800, type = 'sine', duration = 0.05) {
@@ -288,13 +294,46 @@
                 const gain = audioCtx.createGain();
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.6);
+                osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.6);
                 gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.6);
+            } catch(e){}
+        }
+
+        function playFireSound() {
+            if (!isSoundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } catch(e){}
+        }
+
+        function playZapSound() {
+            if (!isSoundEnabled) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(900, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1500, audioCtx.currentTime + 0.05);
+                osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
             } catch(e){}
         }
 
@@ -397,6 +436,34 @@
             });
         }
 
+        function renderHPBar() {
+            const filled = Math.max(0, Math.ceil(monsterHP / 10));
+            const empty = 10 - filled;
+            return `[${"█".repeat(filled)}${"░".repeat(empty)}] ${monsterHP}/${monsterMaxHP} HP`;
+        }
+
+        function applyDamage(damage, attackName, colorClass) {
+            if (monsterHP <= 0) {
+                appendOutput("❌ Tidak ada monster! Ketik <b style='color:#ff0055;'>monster</b> dulu buat manggil Boss.", "warning");
+                return;
+            }
+
+            monsterHP = Math.max(0, monsterHP - damage);
+            appendOutput(`💥 ${attackName} memberikan -${damage} DAMAGE!`, colorClass);
+            appendOutput(`👹 CYBER BOSS HP: ${renderHPBar()}`, monsterHP > 0 ? "error" : "success");
+
+            if (monsterHP <= 0) {
+                setTimeout(() => {
+                    appendOutput("☠️ BOOMMM! CYBER MONSTER DIKALAHKAN!", "success");
+                    appendOutput("🏆 PASUKAN PIXEL MENANG! Hadiah Vault Rahasia terbuka...", "cyan");
+                    playBeep(1200, 'sawtooth', 0.3);
+                    setTimeout(() => {
+                        document.getElementById('secretVault').style.display = 'flex';
+                    }, 600);
+                }, 300);
+            }
+        }
+
         function handleCommand(cmd) {
             const currentLine = document.getElementById('activeInputLine');
             if (currentLine) {
@@ -411,21 +478,20 @@
 
             switch(cmd) {
                 case 'help':
-                    appendOutput("--- PERINTAH TERSEDIA ---", "cyan");
-                    appendOutput("<b>help</b>     : Menampilkan daftar perintah ini", "system");
-                    appendOutput("<b>monster</b>  : [NEW 👹] Memanggil Cyber Pixel Boss", "monster");
-                    appendOutput("<b>hack</b>     : [NEW 🚀] Simulasi hacking server Roblox", "warning");
-                    appendOutput("<b>status</b>   : Menampilkan status server & store", "system");
-                    appendOutput("<b>whoami</b>   : Menampilkan data pengguna saat ini", "system");
-                    appendOutput("<b>access</b>   : [SECRET 🔓] Membuka Vault Rahasia", "warning");
-                    appendOutput("<b>sound</b>    : Nyalakan / matikan audio efek", "cyan");
-                    appendOutput("<b>clear</b>    : Membersihkan layar terminal", "system");
-                    appendOutput("<b>matrix</b>   : Toggle animasi Matrix Rain", "system");
+                    appendOutput("--- PERINTAH BATTLE & SYSTEM ---", "cyan");
+                    appendOutput("<b>monster</b>  : Panggil Boss Monster (100 HP)", "monster");
+                    appendOutput("<b>pasukan</b>  : Summon Pasukan Pixel 👾", "cyan");
+                    appendOutput("<b>api</b>      : Skill Bola Api 🔥 (-35 HP)", "fire");
+                    appendOutput("<b>listrik</b>  : Skill Petir Cyber ⚡ (-45 HP)", "zap");
+                    appendOutput("<b>serang</b>   : Mengeroyok Monster (-20 HP)", "success");
+                    appendOutput("<b>hack</b>     : Simulasi hacking server Roblox", "warning");
+                    appendOutput("<b>access</b>   : Membuka Vault Rahasia", "warning");
+                    appendOutput("<b>clear</b>    : Bersihkan terminal", "system");
                     break;
 
                 case 'monster':
                 case 'boss':
-                case 'demon':
+                    monsterHP = 100;
                     playMonsterRoar();
                     const monsterArt = 
 `
@@ -441,10 +507,53 @@
        | \\______/ |  
        \\          /  
         \`--------\`  
-[ WARNING: CYBER MONSTER LEVEL 99 RELEASED! ]
+👹 [ CYBER MONSTER HP: ${renderHPBar()} ]
 `;
                     appendOutput(monsterArt, "monster");
-                    appendOutput("👹 'GRRRRR! PIN GANTENK IS MY MASTER!'", "error");
+                    appendOutput("👹 'ROARRR! SIAPA BERANI MELAWANKU?!'", "error");
+                    appendOutput("👉 Ketik 'pasukan', 'api', atau 'listrik' buat menyerang!", "cyan");
+                    break;
+
+                case 'pasukan':
+                case 'army':
+                    hasArmy = true;
+                    playBeep(900, 'triangle', 0.1);
+                    appendOutput("👾👾👾 PASUKAN PIXEL CYBER SIAP TEMPUR!", "cyan");
+                    appendOutput("Ketik <b style='color:#00ff66;'>serang</b> untuk menyuruh pasukan mengeroyok boss!", "system");
+                    break;
+
+                case 'api':
+                case 'skill api':
+                case 'fire':
+                    playFireSound();
+                    const fireArt = `
+🔥 (═════════════════►) 💥 BOOM!
+`;
+                    appendOutput(fireArt, "fire");
+                    applyDamage(35, "SKILL BOLA API CYBER", "fire");
+                    break;
+
+                case 'listrik':
+                case 'skill listrik':
+                case 'petir':
+                case 'zap':
+                    playZapSound();
+                    const zapArt = `
+⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡ ZZZZZT!
+`;
+                    appendOutput(zapArt, "zap");
+                    applyDamage(45, "SKILL SENGATAN LISTRIK CYBER", "zap");
+                    break;
+
+                case 'serang':
+                case 'attack':
+                    if (!hasArmy) {
+                        appendOutput("⚠️ Kamu belum panggil pasukan! Ketik <b style='color:#00f0ff;'>pasukan</b> dulu.", "warning");
+                        break;
+                    }
+                    playBeep(700, 'square', 0.08);
+                    appendOutput("⚔️ 👾👾👾 PASUKAN PIXEL MAJU MENGEROYOK BOSS!", "cyan");
+                    applyDamage(20, "SERANGAN PASUKAN PIXEL", "cyan");
                     break;
 
                 case 'hack':
@@ -473,7 +582,7 @@
                             }, 300);
                         }
                     }, 150);
-                    return; // Return early karena menggunakan interval callback
+                    return;
 
                 case 'status':
                     appendOutput("⚡ STATUS SISTEM PIN_GANTENK STORE:", "cyan");
@@ -487,15 +596,8 @@
                     appendOutput("Access Level: USER_LEVEL_1 (Butuh passcode buat Lvl 9)", "warning");
                     break;
 
-                case 'sound':
-                    isSoundEnabled = !isSoundEnabled;
-                    appendOutput(`Audio Effect: ${isSoundEnabled ? "ENABLED 🔊" : "MUTED 🔇"}`, "cyan");
-                    break;
-
                 case 'access':
                 case 'killua':
-                case 'unlock':
-                case 'passcode':
                     playBeep(1200, 'sawtooth', 0.2);
                     appendOutput("🔓 AUTHORIZATION GRANTED! Buka Vault...", "success");
                     setTimeout(() => {
@@ -505,16 +607,6 @@
 
                 case 'clear':
                     terminalBody.innerHTML = '';
-                    break;
-
-                case 'matrix':
-                    isMatrixActive = !isMatrixActive;
-                    if (!isMatrixActive) {
-                        ctx.clearRect(0, 0, canvas.width, canvas.height);
-                        appendOutput("Matrix Rain: DISABLED ❌", "warning");
-                    } else {
-                        appendOutput("Matrix Rain: ENABLED 🟢", "success");
-                    }
                     break;
 
                 default:
