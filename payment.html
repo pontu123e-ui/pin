@@ -547,7 +547,7 @@
 
         let botData = { step: "select", itemId: "", item: "", price: 0, username: "", screenshotBase64: "" };
 
-        // --- 1. FITUR MANAJEMEN LOGS PERMANEN (ANTI HILANG SAAT REFRESH) ---
+        // --- MANAJEMEN LOGS PERMANEN ---
         let localLogsArr = JSON.parse(localStorage.getItem('permanent_store_logs') || '[]');
 
         function renderLogsUI(logsList) {
@@ -577,16 +577,13 @@
             logsContainer.innerHTML = logsHTML;
         }
 
-        // TAMPILKAN LOGS LOKAL DENGAN SEGERA SAAT PAGE LOAD
         renderLogsUI(localLogsArr);
 
-        // SYNC DENGAN FIREBASE KALAU ADA CONNECTION
         if (db) {
             db.ref('logs').limitToLast(30).on('value', (snapshot) => {
                 const fbData = snapshot.val();
                 if (fbData) {
                     let fbArr = Object.values(fbData);
-                    // PENGGABUNGAN DATA (MENGHINDARI DUPLIKAT)
                     let merged = [...localLogsArr];
                     fbArr.forEach(fbItem => {
                         let exists = merged.some(m => m.username === fbItem.username && m.time === fbItem.time && m.item === fbItem.item);
@@ -600,7 +597,7 @@
             });
         }
 
-        // --- 2. FITUR SAVE & RESTORE CHAT STATE (ANTI RESET CHAT SAAT REFRESH) ---
+        // --- MANAJEMEN SAVE & RESTORE CHAT STATE ---
         function saveChatState() {
             const bodyHtml = document.getElementById('chatBody').innerHTML;
             const footerHtml = document.getElementById('chatFooter').innerHTML;
@@ -655,7 +652,6 @@
             container.innerHTML = html;
         }
 
-        // COBA RESTORE CHAT DARI REFRESH TERAKHIR
         restoreChatState();
 
         function toggleChat() {
@@ -673,6 +669,7 @@
             saveChatState();
         }
 
+        // --- ALUR BOT PILIH ITEM + TAMPILAN FOTO QRIS & TOMBOL DOWNLOAD ---
         function botSelectItem(key) {
             let item = itemListData[key];
             botData.itemId = key;
@@ -684,7 +681,11 @@
             setTimeout(() => {
                 addMessage('bot', 
                     `Sip! Total harganya: <b>Rp ${item.price.toLocaleString('id-ID')}</b>.<br><br>` +
-                    `Silakan scan QRIS atau TF ke DANA: <b>0858-2353-8521</b>.<br><br>` +
+                    `Silakan scan QRIS di bawah ini atau TF ke DANA: <b>0858-2353-8521</b>:<br>` +
+                    `<div style="text-align:center; margin: 10px 0;">` +
+                        `<img src="IMG-20260731-WA0007.jpg" style="max-width:180px; border-radius:10px; border:2px solid #00f0ff; background:#ffffff; padding:4px;" alt="QRIS"><br>` +
+                        `<a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" style="display:inline-block; margin-top:8px; background:linear-gradient(135deg, #00f0ff, #0077ff); color:#000; font-size:10px; font-weight:bold; padding:6px 12px; border-radius:6px; text-decoration:none;">📥 Download QRIS</a>` +
+                    `</div>` +
                     `<b>Setelah bayar, isi Username Roblox & lampirkan SS Bukti TF di bawah:</b>`
                 );
 
@@ -717,7 +718,6 @@
             reader.readAsDataURL(input.files[0]);
         }
 
-        // PROSES TRANSAKSI & PENYIMPANAN LOG PERMANEN
         function processBotSubmission() {
             let usnInput = document.getElementById('bot-usn-input').value.trim();
             if (!usnInput) {
@@ -741,17 +741,14 @@
                 time: timeFormatted
             };
 
-            // 1. SIMPAN KE ARRAY LOKAL DAN STORAGE BROWSERS PERMANEN
             localLogsArr.push(newLogObj);
             localStorage.setItem('permanent_store_logs', JSON.stringify(localLogsArr));
             renderLogsUI(localLogsArr);
 
-            // 2. KIRIM KE FIREBASE
             if (db) {
                 db.ref('logs').push(newLogObj).catch(err => console.error(err));
             }
 
-            // 3. BOT MENGATAKAN "SIP" & SAVING CHAT STATE
             addMessage('bot', `Sip, pesanan kamu sudah tercatat di sistem! Klik tombol hijau di bawah untuk terhubung ke WhatsApp.`);
 
             let phone = "6285823538521";
