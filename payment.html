@@ -524,7 +524,7 @@
             transform: translate(-50%, -50%);
             width: 90%;
             max-width: 380px;
-            height: 520px;
+            height: 540px;
             background: #101422;
             border: 2px solid #00f0ff;
             border-radius: 20px;
@@ -578,7 +578,7 @@
         }
 
         .chat-msg {
-            max-width: 82%;
+            max-width: 85%;
             padding: 8px 12px;
             border-radius: 12px;
             font-size: 11px;
@@ -607,7 +607,6 @@
             border-radius: 8px;
             margin-top: 5px;
             border: 1px solid rgba(0, 240, 255, 0.3);
-            pointer-events: none;
         }
 
         .chat-footer {
@@ -925,7 +924,6 @@
         // --- REALTIME SYNC FIREBASE STOK ---
         db.ref('stocks').on('value', (snapshot) => {
             const data = snapshot.val();
-            // Jika data belum ada atau item1/item2 belum terdaftar di Firebase, timpa stok dengan default
             if (!data || data.item1 === undefined || data.item2 === undefined) {
                 db.ref('stocks').set(localStocks);
                 return;
@@ -991,7 +989,7 @@
                 footer: document.getElementById('chatFooter').innerHTML,
                 botData: botData,
                 isOpen: document.getElementById('chatWidget').style.display === 'flex',
-                v: "2.0" // Penanda versi agar cache lama di-reset otomatis
+                v: "2.1"
             };
             localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
         }
@@ -1005,8 +1003,7 @@
             if (saved) {
                 try {
                     let state = JSON.parse(saved);
-                    // Jika versi cache tidak cocok, bersihkan
-                    if (state.v !== "2.0") {
+                    if (state.v !== "2.1") {
                         resetChatSystem();
                         return;
                     }
@@ -1070,6 +1067,7 @@
             saveChatState();
         }
 
+        // --- BOT KIRIM GAMBAR QRIS DI CHAT ---
         function botSelectItem(key) {
             if (!isBotOnline) {
                 addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
@@ -1097,7 +1095,14 @@
                 addMessage('bot', 
                     `Sip! Total harganya: <b>Rp ${item.price.toLocaleString('id-ID')}</b>.<br><br>` +
                     `📦 <b>Informasi Stok:</b> Tersisa <b style="color:#00ff88;">${currentStock} Pcs</b><br><br>` +
-                    `Silakan <b>download QRIS</b> untuk scan bayar atau transfer ke nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br>` +
+                    `Silakan scan QRIS di bawah ini untuk pembayaran:<br>` +
+                    `<div style="text-align:center; margin: 10px 0; background:#ffffff; padding:8px; border-radius:10px;">` +
+                        `<img src="IMG-20260731-WA0007.jpg" alt="QRIS Payment" style="width:100%; max-width:200px; height:auto; border-radius:6px; display:block; margin:0 auto;"><br>` +
+                        `<a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" style="display:inline-block; margin-top:6px; color:#0077ff; text-decoration:underline; font-weight:700; font-size:11px;">` +
+                            `📥 download qris untuk bayar` +
+                        `</a>` +
+                    `</div>` +
+                    `Atau transfer DANA/GoPay/OVO ke: <b>0858-2353-8521</b><br><br>` +
                     `<b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`
                 );
 
