@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PIN_SYSTEM // SECRET_TERMINAL_V2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Fira Code', monospace;
+        }
+
+        body {
+            background-color: #030508;
+            color: #00ff66;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        /* MATRIX CANVAS BACKGROUND */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.35;
+        }
+
+        /* SCANLINE CRT EFFECT */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                rgba(18, 16, 16, 0) 50%, 
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* TERMINAL CONTAINER */
+        .terminal-container {
+            width: 100%;
+            max-width: 750px;
+            height: 82vh;
+            background: rgba(10, 15, 24, 0.92);
+            border: 2px solid #00f0ff;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
+            display: flex;
+            flex-direction: column;
+            z-index: 3;
+            backdrop-filter: blur(8px);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* TERMINAL HEADER */
+        .terminal-header {
+            background: #0d131f;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+
+        .terminal-title {
+            font-size: 11px;
+            color: #00f0ff;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        /* TERMINAL BODY */
+        .terminal-body {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .output-line {
+            word-break: break-word;
+        }
+
+        .output-line.system { color: #8a99ad; }
+        .output-line.success { color: #00ff66; text-shadow: 0 0 8px rgba(0, 255, 102, 0.6); }
+        .output-line.cyan { color: #00f0ff; text-shadow: 0 0 8px rgba(0, 240, 255, 0.6); }
+        .output-line.error { color: #ff4d4d; }
+        .output-line.warning { color: #ffbd2e; }
+
+        /* INPUT PROMPT */
+        .input-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .prompt-symbol {
+            color: #00f0ff;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .cmd-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #00ff66;
+            font-size: 13px;
+            width: 100%;
+            caret-color: #00ff66;
+        }
+
+        /* SECRET VAULT MODAL POPUP */
+        .secret-vault-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(3, 5, 8, 0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            animation: glitchFade 0.4s ease-out;
+        }
+
+        @keyframes glitchFade {
+            0% { opacity: 0; transform: scale(0.9); }
+            50% { opacity: 0.8; transform: scale(1.02); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .vault-card {
+            background: #0d131f;
+            border: 2px solid #00ff66;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0, 255, 102, 0.4);
+            position: relative;
+        }
+
+        .vault-card h2 {
+            color: #00ff66;
+            font-size: 20px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px #00ff66;
+        }
+
+        .vault-card p {
+            color: #cbd5e1;
+            font-size: 12px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .secret-box {
+            background: rgba(0, 255, 102, 0.08);
+            border: 1px dashed #00ff66;
+            padding: 14px;
+            border-radius: 8px;
+            color: #00f0ff;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 20px;
+            word-break: break-all;
+        }
+
+        .btn-close-vault {
+            background: linear-gradient(135deg, #00ff66, #009944);
+            color: #000;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.5);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- DIGITAL RAIN BACKGROUND -->
+    <canvas id="matrixCanvas"></canvas>
+    <div class="scanline"></div>
+
+    <!-- TERMINAL MAIN CONTAINER -->
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <div class="terminal-dots">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+            </div>
+            <div class="terminal-title">⚡ PIN_SYSTEM_SERVER // SECURE_SHELL_V2</div>
+        </div>
+
+        <div class="terminal-body" id="terminalBody">
+            <!-- BOOT LOGS WILL BE TYPED HERE AUTOMATICALLY -->
+        </div>
+    </div>
+
+    <!-- SECRET VAULT POPUP MODAL -->
+    <div class="secret-vault-modal" id="secretVault">
+        <div class="vault-card">
+            <h2>🔓 ACCESS GRANTED!</h2>
+            <p>Selamat bro! Kamu berhasil membobol pertahanan <b>PIN Terminal</b>. Ini dia hadiah kodenya:</p>
+            
+            <div class="secret-box">
+                🎁 SCRIPT_EXCLUSIV_KEY: "PIN_GANTENK_SUPREME_2026"
+            </div>
+
+            <p style="font-size:10px; color:#8a99ad;">Tunjukkan pesan ini ke WhatsApp <b>pin gantenk</b> buat klaim bonus spesial!</p>
+
+            <button class="btn-close-vault" onclick="closeVault()">TUTUP VAULT ⚡</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. AUDIO SYNTHESIZER (RETRO BEEP SOUNDS) ---
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep(freq = 800, type = 'sine', duration = 0.05) {
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = freq;
+                gain.gain.setValueAtTime(0.03, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch(e){}
+        }
+
+        // --- 2. MATRIX RAIN EFFECT ---
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const matrixChars = '01100101010101010101PIN_GANTENK_ROBLOX_KILLUA_⚡🔮🍡';
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
+        let drops = Array(columns).fill(1);
+        let isMatrixActive = true;
+
+        function drawMatrix() {
+            if (!isMatrixActive) return;
+            ctx.fillStyle = 'rgba(3, 5, 8, 0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = '#00ff66';
+            ctx.font = fontSize + 'px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 35);
+
+        // --- 3. TERMINAL LOGIC & COMMANDS ---
+        const terminalBody = document.getElementById('terminalBody');
+
+        const bootSequence = [
+            { text: "[BOOT] Initializing PIN_CORE Kernel v2.6.0...", class: "system" },
+            { text: "[NET] Connecting to Firebase Realtime Server... CONNECTED 🟢", class: "cyan" },
+            { text: "[SECURITY] Firewall status: ACTIVE. Anti-Cheat: ON.", class: "warning" },
+            { text: "------------------------------------------------------------", class: "system" },
+            { text: "WELCOME TO PIN_GANTENK TERMINAL ROOM ⚡", class: "success" },
+            { text: "Ketik 'help' untuk melihat perintah terminal yang tersedia.", class: "cyan" },
+            { text: "------------------------------------------------------------", class: "system" }
+        ];
+
+        let lineIndex = 0;
+
+        function typeBootSequence() {
+            if (lineIndex < bootSequence.length) {
+                appendOutput(bootSequence[lineIndex].text, bootSequence[lineIndex].class);
+                playBeep(600 + (lineIndex * 100), 'square', 0.03);
+                lineIndex++;
+                setTimeout(typeBootSequence, 200);
+            } else {
+                createInputLine();
+            }
+        }
+
+        function appendOutput(text, className = "system") {
+            const div = document.createElement('div');
+            div.className = `output-line ${className}`;
+            div.innerHTML = text;
+            terminalBody.appendChild(div);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+
+        function createInputLine() {
+            const existingInput = document.getElementById('activeInputLine');
+            if (existingInput) existingInput.remove();
+
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'input-line';
+            inputContainer.id = 'activeInputLine';
+
+            inputContainer.innerHTML = `
+                <span class="prompt-symbol">guest@pin-net:~$</span>
+                <input type="text" class="cmd-input" id="cmdInput" autofocus autocomplete="off" spellcheck="false">
+            `;
+
+            terminalBody.appendChild(inputContainer);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+
+            const inputEl = document.getElementById('cmdInput');
+            inputEl.focus();
+
+            inputEl.addEventListener('keydown', function(e) {
+                playBeep(400, 'triangle', 0.02);
+                if (e.key === 'Enter') {
+                    const command = this.value.trim().toLowerCase();
+                    handleCommand(command);
+                }
+            });
+        }
+
+        function handleCommand(cmd) {
+            const currentLine = document.getElementById('activeInputLine');
+            if (currentLine) {
+                currentLine.innerHTML = `<span class="prompt-symbol">guest@pin-net:~$</span> <span style="color:#ffffff;">${cmd}</span>`;
+                currentLine.removeAttribute('id');
+            }
+
+            if (cmd === '') {
+                createInputLine();
+                return;
+            }
+
+            switch(cmd) {
+                case 'help':
+                    appendOutput("--- PERINTAH TERSEDIA ---", "cyan");
+                    appendOutput("<b>help</b>     : Menampilkan bantuan perintah ini", "system");
+                    appendOutput("<b>status</b>   : Menampilkan status server & store", "system");
+                    appendOutput("<b>whoami</b>   : Menampilkan data pengguna saat ini", "system");
+                    appendOutput("<b>access</b>   : [SECRET] Membuka Vault Rahasia", "warning");
+                    appendOutput("<b>clear</b>    : Membersihkan layar terminal", "system");
+                    appendOutput("<b>matrix</b>   : Toggle animasi Matrix Rain", "system");
+                    break;
+
+                case 'status':
+                    appendOutput("⚡ STATUS SISTEM PIN_GANTENK STORE:", "cyan");
+                    appendOutput("• Store Status  : ONLINE 🟢", "success");
+                    appendOutput("• Roblox Server : STABLE (0ms Ping)", "success");
+                    appendOutput("• Payment Gate  : QRIS / DANA Ready 💳", "cyan");
+                    break;
+
+                case 'whoami':
+                    appendOutput("User IP: 192.168.1.7 (Guest Agent)", "system");
+                    appendOutput("Access Level: USER_LEVEL_1 (Butuh passcode buat Lvl 9)", "warning");
+                    break;
+
+                case 'access':
+                case 'killua':
+                case 'unlock':
+                case 'passcode':
+                    playBeep(1200, 'sawtooth', 0.2);
+                    appendOutput("🔓 AUTHORIZATION GRANTED! Buka Vault...", "success");
+                    setTimeout(() => {
+                        document.getElementById('secretVault').style.display = 'flex';
+                    }, 400);
+                    break;
+
+                case 'clear':
+                    terminalBody.innerHTML = '';
+                    break;
+
+                case 'matrix':
+                    isMatrixActive = !isMatrixActive;
+                    if (!isMatrixActive) {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        appendOutput("Matrix Rain: DISABLED ❌", "warning");
+                    } else {
+                        appendOutput("Matrix Rain: ENABLED 🟢", "success");
+                    }
+                    break;
+
+                default:
+                    appendOutput(`Perintah '${cmd}' tidak dikenali. Ketik <b style="color:#00f0ff;">help</b> untuk melihat bantuan.`, "error");
+                    break;
+            }
+
+            createInputLine();
+        }
+
+        function closeVault() {
+            document.getElementById('secretVault').style.display = 'none';
+            const input = document.getElementById('cmdInput');
+            if (input) input.focus();
+        }
+
+        // MULAILAH TYPING SEQUENCE SAAT HALAMAN DIMUAT
+        window.onload = () => {
+            setTimeout(typeBootSequence, 300);
+        };
+
+        // TETAP FOCUS PADA INPUT SAAT TAMPILAN DI-KLIK
+        document.addEventListener('click', (e) => {
+            if (!e.target.classList.contains('btn-close-vault')) {
+                const input = document.getElementById('cmdInput');
+                if (input) input.focus();
+            }
+        });
+    </script>
+</body>
+</html>
