@@ -12,19 +12,24 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Fira Code', monospace;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            min-height: 100dvh;
+            background-color: #030508;
+            color: #00ff66;
+            overflow-y: auto; /* BISA DI-SCROLL DI HP */
+            overflow-x: hidden;
         }
 
         body {
-            background-color: #030508;
-            color: #00ff66;
-            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 10px;
-            overflow: hidden;
+            padding: 8px;
             position: relative;
-            user-select: none;
         }
 
         /* MATRIX CANVAS BACKGROUND */
@@ -35,7 +40,8 @@
             width: 100%;
             height: 100%;
             z-index: 1;
-            opacity: 0.35;
+            opacity: 0.3;
+            pointer-events: none;
         }
 
         /* SCANLINE CRT EFFECT */
@@ -58,37 +64,38 @@
         .terminal-container {
             width: 100%;
             max-width: 750px;
-            height: 88vh;
-            background: rgba(10, 15, 24, 0.92);
+            height: 92dvh; /* Menggunakan dvh agar pas di layar HP */
+            background: rgba(10, 15, 24, 0.95);
             border: 2px solid #00f0ff;
             border-radius: 12px;
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.3);
             display: flex;
             flex-direction: column;
-            z-index: 3;
+            z-index: 10;
             backdrop-filter: blur(8px);
-            overflow: hidden;
             position: relative;
+            margin: auto;
         }
 
         /* TERMINAL HEADER */
         .terminal-header {
             background: #0d131f;
-            padding: 10px 16px;
+            padding: 10px 14px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: 1px solid rgba(0, 240, 255, 0.3);
+            flex-shrink: 0;
         }
 
         .terminal-dots {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .dot {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
         }
         .dot-red { background: #ff5f56; }
@@ -96,23 +103,23 @@
         .dot-green { background: #27c93f; }
 
         .terminal-title {
-            font-size: 11px;
+            font-size: 10px;
             color: #00f0ff;
             font-weight: 700;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         /* TERMINAL BODY */
         .terminal-body {
             flex: 1;
-            padding: 14px;
+            padding: 12px;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
             display: flex;
             flex-direction: column;
             gap: 8px;
             font-size: 12px;
             line-height: 1.4;
-            scroll-behavior: smooth;
         }
 
         .output-line {
@@ -132,13 +139,14 @@
             background: rgba(0, 240, 255, 0.05);
             border: 2px solid #00f0ff;
             border-radius: 12px;
-            padding: 16px 12px;
-            margin: 10px 0;
+            padding: 14px 8px;
+            margin: 6px 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.15);
+            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.15);
+            flex-shrink: 0;
         }
 
         .arena-side {
@@ -148,24 +156,23 @@
         }
 
         .boss-avatar {
-            font-size: 36px;
+            font-size: 32px;
             display: inline-block;
             transition: transform 0.1s;
         }
 
-        /* ANIMASI BOSS KENA SERANG */
         .boss-hit {
             animation: bossDamage 0.35s ease-in-out;
         }
 
         @keyframes bossDamage {
             0%, 100% { transform: translateX(0) scale(1); filter: none; }
-            25% { transform: translateX(-12px) scale(1.2); filter: drop-shadow(0 0 15px #ff0055) brightness(1.8); }
-            75% { transform: translateX(12px) scale(0.9); filter: drop-shadow(0 0 15px #ff0055) brightness(1.8); }
+            25% { transform: translateX(-10px) scale(1.2); filter: drop-shadow(0 0 15px #ff0055) brightness(1.8); }
+            75% { transform: translateX(10px) scale(0.9); filter: drop-shadow(0 0 15px #ff0055) brightness(1.8); }
         }
 
         .army-avatar {
-            font-size: 24px;
+            font-size: 22px;
             display: inline-block;
             transition: transform 0.2s;
             color: #00f0ff;
@@ -178,79 +185,81 @@
 
         @keyframes pixelBounce {
             0% { transform: translateY(0px); }
-            100% { transform: translateY(-5px); }
+            100% { transform: translateY(-4px); }
         }
 
-        /* ANIMASI PASUKAN SERANG/DASH KE BOSS */
         .army-dash {
             animation: armyDashAnim 0.4s ease-in-out;
         }
 
         @keyframes armyDashAnim {
             0% { transform: translateX(0); }
-            50% { transform: translateX(-120px) scale(1.3); }
+            50% { transform: translateX(-80px) scale(1.3); }
             100% { transform: translateX(0); }
         }
 
-        /* TRACT ARENA TENGAH UNTUK PROYEKTIL SKILL */
         .arena-middle-track {
             position: relative;
-            flex: 1.5;
-            height: 45px;
+            flex: 1.2;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* PROYEKTIL BOLA API DARI KANAN KE KIRI */
         .projectile-fire {
             position: absolute;
-            font-size: 22px;
+            font-size: 20px;
             animation: flyToBoss 0.45s ease-in forwards;
         }
 
         @keyframes flyToBoss {
             0% { right: 0%; opacity: 0; transform: scale(0.8); }
             20% { opacity: 1; }
-            100% { right: 85%; opacity: 1; transform: scale(1.5); }
+            100% { right: 80%; opacity: 1; transform: scale(1.4); }
         }
 
-        /* PROYEKTIL PETIR DARI KANAN KE KIRI */
         .projectile-zap {
             position: absolute;
-            font-size: 24px;
+            font-size: 22px;
             animation: flyZapToBoss 0.35s ease-in forwards;
         }
 
         @keyframes flyZapToBoss {
-            0% { right: 0%; opacity: 0; transform: scale(1) rotate(0deg); }
-            50% { opacity: 1; transform: scale(2) rotate(20deg); }
-            100% { right: 85%; opacity: 1; transform: scale(1.3) rotate(-20deg); }
+            0% { right: 0%; opacity: 0; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.8); }
+            100% { right: 80%; opacity: 1; transform: scale(1.2); }
         }
 
-        /* QUICK ACTION BUTTONS BAR */
+        /* QUICK ACTION BUTTONS BAR - MOBILE OPTIMIZED */
         .quick-bar {
             background: #090e17;
-            padding: 8px 10px;
+            padding: 8px;
             display: flex;
-            gap: 6px;
+            gap: 8px;
             overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             border-top: 1px solid rgba(0, 240, 255, 0.2);
             scrollbar-width: none;
+            flex-shrink: 0;
+            z-index: 20;
         }
         .quick-bar::-webkit-scrollbar { display: none; }
 
         .btn-quick {
-            background: rgba(0, 240, 255, 0.1);
+            background: rgba(0, 240, 255, 0.12);
             border: 1px solid #00f0ff;
             color: #00f0ff;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 11px;
+            padding: 10px 14px; /* DIPERBESAR BIAR MUDAH DIPENCET */
+            border-radius: 8px;
+            font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.2s ease;
+            touch-action: manipulation; /* SUPAYA LANGSUNG RESPONSIVE DI HP */
+            user-select: none;
+            flex-shrink: 0;
+            transition: background 0.1s, transform 0.1s;
         }
 
         .btn-quick:active {
@@ -259,25 +268,26 @@
             color: #000;
         }
 
-        .btn-quick.fire-btn { border-color: #ff6600; color: #ff6600; background: rgba(255, 102, 0, 0.1); }
-        .btn-quick.zap-btn { border-color: #ffff00; color: #ffff00; background: rgba(255, 255, 0, 0.1); }
-        .btn-quick.monster-btn { border-color: #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.1); }
+        .btn-quick.fire-btn { border-color: #ff6600; color: #ff6600; background: rgba(255, 102, 0, 0.15); }
+        .btn-quick.zap-btn { border-color: #ffff00; color: #ffff00; background: rgba(255, 255, 0, 0.15); }
+        .btn-quick.monster-btn { border-color: #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.15); }
 
         /* INPUT PROMPT */
         .input-line {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px;
+            gap: 6px;
+            padding: 8px 10px;
             background: #070b12;
             border-top: 1px solid rgba(0, 240, 255, 0.15);
+            flex-shrink: 0;
         }
 
         .prompt-symbol {
             color: #00f0ff;
             font-weight: bold;
             white-space: nowrap;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .cmd-input {
@@ -297,68 +307,61 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(3, 5, 8, 0.92);
+            background: rgba(3, 5, 8, 0.94);
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 10;
+            z-index: 100;
             backdrop-filter: blur(10px);
-            animation: glitchFade 0.4s ease-out;
-        }
-
-        @keyframes glitchFade {
-            0% { opacity: 0; transform: scale(0.9); }
-            50% { opacity: 0.8; transform: scale(1.02); }
-            100% { opacity: 1; transform: scale(1); }
+            padding: 15px;
         }
 
         .vault-card {
             background: #0d131f;
             border: 2px solid #00ff66;
             border-radius: 16px;
-            padding: 25px;
-            max-width: 480px;
-            width: 90%;
+            padding: 20px;
+            max-width: 450px;
+            width: 100%;
             text-align: center;
-            box-shadow: 0 0 40px rgba(0, 255, 102, 0.4);
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.4);
         }
 
         .vault-card h2 {
             color: #00ff66;
-            font-size: 18px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 10px #00ff66;
+            font-size: 16px;
+            margin-bottom: 8px;
         }
 
         .vault-card p {
             color: #cbd5e1;
             font-size: 11px;
-            margin-bottom: 15px;
-            line-height: 1.5;
+            margin-bottom: 12px;
+            line-height: 1.4;
         }
 
         .secret-box {
-            background: rgba(0, 255, 102, 0.08);
+            background: rgba(0, 255, 102, 0.1);
             border: 1px dashed #00ff66;
-            padding: 12px;
+            padding: 10px;
             border-radius: 8px;
             color: #00f0ff;
             font-weight: bold;
-            font-size: 13px;
-            margin-bottom: 15px;
+            font-size: 12px;
+            margin-bottom: 12px;
             word-break: break-all;
         }
 
         .btn-close-vault {
-            background: linear-gradient(135deg, #00ff66, #009944);
+            background: #00ff66;
             color: #000;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 8px;
             font-weight: 700;
             font-size: 12px;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(0, 255, 102, 0.5);
+            touch-action: manipulation;
         }
     </style>
 </head>
@@ -380,17 +383,17 @@
         </div>
 
         <div class="terminal-body" id="terminalBody">
-            <!-- BOOT LOGS WILL BE TYPED HERE AUTOMATICALLY -->
+            <!-- LOGS DIPANGGIL DISINI -->
         </div>
 
         <!-- QUICK ACTION BUTTONS BAR -->
         <div class="quick-bar">
-            <button class="btn-quick monster-btn" onclick="execQuick('monster')">👹 Boss</button>
-            <button class="btn-quick" onclick="execQuick('pasukan')">👾 Pasukan (1)</button>
-            <button class="btn-quick fire-btn" onclick="execQuick('api')">🔥 Api (2)</button>
-            <button class="btn-quick zap-btn" onclick="execQuick('listrik')">⚡ Petir (3)</button>
-            <button class="btn-quick" onclick="execQuick('serang')">⚔️ Serang (4)</button>
-            <button class="btn-quick" onclick="execQuick('clear')">🧹 Clear</button>
+            <button type="button" class="btn-quick monster-btn" onclick="execQuick('monster')">👹 Boss</button>
+            <button type="button" class="btn-quick" onclick="execQuick('pasukan')">👾 Pasukan (1)</button>
+            <button type="button" class="btn-quick fire-btn" onclick="execQuick('api')">🔥 Api (2)</button>
+            <button type="button" class="btn-quick zap-btn" onclick="execQuick('listrik')">⚡ Petir (3)</button>
+            <button type="button" class="btn-quick" onclick="execQuick('serang')">⚔️ Serang (4)</button>
+            <button type="button" class="btn-quick" onclick="execQuick('clear')">🧹 Clear</button>
         </div>
 
         <!-- INPUT PROMPT -->
@@ -412,7 +415,7 @@
 
             <p style="font-size:10px; color:#8a99ad;">Tunjukkan pesan ini ke WhatsApp <b>pin gantenk</b> buat klaim bonus spesial!</p>
 
-            <button class="btn-close-vault" onclick="closeVault()">TUTUP VAULT ⚡</button>
+            <button type="button" class="btn-close-vault" onclick="closeVault()">TUTUP VAULT ⚡</button>
         </div>
     </div>
 
@@ -424,10 +427,23 @@
         let hasArmy = false;
         let activeArenaEl = null;
 
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        // Auto unlock audio saat layar HP disentuh
+        document.addEventListener('touchstart', initAudio, { once: true });
+        document.addEventListener('click', initAudio, { once: true });
+
         function playBeep(freq = 800, type = 'sine', duration = 0.05) {
-            if (!isSoundEnabled) return;
+            if (!isSoundEnabled || !audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -442,52 +458,51 @@
         }
 
         function playMonsterRoar() {
-            if (!isSoundEnabled) return;
+            if (!isSoundEnabled || !audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.5);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+                osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.4);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.5);
+                osc.stop(audioCtx.currentTime + 0.4);
             } catch(e){}
         }
 
         function playFireSound() {
-            if (!isSoundEnabled) return;
+            if (!isSoundEnabled || !audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'triangle';
                 osc.frequency.setValueAtTime(350, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.25);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.2);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.25);
+                osc.stop(audioCtx.currentTime + 0.2);
             } catch(e){}
         }
 
         function playZapSound() {
-            if (!isSoundEnabled) return;
+            if (!isSoundEnabled || !audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(900, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(1400, audioCtx.currentTime + 0.05);
-                osc.frequency.setValueAtTime(500, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1200, audioCtx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.12);
+                osc.stop(audioCtx.currentTime + 0.1);
             } catch(e){}
         }
 
@@ -502,13 +517,13 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        const matrixChars = '01100101PIN_GANTENK_ROBLOX_KILLUA_⚡🔮';
-        const fontSize = 14;
+        const matrixChars = '01100101PIN_GANTENK_KILLUA_⚡🔮';
+        const fontSize = 12;
         let columns = Math.floor(canvas.width / fontSize);
         let drops = Array(columns).fill(1);
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(3, 5, 8, 0.08)';
+            ctx.fillStyle = 'rgba(3, 5, 8, 0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             ctx.fillStyle = '#00ff66';
@@ -524,7 +539,7 @@
                 drops[i]++;
             }
         }
-        setInterval(drawMatrix, 40);
+        setInterval(drawMatrix, 50);
 
         // --- 3. TERMINAL LOGIC & COMMANDS ---
         const terminalBody = document.getElementById('terminalBody');
@@ -532,10 +547,10 @@
 
         const bootSequence = [
             { text: "[BOOT] Initializing PIN_CORE Kernel v2.6.0...", class: "system" },
-            { text: "[NET] Connecting to Firebase Realtime Server... CONNECTED 🟢", class: "cyan" },
+            { text: "[NET] Realtime Server... CONNECTED 🟢", class: "cyan" },
             { text: "------------------------------------------------------------", class: "system" },
             { text: "WELCOME TO PIN_GANTENK TERMINAL BATTLE ⚡", class: "success" },
-            { text: "Pencet tombol di bawah atau ketik angka 1-4 untuk bertarung!", class: "cyan" },
+            { text: "Pencet tombol di bawah untuk bertarung di HP!", class: "cyan" },
             { text: "------------------------------------------------------------", class: "system" }
         ];
 
@@ -544,9 +559,8 @@
         function typeBootSequence() {
             if (lineIndex < bootSequence.length) {
                 appendOutput(bootSequence[lineIndex].text, bootSequence[lineIndex].class);
-                playBeep(600 + (lineIndex * 100), 'square', 0.03);
                 lineIndex++;
-                setTimeout(typeBootSequence, 150);
+                setTimeout(typeBootSequence, 120);
             }
         }
 
@@ -560,6 +574,7 @@
         }
 
         function execQuick(cmd) {
+            initAudio();
             handleCommand(cmd);
         }
 
@@ -576,16 +591,16 @@
             arenaDiv.innerHTML = `
                 <div class="arena-side">
                     <div class="boss-avatar" id="bossAvatar">👹</div>
-                    <div style="color:#ff0055; font-weight:bold; font-size:11px;">BOSS LV.99</div>
-                    <div style="font-size:10px; color:#ff4d4d;" id="bossHpText">${renderHPBar()}</div>
+                    <div style="color:#ff0055; font-weight:bold; font-size:10px;">BOSS LV.99</div>
+                    <div style="font-size:9px; color:#ff4d4d;" id="bossHpText">${renderHPBar()}</div>
                 </div>
                 <div class="arena-middle-track" id="middleTrack">
-                    <span style="font-size:11px; color:#ff6600; font-weight:bold;" id="vsLabel">⚔️ VS ⚔️</span>
+                    <span style="font-size:10px; color:#ff6600; font-weight:bold;" id="vsLabel">⚔️ VS ⚔️</span>
                 </div>
                 <div class="arena-side">
                     <div class="army-avatar ${hasArmy ? 'army-idle' : ''}" id="armyAvatar">${hasArmy ? '👾 👾 👾' : '💤'}</div>
-                    <div style="color:#00f0ff; font-weight:bold; font-size:11px;">PASUKAN</div>
-                    <div style="font-size:10px; color:${hasArmy ? '#00ff66' : '#8a99ad'};" id="armyStatusText">${hasArmy ? 'Battle Ready!' : 'Panggil [1]'}</div>
+                    <div style="color:#00f0ff; font-weight:bold; font-size:10px;">PASUKAN</div>
+                    <div style="font-size:9px; color:${hasArmy ? '#00ff66' : '#8a99ad'};" id="armyStatusText">${hasArmy ? 'Battle Ready!' : 'Panggil [1]'}</div>
                 </div>
             `;
             terminalBody.appendChild(arenaDiv);
@@ -603,7 +618,7 @@
             if (!bossAvatar) return;
 
             bossAvatar.classList.remove('boss-hit');
-            void bossAvatar.offsetWidth; // Trigger reflow
+            void bossAvatar.offsetWidth;
             bossAvatar.classList.add('boss-hit');
 
             monsterHP = Math.max(0, monsterHP - damage);
@@ -617,15 +632,14 @@
                     playBeep(1200, 'sawtooth', 0.3);
                     setTimeout(() => {
                         document.getElementById('secretVault').style.display = 'flex';
-                    }, 500);
-                }, 400);
+                    }, 400);
+                }, 300);
             }
         }
 
         function handleCommand(cmd) {
             if (!cmd) return;
 
-            // SHORTCUT ANGKA
             if (cmd === '1') cmd = 'pasukan';
             if (cmd === '2') cmd = 'api';
             if (cmd === '3') cmd = 'listrik';
@@ -634,7 +648,7 @@
             switch(cmd) {
                 case 'help':
                     appendOutput("--- PERINTAH TERSEDIA ---", "cyan");
-                    appendOutput("Pencet tombol di bawah atau gunakan angka singkat:", "system");
+                    appendOutput("Pencet tombol di bawah layar HP-mu:", "system");
                     appendOutput("<b>1</b> / pasukan : Panggil Pasukan Pixel 👾", "cyan");
                     appendOutput("<b>2</b> / api     : Skill Bola Api 🔥 (-35 HP)", "fire");
                     appendOutput("<b>3</b> / listrik : Skill Petir Cyber ⚡ (-45 HP)", "zap");
@@ -647,13 +661,13 @@
                 case 'boss':
                     monsterHP = 100;
                     playMonsterRoar();
-                    appendOutput("👹 CYBER BOSS DIAPANGGIL KE ARENA!", "error");
+                    appendOutput("👹 CYBER BOSS DIPANGGIL KE ARENA!", "error");
                     renderArenaBox();
                     break;
 
                 case 'pasukan':
                     hasArmy = true;
-                    playBeep(900, 'triangle', 0.1);
+                    playBeep(900, 'triangle', 0.08);
                     if (!activeArenaEl || monsterHP <= 0) {
                         renderArenaBox();
                     } else {
@@ -678,12 +692,11 @@
                     }
                     playFireSound();
                     
-                    // ANIMASI BOLA API MELUNCUR DI DALAM ARENA KOTAK
                     const track1 = document.getElementById('middleTrack');
                     if (track1) {
                         const fireProj = document.createElement('span');
                         fireProj.className = 'projectile-fire';
-                        fireProj.innerText = '🔥🔥🔥';
+                        fireProj.innerText = '🔥🔥';
                         track1.appendChild(fireProj);
 
                         setTimeout(() => {
@@ -700,12 +713,11 @@
                     }
                     playZapSound();
 
-                    // ANIMASI PETIR MELUNCUR DI DALAM ARENA KOTAK
                     const track2 = document.getElementById('middleTrack');
                     if (track2) {
                         const zapProj = document.createElement('span');
                         zapProj.className = 'projectile-zap';
-                        zapProj.innerText = '⚡⚡⚡';
+                        zapProj.innerText = '⚡⚡';
                         track2.appendChild(zapProj);
 
                         setTimeout(() => {
@@ -726,7 +738,6 @@
                     }
                     playBeep(700, 'square', 0.08);
 
-                    // ANIMASI PASUKAN MAJU DITROJOH/DASH KE BOSS DI DALAM KOTAK
                     const armyAvatar = document.getElementById('armyAvatar');
                     if (armyAvatar) {
                         armyAvatar.classList.remove('army-idle');
@@ -748,11 +759,6 @@
                     activeArenaEl = null;
                     break;
 
-                case 'access':
-                case 'killua':
-                    document.getElementById('secretVault').style.display = 'flex';
-                    break;
-
                 default:
                     appendOutput(`Perintah '${cmd}' tidak dikenal. Ketik <b>help</b>.`, "error");
                     break;
@@ -762,7 +768,7 @@
         }
 
         cmdInput.addEventListener('keydown', function(e) {
-            playBeep(400, 'triangle', 0.02);
+            initAudio();
             if (e.key === 'Enter') {
                 const command = this.value.trim().toLowerCase();
                 handleCommand(command);
@@ -774,7 +780,7 @@
         }
 
         window.onload = () => {
-            setTimeout(typeBootSequence, 200);
+            setTimeout(typeBootSequence, 150);
         };
     </script>
 </body>
