@@ -805,7 +805,7 @@
             </div>
         </div>
         <div class="chat-footer" id="chatFooter">
-            <!-- Tombol Opsi Item Dimuat Dinamis Beserta Stok Dari Firebase -->
+            <!-- Opsi Item Beserta Stok Dimuat di Sini secara Dinamis -->
         </div>
     </div>
 
@@ -841,7 +841,10 @@
 
         let localStocks = { item1: 10, item2: 10 };
 
-        // --- STATUS BOT ---
+        // --- STATUS CHATBOT DATA ---
+        let botData = { step: "select", itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
+
+        // --- STATUS BOT ONLINE/OFFLINE ---
         let savedStatus = localStorage.getItem('isBotOnline');
         let isBotOnline = savedStatus !== null ? (savedStatus === 'true') : true;
 
@@ -893,14 +896,14 @@
         applyBotStatusUI(isBotOnline);
 
         // --- RENDER OPSI ITEM ---
-        function renderChatOptions() {
+        function renderChatOptions(force = false) {
             if (!isBotOnline) return;
 
             let chatFooter = document.getElementById('chatFooter');
             if (!chatFooter) return;
 
-            let isFormVisible = document.getElementById('bot-usn-input');
-            if (isFormVisible) return;
+            // Jika sedang isi form/sudah siap WA, jangan timpa footer kecuali dipaksa (force == true)
+            if (!force && botData.step && botData.step !== 'select') return;
 
             let optionsHTML = '<div class="chat-options" id="chatOptions">';
             for (let key in itemListData) {
@@ -977,8 +980,6 @@
         }
 
         // --- CHATBOT SYSTEM ---
-        let botData = { itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
-
         function saveChatState() {
             let usnInput = document.getElementById('bot-usn-input');
             if (usnInput) {
@@ -989,7 +990,7 @@
                 footer: document.getElementById('chatFooter').innerHTML,
                 botData: botData,
                 isOpen: document.getElementById('chatWidget').style.display === 'flex',
-                v: "2.1"
+                v: "3.0"
             };
             localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
         }
@@ -1003,13 +1004,13 @@
             if (saved) {
                 try {
                     let state = JSON.parse(saved);
-                    if (state.v !== "2.1") {
+                    if (state.v !== "3.0") {
                         resetChatSystem();
                         return;
                     }
+                    if (state.botData) botData = state.botData;
                     if (state.body) document.getElementById('chatBody').innerHTML = state.body;
                     if (state.footer) document.getElementById('chatFooter').innerHTML = state.footer;
-                    if (state.botData) botData = state.botData;
                     if (state.isOpen) document.getElementById('chatWidget').style.display = 'flex';
 
                     let usnInput = document.getElementById('bot-usn-input');
@@ -1023,13 +1024,14 @@
                     resetChatSystem();
                 }
             } else {
-                renderChatOptions();
+                resetChatSystem();
             }
         }
 
+        // --- FUNGSI RESET CHAT TOTAL ---
         function resetChatSystem() {
             localStorage.removeItem('pin_store_chat_session');
-            botData = { itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
+            botData = { step: "select", itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
 
             if (!isBotOnline) {
                 applyBotStatusUI(false);
@@ -1041,7 +1043,10 @@
                     Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
                 </div>
             `;
-            renderChatOptions();
+            
+            // Paksa render opsi pilihan item dan simpan state
+            renderChatOptions(true);
+            saveChatState();
         }
 
         function toggleChat() {
@@ -1051,8 +1056,8 @@
 
             if (!isBotOnline) {
                 applyBotStatusUI(false);
-            } else {
-                renderChatOptions();
+            } else if (botData.step === 'select') {
+                renderChatOptions(true);
             }
             saveChatState();
         }
@@ -1067,7 +1072,7 @@
             saveChatState();
         }
 
-        // --- BOT KIRIM GAMBAR QRIS DI CHAT ---
+        // --- BOT PILIH ITEM ---
         function botSelectItem(key) {
             if (!isBotOnline) {
                 addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
@@ -1085,6 +1090,7 @@
                 return;
             }
 
+            botData.step = "form";
             botData.itemId = key;
             botData.item = item.name;
             botData.price = item.price;
@@ -1157,7 +1163,9 @@
             }
 
             botData.username = usnInput;
+            botData.step = "done";
 
+            // Kurangi stok di Firebase Realtime
             db.ref('stocks/' + botData.itemId).transaction((current) => {
                 if (current === null) return 0;
                 return Math.max(0, current - 1);
@@ -1177,9 +1185,14 @@
 
             let footer = document.getElementById('chatFooter');
             footer.innerHTML = `
-                <a href="${waUrl}" target="_blank" onclick="localStorage.removeItem('pin_store_chat_session')" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none;">
-                    📲 Kirim Pesanan + Bukti ke WA
-                </a>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <a href="${waUrl}" target="_blank" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; box-shadow: 0 0 10px rgba(37,211,102,0.4);">
+                        📲 Kirim Pesanan + Bukti ke WA
+                    </a>
+                    <button onclick="resetChatSystem()" style="background:#171c2e; border:1px solid #00f0ff; color:#00f0ff; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
+                        🔄 Mulai Transaksi Baru
+                    </button>
+                </div>
             `;
             saveChatState();
         }
