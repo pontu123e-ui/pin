@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PIN_SYSTEM // SECRET_TERMINAL_V2</title>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -21,7 +21,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
+            padding: 10px;
             overflow: hidden;
             position: relative;
             user-select: none;
@@ -58,7 +58,7 @@
         .terminal-container {
             width: 100%;
             max-width: 750px;
-            height: 82vh;
+            height: 88vh;
             background: rgba(10, 15, 24, 0.92);
             border: 2px solid #00f0ff;
             border-radius: 12px;
@@ -105,13 +105,14 @@
         /* TERMINAL BODY */
         .terminal-body {
             flex: 1;
-            padding: 18px;
+            padding: 14px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            font-size: 13px;
-            line-height: 1.5;
+            gap: 8px;
+            font-size: 12px;
+            line-height: 1.4;
+            scroll-behavior: smooth;
         }
 
         .output-line {
@@ -128,18 +129,56 @@
         .output-line.fire { color: #ff6600; font-weight: bold; text-shadow: 0 0 10px #ff6600; }
         .output-line.zap { color: #ffff00; font-weight: bold; text-shadow: 0 0 10px #ffff00; }
 
+        /* QUICK ACTION BUTTONS BAR */
+        .quick-bar {
+            background: #090e17;
+            padding: 8px 10px;
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            scrollbar-width: none;
+        }
+        .quick-bar::-webkit-scrollbar { display: none; }
+
+        .btn-quick {
+            background: rgba(0, 240, 255, 0.1);
+            border: 1px solid #00f0ff;
+            color: #00f0ff;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+        }
+
+        .btn-quick:active {
+            transform: scale(0.92);
+            background: #00f0ff;
+            color: #000;
+        }
+
+        .btn-quick.fire-btn { border-color: #ff6600; color: #ff6600; background: rgba(255, 102, 0, 0.1); }
+        .btn-quick.zap-btn { border-color: #ffff00; color: #ffff00; background: rgba(255, 255, 0, 0.1); }
+        .btn-quick.monster-btn { border-color: #ff0055; color: #ff0055; background: rgba(255, 0, 85, 0.1); }
+
         /* INPUT PROMPT */
         .input-line {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-top: 5px;
+            padding: 10px;
+            background: #070b12;
+            border-top: 1px solid rgba(0, 240, 255, 0.15);
         }
 
         .prompt-symbol {
             color: #00f0ff;
             font-weight: bold;
             white-space: nowrap;
+            font-size: 12px;
         }
 
         .cmd-input {
@@ -147,7 +186,7 @@
             border: none;
             outline: none;
             color: #00ff66;
-            font-size: 13px;
+            font-size: 12px;
             width: 100%;
             caret-color: #00ff66;
         }
@@ -159,7 +198,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(3, 5, 8, 0.9);
+            background: rgba(3, 5, 8, 0.92);
             display: none;
             justify-content: center;
             align-items: center;
@@ -178,37 +217,36 @@
             background: #0d131f;
             border: 2px solid #00ff66;
             border-radius: 16px;
-            padding: 30px;
+            padding: 25px;
             max-width: 480px;
             width: 90%;
             text-align: center;
             box-shadow: 0 0 40px rgba(0, 255, 102, 0.4);
-            position: relative;
         }
 
         .vault-card h2 {
             color: #00ff66;
-            font-size: 20px;
+            font-size: 18px;
             margin-bottom: 10px;
             text-shadow: 0 0 10px #00ff66;
         }
 
         .vault-card p {
             color: #cbd5e1;
-            font-size: 12px;
-            margin-bottom: 20px;
-            line-height: 1.6;
+            font-size: 11px;
+            margin-bottom: 15px;
+            line-height: 1.5;
         }
 
         .secret-box {
             background: rgba(0, 255, 102, 0.08);
             border: 1px dashed #00ff66;
-            padding: 14px;
+            padding: 12px;
             border-radius: 8px;
             color: #00f0ff;
             font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
             word-break: break-all;
         }
 
@@ -216,7 +254,7 @@
             background: linear-gradient(135deg, #00ff66, #009944);
             color: #000;
             border: none;
-            padding: 10px 24px;
+            padding: 10px 20px;
             border-radius: 8px;
             font-weight: 700;
             font-size: 12px;
@@ -245,13 +283,29 @@
         <div class="terminal-body" id="terminalBody">
             <!-- BOOT LOGS WILL BE TYPED HERE AUTOMATICALLY -->
         </div>
+
+        <!-- QUICK ACTION BUTTONS BAR (SANGAT COCOK UNTUK HP) -->
+        <div class="quick-bar">
+            <button class="btn-quick monster-btn" onclick="execQuick('monster')">👹 Boss</button>
+            <button class="btn-quick" onclick="execQuick('pasukan')">👾 Pasukan (1)</button>
+            <button class="btn-quick fire-btn" onclick="execQuick('api')">🔥 Api (2)</button>
+            <button class="btn-quick zap-btn" onclick="execQuick('listrik')">⚡ Petir (3)</button>
+            <button class="btn-quick" onclick="execQuick('serang')">⚔️ Serang (4)</button>
+            <button class="btn-quick" onclick="execQuick('clear')">🧹 Clear</button>
+        </div>
+
+        <!-- INPUT PROMPT -->
+        <div class="input-line" id="activeInputLine">
+            <span class="prompt-symbol">guest@pin-net:~$</span>
+            <input type="text" class="cmd-input" id="cmdInput" placeholder="Ketik perintah/angka..." autocomplete="off" spellcheck="false">
+        </div>
     </div>
 
     <!-- SECRET VAULT POPUP MODAL -->
     <div class="secret-vault-modal" id="secretVault">
         <div class="vault-card">
             <h2>🔓 ACCESS GRANTED!</h2>
-            <p>Selamat bro! Kamu berhasil membobol pertahanan <b>PIN Terminal</b>. Ini dia hadiah kodenya:</p>
+            <p>Selamat bro! Kamu berhasil mengalahkan Boss & membobol <b>PIN Terminal</b>:</p>
             
             <div class="secret-box">
                 🎁 SCRIPT_EXCLUSIV_KEY: "PIN_GANTENK_SUPREME_2026"
@@ -294,13 +348,13 @@
                 const gain = audioCtx.createGain();
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(120, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.6);
-                gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+                osc.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 0.5);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.6);
+                osc.stop(audioCtx.currentTime + 0.5);
             } catch(e){}
         }
 
@@ -310,13 +364,13 @@
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
                 osc.type = 'triangle';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(80, audioCtx.currentTime + 0.3);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(350, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.25);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.3);
+                osc.stop(audioCtx.currentTime + 0.25);
             } catch(e){}
         }
 
@@ -327,13 +381,13 @@
                 const gain = audioCtx.createGain();
                 osc.type = 'square';
                 osc.frequency.setValueAtTime(900, audioCtx.currentTime);
-                osc.frequency.setValueAtTime(1500, audioCtx.currentTime + 0.05);
-                osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(1400, audioCtx.currentTime + 0.05);
+                osc.frequency.setValueAtTime(500, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.06, audioCtx.currentTime);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start();
-                osc.stop(audioCtx.currentTime + 0.15);
+                osc.stop(audioCtx.currentTime + 0.12);
             } catch(e){}
         }
 
@@ -348,14 +402,12 @@
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        const matrixChars = '01100101010101010101PIN_GANTENK_ROBLOX_KILLUA_⚡🔮🍡';
+        const matrixChars = '01100101PIN_GANTENK_ROBLOX_KILLUA_⚡🔮';
         const fontSize = 14;
         let columns = Math.floor(canvas.width / fontSize);
         let drops = Array(columns).fill(1);
-        let isMatrixActive = true;
 
         function drawMatrix() {
-            if (!isMatrixActive) return;
             ctx.fillStyle = 'rgba(3, 5, 8, 0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -372,18 +424,18 @@
                 drops[i]++;
             }
         }
-        setInterval(drawMatrix, 35);
+        setInterval(drawMatrix, 40);
 
         // --- 3. TERMINAL LOGIC & COMMANDS ---
         const terminalBody = document.getElementById('terminalBody');
+        const cmdInput = document.getElementById('cmdInput');
 
         const bootSequence = [
             { text: "[BOOT] Initializing PIN_CORE Kernel v2.6.0...", class: "system" },
             { text: "[NET] Connecting to Firebase Realtime Server... CONNECTED 🟢", class: "cyan" },
-            { text: "[SECURITY] Firewall status: ACTIVE. Anti-Cheat: ON.", class: "warning" },
             { text: "------------------------------------------------------------", class: "system" },
-            { text: "WELCOME TO PIN_GANTENK TERMINAL ROOM ⚡", class: "success" },
-            { text: "Ketik 'help' untuk melihat perintah terminal yang tersedia.", class: "cyan" },
+            { text: "WELCOME TO PIN_GANTENK TERMINAL BATTLE ⚡", class: "success" },
+            { text: "Pencet tombol di bawah atau ketik angka 1-4 untuk bertarung!", class: "cyan" },
             { text: "------------------------------------------------------------", class: "system" }
         ];
 
@@ -394,9 +446,7 @@
                 appendOutput(bootSequence[lineIndex].text, bootSequence[lineIndex].class);
                 playBeep(600 + (lineIndex * 100), 'square', 0.03);
                 lineIndex++;
-                setTimeout(typeBootSequence, 200);
-            } else {
-                createInputLine();
+                setTimeout(typeBootSequence, 150);
             }
         }
 
@@ -405,35 +455,13 @@
             div.className = `output-line ${className}`;
             div.innerHTML = text;
             terminalBody.appendChild(div);
+            
+            // Smooth Auto-scroll
             terminalBody.scrollTop = terminalBody.scrollHeight;
         }
 
-        function createInputLine() {
-            const existingInput = document.getElementById('activeInputLine');
-            if (existingInput) existingInput.remove();
-
-            const inputContainer = document.createElement('div');
-            inputContainer.className = 'input-line';
-            inputContainer.id = 'activeInputLine';
-
-            inputContainer.innerHTML = `
-                <span class="prompt-symbol">guest@pin-net:~$</span>
-                <input type="text" class="cmd-input" id="cmdInput" autofocus autocomplete="off" spellcheck="false">
-            `;
-
-            terminalBody.appendChild(inputContainer);
-            terminalBody.scrollTop = terminalBody.scrollHeight;
-
-            const inputEl = document.getElementById('cmdInput');
-            inputEl.focus();
-
-            inputEl.addEventListener('keydown', function(e) {
-                playBeep(400, 'triangle', 0.02);
-                if (e.key === 'Enter') {
-                    const command = this.value.trim().toLowerCase();
-                    handleCommand(command);
-                }
-            });
+        function execQuick(cmd) {
+            handleCommand(cmd);
         }
 
         function renderHPBar() {
@@ -444,49 +472,47 @@
 
         function applyDamage(damage, attackName, colorClass) {
             if (monsterHP <= 0) {
-                appendOutput("❌ Tidak ada monster! Ketik <b style='color:#ff0055;'>monster</b> dulu buat manggil Boss.", "warning");
+                appendOutput("❌ Monster belum dipanggil! Pencet tombol <b style='color:#ff0055;'>👹 Boss</b> dulu.", "warning");
                 return;
             }
 
             monsterHP = Math.max(0, monsterHP - damage);
-            appendOutput(`💥 ${attackName} memberikan -${damage} DAMAGE!`, colorClass);
+            appendOutput(`💥 ${attackName}: -${damage} HP!`, colorClass);
             appendOutput(`👹 CYBER BOSS HP: ${renderHPBar()}`, monsterHP > 0 ? "error" : "success");
 
             if (monsterHP <= 0) {
                 setTimeout(() => {
-                    appendOutput("☠️ BOOMMM! CYBER MONSTER DIKALAHKAN!", "success");
-                    appendOutput("🏆 PASUKAN PIXEL MENANG! Hadiah Vault Rahasia terbuka...", "cyan");
+                    appendOutput("☠️ BOOMMM! CYBER MONSTER HANCUR LLEBUR!", "success");
+                    appendOutput("🏆 PASUKAN PIXEL MENANG! Hadiah Vault terbuka...", "cyan");
                     playBeep(1200, 'sawtooth', 0.3);
                     setTimeout(() => {
                         document.getElementById('secretVault').style.display = 'flex';
-                    }, 600);
-                }, 300);
+                    }, 500);
+                }, 200);
             }
         }
 
         function handleCommand(cmd) {
-            const currentLine = document.getElementById('activeInputLine');
-            if (currentLine) {
-                currentLine.innerHTML = `<span class="prompt-symbol">guest@pin-net:~$</span> <span style="color:#ffffff;">${cmd}</span>`;
-                currentLine.removeAttribute('id');
-            }
+            if (!cmd) return;
 
-            if (cmd === '') {
-                createInputLine();
-                return;
-            }
+            appendOutput(`<span style="color:#00f0ff;">guest@pin-net:~$</span> ${cmd}`, "system");
+
+            // SHORTCUT ANGKA DUKUNGAN UNTUK HP
+            if (cmd === '1') cmd = 'pasukan';
+            if (cmd === '2') cmd = 'api';
+            if (cmd === '3') cmd = 'listrik';
+            if (cmd === '4') cmd = 'serang';
 
             switch(cmd) {
                 case 'help':
-                    appendOutput("--- PERINTAH BATTLE & SYSTEM ---", "cyan");
-                    appendOutput("<b>monster</b>  : Panggil Boss Monster (100 HP)", "monster");
-                    appendOutput("<b>pasukan</b>  : Summon Pasukan Pixel 👾", "cyan");
-                    appendOutput("<b>api</b>      : Skill Bola Api 🔥 (-35 HP)", "fire");
-                    appendOutput("<b>listrik</b>  : Skill Petir Cyber ⚡ (-45 HP)", "zap");
-                    appendOutput("<b>serang</b>   : Mengeroyok Monster (-20 HP)", "success");
-                    appendOutput("<b>hack</b>     : Simulasi hacking server Roblox", "warning");
-                    appendOutput("<b>access</b>   : Membuka Vault Rahasia", "warning");
-                    appendOutput("<b>clear</b>    : Bersihkan terminal", "system");
+                    appendOutput("--- PERINTAH TERSEDIA ---", "cyan");
+                    appendOutput("Pencet tombol di bawah atau gunakan angka singkat:", "system");
+                    appendOutput("<b>1</b> / pasukan : Panggil Pasukan Pixel 👾", "cyan");
+                    appendOutput("<b>2</b> / api     : Skill Bola Api 🔥 (-35 HP)", "fire");
+                    appendOutput("<b>3</b> / listrik : Skill Petir Cyber ⚡ (-45 HP)", "zap");
+                    appendOutput("<b>4</b> / serang  : Pukulan Pasukan (-20 HP)", "success");
+                    appendOutput("<b>monster</b>    : Memanggil Boss Monster", "monster");
+                    appendOutput("<b>clear</b>      : Bersihkan layar", "system");
                     break;
 
                 case 'monster':
@@ -498,141 +524,76 @@
           ______  
        .-"      "-.  
       /            \\  
-     |              |  
-     |,  .-.  .-.  ,|  
-     | )(__/  \\__)( |  
-     |/     /\\     \\|  
-     (_     ^^     _)  
-      \\__|IIIIII|__/  
-       | \\______/ |  
-       \\          /  
-        \`--------\`  
-👹 [ CYBER MONSTER HP: ${renderHPBar()} ]
+     |  (o)    (o)  |  
+     |      /\\      |  
+      \\   '----'   /  
+       \`----------\`  
+👹 BOSS LEVEL 99 [ ${renderHPBar()} ]
 `;
                     appendOutput(monsterArt, "monster");
-                    appendOutput("👹 'ROARRR! SIAPA BERANI MELAWANKU?!'", "error");
-                    appendOutput("👉 Ketik 'pasukan', 'api', atau 'listrik' buat menyerang!", "cyan");
+                    appendOutput("👹 'SIAPA BERANI MELAWANKU?!'", "error");
                     break;
 
                 case 'pasukan':
-                case 'army':
                     hasArmy = true;
                     playBeep(900, 'triangle', 0.1);
-                    appendOutput("👾👾👾 PASUKAN PIXEL CYBER SIAP TEMPUR!", "cyan");
-                    appendOutput("Ketik <b style='color:#00ff66;'>serang</b> untuk menyuruh pasukan mengeroyok boss!", "system");
+                    appendOutput("👾👾👾 PASUKAN PIXEL CYBER DIPANGGIL!", "cyan");
                     break;
 
                 case 'api':
-                case 'skill api':
-                case 'fire':
                     playFireSound();
-                    const fireArt = `
-🔥 (═════════════════►) 💥 BOOM!
-`;
-                    appendOutput(fireArt, "fire");
-                    applyDamage(35, "SKILL BOLA API CYBER", "fire");
+                    appendOutput("🔥 (════════►) BOLA API MELUNCUR!", "fire");
+                    applyDamage(35, "SKILL BOLA API", "fire");
                     break;
 
                 case 'listrik':
-                case 'skill listrik':
-                case 'petir':
-                case 'zap':
                     playZapSound();
-                    const zapArt = `
-⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡⚡ ZZZZZT!
-`;
-                    appendOutput(zapArt, "zap");
-                    applyDamage(45, "SKILL SENGATAN LISTRIK CYBER", "zap");
+                    appendOutput("⚡⚡⚡ PETIR CYBER MENYENGAT!", "zap");
+                    applyDamage(45, "SKILL PETIR CYBER", "zap");
                     break;
 
                 case 'serang':
-                case 'attack':
                     if (!hasArmy) {
-                        appendOutput("⚠️ Kamu belum panggil pasukan! Ketik <b style='color:#00f0ff;'>pasukan</b> dulu.", "warning");
+                        appendOutput("⚠️ Panggil <b style='color:#00f0ff;'>Pasukan (1)</b> terlebih dahulu!", "warning");
                         break;
                     }
                     playBeep(700, 'square', 0.08);
-                    appendOutput("⚔️ 👾👾👾 PASUKAN PIXEL MAJU MENGEROYOK BOSS!", "cyan");
-                    applyDamage(20, "SERANGAN PASUKAN PIXEL", "cyan");
-                    break;
-
-                case 'hack':
-                    appendOutput("⚡ INITIALIZING ROBLOX SERVER DUPE OVERRIDE...", "warning");
-                    playBeep(900, 'sawtooth', 0.1);
-                    
-                    let progress = 0;
-                    const progressDiv = document.createElement('div');
-                    progressDiv.className = 'output-line cyan';
-                    terminalBody.appendChild(progressDiv);
-
-                    const hackInterval = setInterval(() => {
-                        progress += 20;
-                        playBeep(300 + (progress * 5), 'square', 0.04);
-                        
-                        let bar = "█".repeat(progress / 10) + "░".repeat(10 - (progress / 10));
-                        progressDiv.innerHTML = `[HACKING] [${bar}] ${progress}%`;
-                        terminalBody.scrollTop = terminalBody.scrollHeight;
-
-                        if (progress >= 100) {
-                            clearInterval(hackInterval);
-                            setTimeout(() => {
-                                appendOutput("✅ HACK SUCCESSFUL! Target server bypassed.", "success");
-                                appendOutput("🔑 Injecting Dupe Packet via Luau engine...", "cyan");
-                                createInputLine();
-                            }, 300);
-                        }
-                    }, 150);
-                    return;
-
-                case 'status':
-                    appendOutput("⚡ STATUS SISTEM PIN_GANTENK STORE:", "cyan");
-                    appendOutput("• Store Status  : ONLINE 🟢", "success");
-                    appendOutput("• Roblox Server : STABLE (0ms Ping)", "success");
-                    appendOutput("• Payment Gate  : QRIS / DANA Ready 💳", "cyan");
-                    break;
-
-                case 'whoami':
-                    appendOutput("User IP: 192.168.1.7 (Guest Agent)", "system");
-                    appendOutput("Access Level: USER_LEVEL_1 (Butuh passcode buat Lvl 9)", "warning");
-                    break;
-
-                case 'access':
-                case 'killua':
-                    playBeep(1200, 'sawtooth', 0.2);
-                    appendOutput("🔓 AUTHORIZATION GRANTED! Buka Vault...", "success");
-                    setTimeout(() => {
-                        document.getElementById('secretVault').style.display = 'flex';
-                    }, 400);
+                    appendOutput("⚔️ 👾👾👾 PASUKAN MAJU MENGEROYOK BOSS!", "cyan");
+                    applyDamage(20, "SERANGAN PASUKAN", "cyan");
                     break;
 
                 case 'clear':
                     terminalBody.innerHTML = '';
                     break;
 
+                case 'access':
+                case 'killua':
+                    document.getElementById('secretVault').style.display = 'flex';
+                    break;
+
                 default:
-                    appendOutput(`Perintah '${cmd}' tidak dikenali. Ketik <b style="color:#00f0ff;">help</b> untuk melihat bantuan.`, "error");
+                    appendOutput(`Perintah '${cmd}' tidak dikenal. Ketik <b>help</b>.`, "error");
                     break;
             }
 
-            createInputLine();
+            cmdInput.value = '';
         }
+
+        cmdInput.addEventListener('keydown', function(e) {
+            playBeep(400, 'triangle', 0.02);
+            if (e.key === 'Enter') {
+                const command = this.value.trim().toLowerCase();
+                handleCommand(command);
+            }
+        });
 
         function closeVault() {
             document.getElementById('secretVault').style.display = 'none';
-            const input = document.getElementById('cmdInput');
-            if (input) input.focus();
         }
 
         window.onload = () => {
-            setTimeout(typeBootSequence, 300);
+            setTimeout(typeBootSequence, 200);
         };
-
-        document.addEventListener('click', (e) => {
-            if (!e.target.classList.contains('btn-close-vault')) {
-                const input = document.getElementById('cmdInput');
-                if (input) input.focus();
-            }
-        });
     </script>
 </body>
 </html>
