@@ -806,9 +806,7 @@
             </div>
         </div>
         <div class="chat-footer" id="chatFooter">
-            <div class="chat-options" id="chatOptions">
-                <!-- Tombol Opsi Item Dimuat Dinamis Beserta Stok Dari Firebase -->
-            </div>
+            <!-- Tombol Opsi Item Dimuat Dinamis Beserta Stok Dari Firebase -->
         </div>
     </div>
 
@@ -836,7 +834,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // MASTER DATA ITEM DIPERBARUI
+        // MASTER DATA ITEM UTAMA
         const itemListData = {
             item1: { name: "500sp", price: 3000, icon: "⚡" },
             item2: { name: "1oc", price: 5000, icon: "🔮" }
@@ -844,11 +842,10 @@
 
         let localStocks = { item1: 10, item2: 10 };
 
-        // --- STATUS BOT INSTAN ( BACA BROWSER LOCALSTORAGE ) ---
+        // --- STATUS BOT ---
         let savedStatus = localStorage.getItem('isBotOnline');
         let isBotOnline = savedStatus !== null ? (savedStatus === 'true') : true;
 
-        // --- FUNGSI UPDATE TAMPILAN BOT ONLINE / OFFLINE ---
         function applyBotStatusUI(online) {
             isBotOnline = online;
             localStorage.setItem('isBotOnline', online);
@@ -896,21 +893,20 @@
 
         applyBotStatusUI(isBotOnline);
 
-        // --- FUNGSI RENDER OPSI ITEM DI CHATBOT BERDASARKAN STOK ---
+        // --- RENDER OPSI ITEM ---
         function renderChatOptions() {
             if (!isBotOnline) return;
 
             let chatFooter = document.getElementById('chatFooter');
             if (!chatFooter) return;
 
-            // Hanya render jika pilihan item sedang ditampilkan (tidak dalam mode form input)
             let isFormVisible = document.getElementById('bot-usn-input');
             if (isFormVisible) return;
 
             let optionsHTML = '<div class="chat-options" id="chatOptions">';
             for (let key in itemListData) {
                 let item = itemListData[key];
-                let stock = localStocks[key] || 0;
+                let stock = localStocks[key] !== undefined ? localStocks[key] : 10;
                 let isOut = stock <= 0;
 
                 optionsHTML += `
@@ -926,10 +922,11 @@
             chatFooter.innerHTML = optionsHTML;
         }
 
-        // --- LISTEN REALTIME STOCK FIREBASE ---
+        // --- REALTIME SYNC FIREBASE STOK ---
         db.ref('stocks').on('value', (snapshot) => {
             const data = snapshot.val();
-            if (!data) {
+            // Jika data belum ada atau item1/item2 belum terdaftar di Firebase, timpa stok dengan default
+            if (!data || data.item1 === undefined || data.item2 === undefined) {
                 db.ref('stocks').set(localStocks);
                 return;
             }
@@ -937,7 +934,7 @@
             renderChatOptions();
         });
 
-        // --- LISTEN REALTIME BOT STATUS FIREBASE ---
+        // --- REALTIME BOT STATUS ---
         db.ref('botStatus/isOnline').on('value', (snapshot) => {
             let isOnline = snapshot.val();
             if (isOnline === null) {
@@ -959,12 +956,12 @@
                     if (menu === "1") {
                         let resetData = { item1: 10, item2: 10 };
                         db.ref('stocks').set(resetData);
-                        alert("✅ Berhasil! Stok item telah di-reset penuh.");
+                        alert("✅ Berhasil! Stok item (500sp & 1oc) telah di-reset ke 10.");
                     } else if (menu === "2") {
                         let newState = !isBotOnline;
                         applyBotStatusUI(newState);
                         db.ref('botStatus/isOnline').set(newState);
-                        alert(`✅ Status Bot berhasil diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE / BOBO 😴"}`);
+                        alert(`✅ Status Bot diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE 😴"}`);
                     }
                 } else if (pin !== null) {
                     alert("❌ PIN Salah!");
@@ -981,7 +978,7 @@
             document.getElementById('testiModal').style.display = "none";
         }
 
-        // --- CHATBOT WIDGET SYSTEM ---
+        // --- CHATBOT SYSTEM ---
         let botData = { itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
 
         function saveChatState() {
@@ -993,7 +990,8 @@
                 body: document.getElementById('chatBody').innerHTML,
                 footer: document.getElementById('chatFooter').innerHTML,
                 botData: botData,
-                isOpen: document.getElementById('chatWidget').style.display === 'flex'
+                isOpen: document.getElementById('chatWidget').style.display === 'flex',
+                v: "2.0" // Penanda versi agar cache lama di-reset otomatis
             };
             localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
         }
@@ -1007,6 +1005,11 @@
             if (saved) {
                 try {
                     let state = JSON.parse(saved);
+                    // Jika versi cache tidak cocok, bersihkan
+                    if (state.v !== "2.0") {
+                        resetChatSystem();
+                        return;
+                    }
                     if (state.body) document.getElementById('chatBody').innerHTML = state.body;
                     if (state.footer) document.getElementById('chatFooter').innerHTML = state.footer;
                     if (state.botData) botData = state.botData;
@@ -1020,7 +1023,7 @@
                         usnInput.addEventListener('input', saveChatState);
                     }
                 } catch(e) {
-                    console.error("Gagal memuat sesi chat", e);
+                    resetChatSystem();
                 }
             } else {
                 renderChatOptions();
@@ -1052,9 +1055,7 @@
             if (!isBotOnline) {
                 applyBotStatusUI(false);
             } else {
-                if (!localStorage.getItem('pin_store_chat_session')) {
-                    renderChatOptions();
-                }
+                renderChatOptions();
             }
             saveChatState();
         }
@@ -1069,7 +1070,6 @@
             saveChatState();
         }
 
-        // --- PILIH ITEM DI CHATBOT ---
         function botSelectItem(key) {
             if (!isBotOnline) {
                 addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
@@ -1077,7 +1077,7 @@
             }
 
             let item = itemListData[key];
-            let currentStock = localStocks[key] || 0;
+            let currentStock = localStocks[key] !== undefined ? localStocks[key] : 0;
 
             if (currentStock <= 0) {
                 addMessage('user', `Saya mau beli ${item.name}`);
@@ -1096,8 +1096,8 @@
             setTimeout(() => {
                 addMessage('bot', 
                     `Sip! Total harganya: <b>Rp ${item.price.toLocaleString('id-ID')}</b>.<br><br>` +
-                    `📦 <b>Informasi Stok Item Ini:</b> Tersisa <b style="color:#00ff88;">${currentStock} Pcs</b><br><br>` +
-                    `Silakan <b>download QRIS</b> di samping untuk scan bayar. Atau kalau mau lewati & transfer manual juga bisa, itu nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br>` +
+                    `📦 <b>Informasi Stok:</b> Tersisa <b style="color:#00ff88;">${currentStock} Pcs</b><br><br>` +
+                    `Silakan <b>download QRIS</b> untuk scan bayar atau transfer ke nomor DANA/GoPay/OVO atas nama <b>pin pin gantenk</b>.<br><br>` +
                     `<b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`
                 );
 
@@ -1153,13 +1153,12 @@
 
             botData.username = usnInput;
 
-            // Kurangi stok di Firebase Realtime Database
             db.ref('stocks/' + botData.itemId).transaction((current) => {
                 if (current === null) return 0;
                 return Math.max(0, current - 1);
             });
 
-            addMessage('bot', `Sip, data sudah lengkap! Klik tombol di bawah ini untuk membuka WhatsApp. <b>Jangan lupa kirimkan foto bukti transfer kamu di chat WA ya!</b>`);
+            addMessage('bot', `Sip, data sudah lengkap! Klik tombol di bawah untuk kirim ke WhatsApp. <b>Jangan lupa sertakan foto bukti transfer di WA ya!</b>`);
 
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
