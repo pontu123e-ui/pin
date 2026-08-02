@@ -803,7 +803,6 @@
         <div class="chat-body" id="chatBody">
             <div class="chat-msg bot" id="botGreetingMsg">
                 Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
-                <!-- Pilihan item langsung dirender di dalam bubble bot ini -->
                 <div class="chat-options" id="chatOptions"></div>
             </div>
         </div>
@@ -845,7 +844,7 @@
         let localStocks = { item1: 10, item2: 10 };
 
         // --- STATUS CHATBOT DATA ---
-        let botData = { step: "select", itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
+        let botData = { step: "select", itemId: "", item: "", price: 0, username: "", screenshotBase64: "" };
 
         // --- STATUS BOT ONLINE/OFFLINE ---
         let savedStatus = localStorage.getItem('isBotOnline');
@@ -905,7 +904,6 @@
 
             let optionsContainer = document.getElementById('chatOptions');
             
-            // Jika elemen penampung tombol tidak ada, buat di dalam gelembung greeting bot
             if (!optionsContainer) {
                 let greetingMsg = document.getElementById('botGreetingMsg');
                 if (greetingMsg) {
@@ -935,7 +933,6 @@
             }
             optionsContainer.innerHTML = optionsHTML;
 
-            // Kosongkan / atur keterangan footer saat memilih item
             let chatFooter = document.getElementById('chatFooter');
             if (chatFooter && botData.step === 'select') {
                 chatFooter.innerHTML = '<div style="text-align:center; font-size:10px; color:#64748b;">Silakan pilih item di atas 👆</div>';
@@ -1008,7 +1005,7 @@
                 footer: document.getElementById('chatFooter').innerHTML,
                 botData: botData,
                 isOpen: document.getElementById('chatWidget').style.display === 'flex',
-                v: "4.0"
+                v: "5.0"
             };
             localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
         }
@@ -1022,7 +1019,7 @@
             if (saved) {
                 try {
                     let state = JSON.parse(saved);
-                    if (state.v !== "4.0") {
+                    if (state.v !== "5.0") {
                         resetChatSystem();
                         return;
                     }
@@ -1049,14 +1046,13 @@
         // --- FUNGSI RESET CHAT TOTAL ---
         function resetChatSystem() {
             localStorage.removeItem('pin_store_chat_session');
-            botData = { step: "select", itemId: "", item: "", price: 0, username: "", hasScreenshot: false };
+            botData = { step: "select", itemId: "", item: "", price: 0, username: "", screenshotBase64: "" };
 
             if (!isBotOnline) {
                 applyBotStatusUI(false);
                 return;
             }
 
-            // Kembalikan area chat ke gelembung sambutan pertama + wadah tombol
             document.getElementById('chatBody').innerHTML = `
                 <div class="chat-msg bot" id="botGreetingMsg">
                     Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
@@ -1156,8 +1152,9 @@
             let file = input.files[0];
             let reader = new FileReader();
             reader.onload = function (e) {
-                addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${e.result}" alt="Bukti Transfer">`);
-                botData.hasScreenshot = true;
+                botData.screenshotBase64 = e.target.result; // Simpan Base64 foto
+                addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${botData.screenshotBase64}" alt="Bukti Transfer">`);
+                
                 let label = document.getElementById('file-label');
                 if (label) {
                     label.innerText = "✅ Foto Berhasil Diunggah! (Ganti)";
@@ -1181,7 +1178,7 @@
                 return;
             }
 
-            if (!botData.hasScreenshot) {
+            if (!botData.screenshotBase64) {
                 alert("Harap sertakan / lampirkan foto bukti transfer!");
                 return;
             }
@@ -1195,7 +1192,7 @@
                 return Math.max(0, current - 1);
             });
 
-            addMessage('bot', `Sip, data sudah lengkap! Klik tombol di bawah untuk kirim ke WhatsApp. <b>Jangan lupa sertakan foto bukti transfer di WA ya!</b>`);
+            addMessage('bot', `Sip, data & foto bukti transfer sudah lengkap! Klik tombol di bawah untuk kirim ke WhatsApp.`);
 
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
@@ -1203,7 +1200,7 @@
                          `Item: *${botData.item}*\n` +
                          `Harga: *Rp ${botData.price.toLocaleString('id-ID')}*\n` +
                          `Username Roblox: *${botData.username}*\n\n` +
-                         `Berikut saya lampirkan foto bukti transfernya. Tolong diproses ya!`;
+                         `*(Catatan: Foto bukti transfer telah diunggah melalui Web Store)*`;
 
             let waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textWa)}`;
 
@@ -1211,7 +1208,7 @@
             footer.innerHTML = `
                 <div style="display:flex; flex-direction:column; gap:8px;">
                     <a href="${waUrl}" target="_blank" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; box-shadow: 0 0 10px rgba(37,211,102,0.4);">
-                        📲 Kirim Pesanan + Bukti ke WA
+                        📲 Kirim Pesanan ke WhatsApp
                     </a>
                     <button onclick="resetChatSystem()" style="background:#171c2e; border:1px solid #00f0ff; color:#00f0ff; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
                         🔄 Mulai Transaksi Baru
