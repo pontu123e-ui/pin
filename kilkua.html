@@ -129,19 +129,56 @@
         .output-line.fire { color: #ff6600; font-weight: bold; text-shadow: 0 0 10px #ff6600; }
         .output-line.zap { color: #ffff00; font-weight: bold; text-shadow: 0 0 10px #ffff00; }
 
+        /* BATTLE ARENA FACE-TO-FACE BOX */
+        .battle-arena-box {
+            background: rgba(0, 240, 255, 0.04);
+            border: 2px solid #00f0ff;
+            border-radius: 10px;
+            padding: 12px;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+
+        .arena-combatant {
+            text-align: center;
+            flex: 1;
+        }
+
+        .boss-avatar {
+            font-size: 26px;
+            animation: bossFloat 1.2s infinite alternate ease-in-out;
+        }
+
+        @keyframes bossFloat {
+            0% { transform: translateY(0px); }
+            100% { transform: translateY(-4px); }
+        }
+
         /* ANIMASI PIXEL PASUKAN BERGERAK / IDLE */
         .army-idle {
             display: inline-block;
             animation: pixelBounce 0.6s infinite alternate ease-in-out;
             color: #00f0ff;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 22px;
             text-shadow: 0 0 8px #00f0ff;
         }
 
         @keyframes pixelBounce {
             0% { transform: translateY(0px) scale(1); }
-            100% { transform: translateY(-4px) scale(1.1); }
+            100% { transform: translateY(-4px) scale(1.05); }
+        }
+
+        .arena-middle {
+            flex: 1.2;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+            color: #ff6600;
+            padding: 0 5px;
         }
 
         /* ANIMASI LEMPAR BOLA API */
@@ -153,7 +190,7 @@
         }
 
         @keyframes fireballFly {
-            0% { opacity: 0; transform: translateX(-20px); }
+            0% { opacity: 0; transform: translateX(-30px); }
             50% { opacity: 1; }
             100% { transform: translateX(30px); }
         }
@@ -546,36 +583,55 @@
                 case 'boss':
                     monsterHP = 100;
                     playMonsterRoar();
-                    const monsterArt = 
-`
-          ______  
-       .-"      "-.  
-      /            \\  
-     |  (o)    (o)  |  
-     |      /\\      |  
-      \\   '----'   /  
-       \`----------\`  
-👹 BOSS LEVEL 99 [ ${renderHPBar()} ]
-`;
-                    appendOutput(monsterArt, "monster");
-                    if (hasArmy) {
-                        appendOutput(`    <span class="army-idle">👾 👾 👾</span> (Pasukan Pixel bersiap di samping Boss!)`, "cyan");
-                    }
-                    appendOutput("👹 'SIAPA BERANI MELAWANKU?!'", "error");
+                    const arenaHTML = `
+                        <div class="battle-arena-box">
+                            <div class="arena-combatant">
+                                <div class="boss-avatar">👹</div>
+                                <div style="color:#ff0055; font-weight:bold; font-size:11px;">BOSS LV.99</div>
+                                <div style="font-size:10px; color:#ff4d4d;">${renderHPBar()}</div>
+                            </div>
+                            <div class="arena-middle">
+                                ⚔️ VS ⚔️
+                            </div>
+                            <div class="arena-combatant">
+                                <div class="${hasArmy ? 'army-idle' : ''}" style="font-size:20px;">${hasArmy ? '👾 👾 👾' : '💤 [Kosong]'}</div>
+                                <div style="color:#00f0ff; font-weight:bold; font-size:11px;">PASUKAN</div>
+                                <div style="font-size:10px; color:#8a99ad;">${hasArmy ? 'Ready' : 'Panggil [1]'}</div>
+                            </div>
+                        </div>
+                    `;
+                    appendOutput(arenaHTML, "monster");
+                    appendOutput("👹 'SIAPA BERANI MELAWANKU DI ARENA INI?!'", "error");
                     break;
 
                 case 'pasukan':
                     hasArmy = true;
                     playBeep(900, 'triangle', 0.1);
-                    appendOutput("👾👾👾 PASUKAN PIXEL BERGERAK MAJU!", "cyan");
-                    appendOutput(`    <span class="army-idle">👾 👾 👾</span> <- Pasukan bergerak siap melempar skill!`, "cyan");
+                    appendOutput("👾👾👾 PASUKAN PIXEL HADIR & BERHADAPAN DENGAN BOSS!", "cyan");
+                    const arenaHTML2 = `
+                        <div class="battle-arena-box">
+                            <div class="arena-combatant">
+                                <div class="boss-avatar">👹</div>
+                                <div style="color:#ff0055; font-weight:bold; font-size:11px;">BOSS LV.99</div>
+                                <div style="font-size:10px; color:#ff4d4d;">${renderHPBar()}</div>
+                            </div>
+                            <div class="arena-middle" style="color:#00f0ff;">
+                                ⚡ BERHADAPAN ⚡
+                            </div>
+                            <div class="arena-combatant">
+                                <div class="army-idle">👾 👾 👾</div>
+                                <div style="color:#00f0ff; font-weight:bold; font-size:11px;">PASUKAN</div>
+                                <div style="font-size:10px; color:#00ff66;">Battle Ready!</div>
+                            </div>
+                        </div>
+                    `;
+                    appendOutput(arenaHTML2, "cyan");
                     break;
 
                 case 'api':
                     playFireSound();
                     if (hasArmy) {
-                        // Animasi Pasukan Melempar Api
-                        appendOutput(`    <span class="army-idle">👾</span> <span class="throw-fire">🔥🔥🔥 (════►)</span> 👹 BOOM!!`, "fire");
+                        appendOutput(`🔥 <span class="army-idle">👾</span> <span class="throw-fire">(══════🔥 ➔)</span> 👹 (TERKENA BOLA API!)`, "fire");
                     } else {
                         appendOutput("🔥 (════════►) BOLA API MELUNCUR!", "fire");
                     }
@@ -585,7 +641,7 @@
                 case 'listrik':
                     playZapSound();
                     if (hasArmy) {
-                        appendOutput(`    <span class="army-idle">👾 👾</span> ⚡⚡⚡ (SENGATAN PETIR) ⚡⚡⚡ ==> 👹 ZZZT!`, "zap");
+                        appendOutput(`⚡ <span class="army-idle">👾 👾</span> <span class="throw-fire" style="color:#ffff00;">(══════⚡ ➔)</span> 👹 (TERSENGAT PETIR!)`, "zap");
                     } else {
                         appendOutput("⚡⚡⚡ PETIR CYBER MENYENGAT!", "zap");
                     }
@@ -598,7 +654,7 @@
                         break;
                     }
                     playBeep(700, 'square', 0.08);
-                    appendOutput(`⚔️ <span class="army-idle">👾 👾 👾</span> MAJU MENGEROYOK BOSS!`, "cyan");
+                    appendOutput(`⚔️ <span class="army-idle">👾 👾 👾</span> MENYERANG LANGSUNG KE DEPAN BOSS!`, "cyan");
                     applyDamage(20, "SERANGAN PASUKAN", "cyan");
                     break;
 
