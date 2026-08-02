@@ -97,7 +97,6 @@
             box-shadow: 0 0 18px rgba(0, 240, 255, 0.4);
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
         .avatar img {
@@ -174,7 +173,6 @@
             height: 100%;
             object-fit: cover;
             pointer-events: none;
-            transition: filter 0.3s ease;
         }
 
         @keyframes bounceChibi {
@@ -190,7 +188,6 @@
             height: 14px;
             border-radius: 50%;
             border: 2px solid #101422;
-            transition: all 0.3s ease;
             z-index: 5;
         }
 
@@ -199,62 +196,11 @@
             box-shadow: 0 0 8px #00ff88;
         }
 
-        .status-dot.offline {
-            background-color: #ff4d4d;
-            box-shadow: 0 0 8px #ff4d4d;
-        }
-
-        .zzz-container {
-            position: absolute;
-            top: -12px;
-            right: -6px;
-            pointer-events: none;
-            display: none;
-            z-index: 10;
-        }
-
-        .zzz-container span {
-            position: absolute;
-            font-weight: bold;
-            color: #60a5fa;
-            font-size: 14px;
-            opacity: 0;
-            animation: floatZ 2.5s infinite linear;
-        }
-
-        .zzz-container span:nth-child(1) { animation-delay: 0s; right: 0px; }
-        .zzz-container span:nth-child(2) { animation-delay: 0.8s; right: 6px; }
-        .zzz-container span:nth-child(3) { animation-delay: 1.6s; right: 12px; }
-
-        @keyframes floatZ {
-            0% { opacity: 0; transform: translate(0, 0) scale(0.6); }
-            50% { opacity: 1; }
-            100% { opacity: 0; transform: translate(12px, -25px) scale(1.2); }
-        }
-
-        .chat-hero-banner.is-offline {
-            border-color: #ff4d4d !important;
-            box-shadow: 0 0 20px rgba(255, 77, 77, 0.25) !important;
-        }
-
-        .chat-hero-banner.is-offline .chibi-img-box img {
-            filter: grayscale(50%) brightness(70%);
-        }
-
-        .chat-hero-banner.is-offline .zzz-container {
-            display: block !important;
-        }
-
         .banner-info h3 {
             font-size: 13px;
             color: #00f0ff;
             font-weight: 700;
             margin-bottom: 2px;
-            transition: color 0.3s;
-        }
-
-        .chat-hero-banner.is-offline .banner-info h3 {
-            color: #ff4d4d;
         }
 
         .banner-info p {
@@ -271,26 +217,6 @@
             border-radius: 8px;
             white-space: nowrap;
             box-shadow: 0 0 10px rgba(0, 240, 255, 0.4);
-            transition: all 0.3s;
-        }
-
-        .chat-hero-banner.is-offline .banner-btn-action {
-            background: linear-gradient(135deg, #ff4d4d, #991b1b);
-            color: #ffffff;
-            box-shadow: 0 0 10px rgba(255, 77, 77, 0.4);
-        }
-
-        @media (max-width: 480px) {
-            .chat-hero-banner {
-                flex-direction: column;
-                text-align: center;
-            }
-            .chibi-left {
-                flex-direction: column;
-            }
-            .banner-btn-action {
-                width: 100%;
-            }
         }
 
         .section-title {
@@ -303,6 +229,100 @@
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        /* --- STYLES LIVE LOGS BERJALAN --- */
+        .logs-box {
+            background: #171c2e;
+            border-radius: 14px;
+            padding: 14px;
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            margin-bottom: 20px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+        }
+
+        .logs-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+            padding-bottom: 6px;
+        }
+
+        .logs-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #00f0ff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logs-live-badge {
+            background: rgba(0, 255, 136, 0.15);
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 6px;
+            animation: pulseBadge 1.5s infinite alternate;
+        }
+
+        @keyframes pulseBadge {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .logs-wrapper {
+            max-height: 180px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 4px;
+        }
+
+        .logs-wrapper::-webkit-scrollbar {
+            width: 4px;
+        }
+        .logs-wrapper::-webkit-scrollbar-thumb {
+            background: #00f0ff;
+            border-radius: 4px;
+        }
+
+        .log-item {
+            background: #101422;
+            border-left: 3px solid #00f0ff;
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 11px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideInLog 0.3s ease-out;
+        }
+
+        @keyframes slideInLog {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .log-details strong {
+            color: #ffffff;
+        }
+
+        .log-details span {
+            color: #00f0ff;
+            font-weight: 600;
+        }
+
+        .log-time {
+            font-size: 9px;
+            color: #64748b;
+            text-align: right;
+            white-space: nowrap;
         }
 
         /* --- QRIS & PAYMENT --- */
@@ -347,12 +367,6 @@
             border-radius: 8px;
             text-decoration: none;
             box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
-            transition: all 0.2s ease;
-        }
-
-        .btn-download-qris:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 18px rgba(0, 240, 255, 0.5);
         }
 
         .manual-pay-list {
@@ -396,164 +410,9 @@
             font-size: 11px;
             font-weight: 600;
             cursor: pointer;
-            text-decoration: none;
-            white-space: nowrap;
         }
 
-        /* --- TESTIMONI --- */
-        .testi-container {
-            margin-top: 20px;
-            border-top: 1px solid rgba(0, 240, 255, 0.15);
-            padding-top: 16px;
-        }
-
-        .btn-show-testi {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #171c2e, #1a2238);
-            color: #00f0ff;
-            border: 1px solid rgba(0, 240, 255, 0.3);
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-show-testi:hover {
-            background: #202740;
-            border-color: #00f0ff;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
-        }
-
-        /* --- MODAL POPUP --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(6, 8, 16, 0.85);
-            backdrop-filter: blur(8px);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 100;
-            padding: 20px;
-        }
-
-        .modal-box {
-            background: #101422;
-            border-radius: 16px;
-            padding: 22px;
-            width: 100%;
-            max-width: 520px;
-            max-height: 85vh;
-            overflow-y: auto;
-            border: 1px solid #00f0ff;
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
-            animation: fadeInModal 0.25s ease-out;
-        }
-
-        @keyframes fadeInModal {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
-            padding-bottom: 8px;
-        }
-
-        .modal-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #00f0ff;
-        }
-
-        .modal-close {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            font-size: 18px;
-            cursor: pointer;
-        }
-
-        .testi-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 480px) {
-            .testi-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        .testi-card {
-            background: #171c2e;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-            aspect-ratio: 1 / 1;
-        }
-
-        .testi-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-            pointer-events: none;
-        }
-
-        /* --- DASHBOARD OWNER / ADMIN MODAL STYLES --- */
-        .order-card {
-            background: #171c2e;
-            border: 1px solid rgba(0, 240, 255, 0.25);
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .order-info {
-            font-size: 11px;
-            color: #cbd5e1;
-            line-height: 1.5;
-        }
-
-        .order-info b {
-            color: #00f0ff;
-        }
-
-        .order-time {
-            font-size: 10px;
-            color: #64748b;
-            font-style: italic;
-        }
-
-        .order-img-preview {
-            width: 100%;
-            max-height: 250px;
-            object-fit: contain;
-            border-radius: 8px;
-            background: #000;
-            border: 1px solid rgba(0, 240, 255, 0.2);
-        }
-
-        /* --- JENDELA CHATBOT POPUP MODAL --- */
+        /* --- CHATBOT POPUP MODAL --- */
         .chat-widget {
             position: fixed;
             top: 50%;
@@ -570,12 +429,6 @@
             flex-direction: column;
             z-index: 1000;
             overflow: hidden;
-            animation: popIn 0.3s ease-out;
-        }
-
-        @keyframes popIn {
-            from { opacity: 0; transform: translate(-50%, -45%) scale(0.9); }
-            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         }
 
         .chat-header {
@@ -586,23 +439,6 @@
             align-items: center;
             border-bottom: 1px solid rgba(0, 240, 255, 0.2);
             font-size: 13px;
-        }
-
-        .chat-header-actions {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-reset-chat {
-            background: rgba(255, 77, 77, 0.2);
-            color: #ff4d4d;
-            border: 1px solid rgba(255, 77, 77, 0.4);
-            font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
         }
 
         .chat-body {
@@ -643,7 +479,6 @@
             max-width: 100%;
             border-radius: 8px;
             margin-top: 5px;
-            border: 1px solid rgba(0, 240, 255, 0.3);
         }
 
         .chat-footer {
@@ -667,8 +502,6 @@
             border-radius: 8px;
             font-size: 11px;
             cursor: pointer;
-            text-align: left;
-            transition: all 0.2s;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -677,13 +510,6 @@
         .opt-btn:hover {
             background: #00f0ff;
             color: #000;
-        }
-
-        .opt-btn.disabled {
-            background: #1e293b;
-            color: #64748b;
-            border-color: #334155;
-            cursor: not-allowed;
         }
 
         .chat-form {
@@ -742,7 +568,7 @@
     <div class="container">
         <!-- HEADER PROFIL -->
         <div class="profile">
-            <div class="avatar" onclick="adminAccessPrompt()">
+            <div class="avatar">
                 <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Killua Zoldyck">
             </div>
             <h1 class="name">pin gantenk</h1>
@@ -756,20 +582,30 @@
                     <div class="chibi-img-box">
                         <img src="HxH2011_EP147_Killua_Portrait.webp" alt="Chibi Killua">
                     </div>
-                    <div class="zzz-container">
-                        <span>Z</span>
-                        <span>z</span>
-                        <span>z</span>
-                    </div>
-                    <div class="status-dot online" id="bannerStatusDot"></div>
+                    <div class="status-dot online"></div>
                 </div>
                 <div class="banner-info">
-                    <h3 id="banner-title">🍡 Jajan Item Roblox / Chat Aku!!</h3>
-                    <p id="banner-desc">Mau beli item / butuh bantuan? Klik di sini aja bro! 💬</p>
+                    <h3>🍡 Jajan Item Roblox / Chat Aku!!</h3>
+                    <p>Mau beli item / butuh bantuan? Klik di sini aja bro! 💬</p>
                 </div>
             </div>
-            <div class="banner-btn-action" id="banner-btn">
+            <div class="banner-btn-action">
                 Chat Sekarang ⚡
+            </div>
+        </div>
+
+        <!-- ⚡ KOTAK LIVE LOGS BERJALAN (REALTIME LOGS) -->
+        <div class="logs-box">
+            <div class="logs-header">
+                <div class="logs-title">
+                    ⚡ Live Transaksi Berjalan
+                </div>
+                <div class="logs-live-badge">REALTIME 🟢</div>
+            </div>
+            <div class="logs-wrapper" id="liveLogsContainer">
+                <div style="font-size:10px; color:#64748b; text-align:center; padding:10px;" id="logsEmptyText">
+                    Belum ada transaksi terbaru...
+                </div>
             </div>
         </div>
 
@@ -795,49 +631,8 @@
             </div>
         </div>
 
-        <!-- TESTIMONI BUTTON -->
-        <div class="testi-container">
-            <button class="btn-show-testi" onclick="openTestiModal()">
-                📸 Lihat Bukti Transfer & Testimoni Pembeli
-            </button>
-        </div>
-
         <div class="footer">
             &copy; 2026 pin gantenk. Realtime Roblox Item Store.
-        </div>
-    </div>
-
-    <!-- MODAL POPUP BUKTI TRANSFER & TESTIMONI -->
-    <div id="testiModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span class="modal-title">📸 Bukti Transfer & Testimoni</span>
-                <button class="modal-close" onclick="closeTestiModal()">&times;</button>
-            </div>
-            <div class="testi-grid">
-                <div class="testi-card"><img src="IMG-20260731-WA0008.jpg" alt="Testimoni 1"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0009.jpg" alt="Testimoni 2"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0010.jpg" alt="Testimoni 3"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0011.jpg" alt="Testimoni 4"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0012.jpg" alt="Testimoni 5"></div>
-                <div class="testi-card"><img src="IMG-20260731-WA0013.jpg" alt="Testimoni 6"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL KHUSUS OWNER: DASHBOARD RIWAYAT & SS BUKTI TF -->
-    <div id="adminOrdersModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header">
-                <span class="modal-title">👑 Panel Owner - Bukti TF & Data Pembeli</span>
-                <button class="modal-close" onclick="closeAdminOrdersModal()">&times;</button>
-            </div>
-            <div id="adminOrdersList">
-                <p style="font-size:11px; color:#8a99ad; text-align:center;">Memuat data transaksi...</p>
-            </div>
-            <button onclick="clearAllOrdersHistory()" style="width:100%; margin-top:10px; background:rgba(255,77,77,0.2); border:1px solid #ff4d4d; color:#ff4d4d; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
-                🗑️ Hapus Semua Riwayat Transaksi
-            </button>
         </div>
     </div>
 
@@ -845,13 +640,10 @@
     <div class="chat-widget" id="chatWidget">
         <div class="chat-header">
             <div style="display:flex; align-items:center; gap:8px;">
-                <div style="width:10px; height:10px; background:#00ff88; border-radius:50%;" id="chatHeaderDot"></div>
+                <div style="width:10px; height:10px; background:#00ff88; border-radius:50%;"></div>
                 <strong>pin Store Assistant</strong>
             </div>
-            <div class="chat-header-actions">
-                <button class="btn-reset-chat" onclick="resetChatSystem()" title="Mulai ulang percakapan">🔄 Reset Chat</button>
-                <button onclick="toggleChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:18px;">&times;</button>
-            </div>
+            <button onclick="toggleChat()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:18px;">&times;</button>
         </div>
         <div class="chat-body" id="chatBody">
             <div class="chat-msg bot" id="botGreetingMsg">
@@ -860,335 +652,87 @@
             </div>
         </div>
         <div class="chat-footer" id="chatFooter">
-            <!-- Footer siap untuk form / instruksi -->
+            <div style="text-align:center; font-size:10px; color:#64748b;">Silakan pilih item di atas 👆</div>
         </div>
     </div>
 
     <script>
-        // --- 🛡️ SCRIPT ANTI-INSPECT & PROTEKSI KODE WEB ---
-        document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-        document.addEventListener('keydown', function(e) {
-            if (
-                e.key === 'F12' || 
-                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j' || e.key === 'C' || e.key === 'c')) ||
-                (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.key === 'S' || e.key === 's'))
-            ) {
+        // --- PROTEKSI & ANTI-INSPECT ---
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('keydown', e => {
+            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['I','J','C'].includes(e.key.toUpperCase())) || (e.ctrlKey && ['U','S'].includes(e.key.toUpperCase()))) {
                 e.preventDefault();
-                return false;
             }
         });
-        document.querySelectorAll('img').forEach(img => {
-            img.addEventListener('dragstart', (e) => e.preventDefault());
-        });
 
-        // --- FIREBASE REALTIME DATABASE CONFIG ---
+        // --- FIREBASE INITIALIZATION ---
         const firebaseConfig = {
             databaseURL: "https://pingantenk-roblox-store-default-rtdb.asia-southeast1.firebasedatabase.app"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // MASTER DATA ITEM UTAMA
+        // MASTER DATA ITEM
         const itemListData = {
             item1: { name: "500sp", price: 3000, icon: "⚡" },
             item2: { name: "1oc", price: 5000, icon: "🔮" }
         };
 
-        let localStocks = { item1: 10, item2: 10 };
-
-        // --- STATUS CHATBOT DATA ---
         let botData = { step: "select", itemId: "", item: "", price: 0, username: "", screenshotBase64: "" };
 
-        // --- STATUS BOT ONLINE/OFFLINE ---
-        let savedStatus = localStorage.getItem('isBotOnline');
-        let isBotOnline = savedStatus !== null ? (savedStatus === 'true') : true;
+        // --- ⚡ FITUR LOGS BERJALAN (LISTEN FIREBASE REALTIME) ---
+        db.ref('logs').limitToLast(15).on('value', (snapshot) => {
+            const logsContainer = document.getElementById('liveLogsContainer');
+            const logsData = snapshot.val();
 
-        function applyBotStatusUI(online) {
-            isBotOnline = online;
-            localStorage.setItem('isBotOnline', online);
-
-            let bannerBox = document.querySelector('.chat-hero-banner');
-            let bannerDot = document.getElementById('bannerStatusDot');
-            let chatHeaderDot = document.getElementById('chatHeaderDot');
-            let bannerTitle = document.getElementById('banner-title');
-            let bannerDesc = document.getElementById('banner-desc');
-            let bannerBtn = document.getElementById('banner-btn');
-
-            if (online) {
-                if (bannerBox) bannerBox.classList.remove('is-offline');
-                if (bannerDot) bannerDot.className = 'status-dot online';
-                if (chatHeaderDot) chatHeaderDot.style.background = '#00ff88';
-                if (bannerTitle) bannerTitle.innerText = "🍡 Jajan Item Roblox / Chat Aku!!";
-                if (bannerDesc) bannerDesc.innerText = "Mau beli item / butuh bantuan? Klik di sini aja bro! 💬";
-                if (bannerBtn) bannerBtn.innerText = "Chat Sekarang ⚡";
-            } else {
-                if (bannerBox) bannerBox.classList.add('is-offline');
-                if (bannerDot) bannerDot.className = 'status-dot offline';
-                if (chatHeaderDot) chatHeaderDot.style.background = '#ff4d4d';
-                if (bannerTitle) bannerTitle.innerText = "😴 pinpin lagi bobo...";
-                if (bannerDesc) bannerDesc.innerText = "Bot sedang tidur, pembelian sementara tidak tersedia! 💤";
-                if (bannerBtn) bannerBtn.innerText = "Bot Offline 💤";
-
-                let chatBody = document.getElementById('chatBody');
-                let chatFooter = document.getElementById('chatFooter');
-                if (chatBody) {
-                    chatBody.innerHTML = `
-                        <div class="chat-msg bot">
-                            pinpin lgi bobo kamu gabisa beli dulu😡😡
-                        </div>
-                    `;
-                }
-                if (chatFooter) {
-                    chatFooter.innerHTML = `
-                        <div style="text-align:center; font-size:11px; color:#ff4d4d; font-weight:700; padding:6px;">
-                            😴 Bot Offline / Bobo
-                        </div>
-                    `;
-                }
-            }
-        }
-
-        applyBotStatusUI(isBotOnline);
-
-        // --- RENDER OPSI ITEM DI DALAM CHAT BUBBLE ---
-        function renderChatOptions(force = false) {
-            if (!isBotOnline) return;
-            if (!force && botData.step && botData.step !== 'select') return;
-
-            let optionsContainer = document.getElementById('chatOptions');
-            
-            if (!optionsContainer) {
-                let greetingMsg = document.getElementById('botGreetingMsg');
-                if (greetingMsg) {
-                    optionsContainer = document.createElement('div');
-                    optionsContainer.id = 'chatOptions';
-                    optionsContainer.className = 'chat-options';
-                    greetingMsg.appendChild(optionsContainer);
-                }
+            if (!logsData) {
+                logsContainer.innerHTML = `<div style="font-size:10px; color:#64748b; text-align:center; padding:10px;">Belum ada transaksi terbaru...</div>`;
+                return;
             }
 
-            if (!optionsContainer) return;
+            let logsHTML = '';
+            let logKeys = Object.keys(logsData).reverse(); // Yang terbaru di paling atas
 
-            let optionsHTML = '';
+            logKeys.forEach(key => {
+                let log = logsData[key];
+                logsHTML += `
+                    <div class="log-item">
+                        <div class="log-details">
+                            <strong>${log.username}</strong> membeli <span>${log.item}</span>
+                        </div>
+                        <div class="log-time">
+                            ${log.time}<br>
+                            <span style="color:#00ff88; font-weight:bold;">[SUCCESS]</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            logsContainer.innerHTML = logsHTML;
+        });
+
+        // RENDER OPSI ITEM DI CHAT
+        function renderChatOptions() {
+            let container = document.getElementById('chatOptions');
+            if (!container) return;
+            let html = '';
             for (let key in itemListData) {
                 let item = itemListData[key];
-                let stock = localStocks[key] !== undefined ? localStocks[key] : 10;
-                let isOut = stock <= 0;
-
-                optionsHTML += `
-                    <button class="opt-btn ${isOut ? 'disabled' : ''}" onclick="botSelectItem('${key}')">
+                html += `
+                    <button class="opt-btn" onclick="botSelectItem('${key}')">
                         <span>${item.icon} ${item.name} (Rp ${item.price.toLocaleString('id-ID')})</span>
-                        <b style="color: ${isOut ? '#ff4d4d' : '#00ff88'}; font-size:10px;">
-                            ${isOut ? 'HABIS' : 'Stok: ' + stock}
-                        </b>
+                        <b style="color:#00ff88; font-size:10px;">Tersedia</b>
                     </button>
                 `;
             }
-            optionsContainer.innerHTML = optionsHTML;
-
-            let chatFooter = document.getElementById('chatFooter');
-            if (chatFooter && botData.step === 'select') {
-                chatFooter.innerHTML = '<div style="text-align:center; font-size:10px; color:#64748b;">Silakan pilih item di atas 👆</div>';
-            }
+            container.innerHTML = html;
         }
 
-        // --- REALTIME SYNC FIREBASE STOK ---
-        db.ref('stocks').on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (!data || data.item1 === undefined || data.item2 === undefined) {
-                db.ref('stocks').set(localStocks);
-                return;
-            }
-            localStocks = data;
-            renderChatOptions();
-        });
-
-        // --- REALTIME BOT STATUS ---
-        db.ref('botStatus/isOnline').on('value', (snapshot) => {
-            let isOnline = snapshot.val();
-            if (isOnline === null) {
-                db.ref('botStatus/isOnline').set(true);
-                isOnline = true;
-            }
-            applyBotStatusUI(isOnline);
-            if (isOnline) renderChatOptions();
-        });
-
-        // --- ADMIN ACCESS (KLIK 5x FOTO PROFIL) ---
-        let profileClickCount = 0;
-        function adminAccessPrompt() {
-            profileClickCount++;
-            if (profileClickCount >= 5) {
-                let pin = prompt("🔐 Masukkan PIN Admin Owner:");
-                if (pin === "1234") {
-                    let menu = prompt(
-                        "✅ PIN Benar!\nPilih Menu Admin:\n" +
-                        "1. Restok Semua Stok Item\n" +
-                        "2. Toggle Status Bot (Online/Off)\n" +
-                        "3. 📋 Lihat Bukti TF & Data Pembeli (DATABASE OWNER)"
-                    );
-                    if (menu === "1") {
-                        let resetData = { item1: 10, item2: 10 };
-                        db.ref('stocks').set(resetData);
-                        alert("✅ Berhasil! Stok item (500sp & 1oc) telah di-reset ke 10.");
-                    } else if (menu === "2") {
-                        let newState = !isBotOnline;
-                        applyBotStatusUI(newState);
-                        db.ref('botStatus/isOnline').set(newState);
-                        alert(`✅ Status Bot diubah menjadi: ${newState ? "ONLINE 🟢" : "OFFLINE 😴"}`);
-                    } else if (menu === "3") {
-                        openAdminOrdersModal();
-                    }
-                } else if (pin !== null) {
-                    alert("❌ PIN Salah!");
-                }
-                profileClickCount = 0;
-            }
-        }
-
-        // --- DITAMBAHKAN: FUNGSI OWNER UNTUK MEMBUKA BUKTI TF & DATA TRANSAKSI ---
-        function openAdminOrdersModal() {
-            let modal = document.getElementById('adminOrdersModal');
-            let container = document.getElementById('adminOrdersList');
-            modal.style.display = 'flex';
-            container.innerHTML = '<p style="font-size:11px; color:#8a99ad; text-align:center;">Mengambil data transaksi dari Firebase...</p>';
-
-            db.ref('orders').once('value', (snapshot) => {
-                const orders = snapshot.val();
-                if (!orders) {
-                    container.innerHTML = '<p style="font-size:11px; color:#ff4d4d; text-align:center; padding:15px;">Belum ada riwayat transaksi / bukti transfer yang masuk.</p>';
-                    return;
-                }
-
-                let html = '';
-                // Looping dari transaksi terbaru (reverse)
-                let orderKeys = Object.keys(orders).reverse();
-
-                orderKeys.forEach(key => {
-                    let order = orders[key];
-                    html += `
-                        <div class="order-card">
-                            <div class="order-info">
-                                👤 Username Roblox: <b>${order.username}</b><br>
-                                📦 Item Beli: <b>${order.item}</b> (Rp ${order.price ? order.price.toLocaleString('id-ID') : 0})<br>
-                                🕒 Waktu TF: <span class="order-time">${order.timestamp}</span>
-                            </div>
-                            ${order.image ? `<img src="${order.image}" class="order-img-preview" alt="SS Bukti TF">` : '<i style="font-size:10px; color:#ff4d4d;">Foto Bukti Tidak Ada</i>'}
-                        </div>
-                    `;
-                });
-
-                container.innerHTML = html;
-            });
-        }
-
-        function closeAdminOrdersModal() {
-            document.getElementById('adminOrdersModal').style.display = 'none';
-        }
-
-        function clearAllOrdersHistory() {
-            if (confirm("Apakah kamu yakin ingin menghapus semua riwayat transaksi dari database?")) {
-                db.ref('orders').remove().then(() => {
-                    alert("✅ Semua riwayat transaksi berhasil dihapus!");
-                    openAdminOrdersModal();
-                });
-            }
-        }
-
-        function openTestiModal() {
-            document.getElementById('testiModal').style.display = "flex";
-        }
-
-        function closeTestiModal() {
-            document.getElementById('testiModal').style.display = "none";
-        }
-
-        // --- CHATBOT SYSTEM ---
-        function saveChatState() {
-            let usnInput = document.getElementById('bot-usn-input');
-            if (usnInput) {
-                botData.username = usnInput.value;
-            }
-            let chatState = {
-                body: document.getElementById('chatBody').innerHTML,
-                footer: document.getElementById('chatFooter').innerHTML,
-                botData: botData,
-                isOpen: document.getElementById('chatWidget').style.display === 'flex',
-                v: "6.0"
-            };
-            localStorage.setItem('pin_store_chat_session', JSON.stringify(chatState));
-        }
-
-        function loadChatState() {
-            if (!isBotOnline) {
-                applyBotStatusUI(false);
-                return;
-            }
-            let saved = localStorage.getItem('pin_store_chat_session');
-            if (saved) {
-                try {
-                    let state = JSON.parse(saved);
-                    if (state.v !== "6.0") {
-                        resetChatSystem();
-                        return;
-                    }
-                    if (state.botData) botData = state.botData;
-                    if (state.body) document.getElementById('chatBody').innerHTML = state.body;
-                    if (state.footer) document.getElementById('chatFooter').innerHTML = state.footer;
-                    if (state.isOpen) document.getElementById('chatWidget').style.display = 'flex';
-
-                    let usnInput = document.getElementById('bot-usn-input');
-                    if (usnInput && botData.username) {
-                        usnInput.value = botData.username;
-                    }
-                    if (usnInput) {
-                        usnInput.addEventListener('input', saveChatState);
-                    }
-                } catch(e) {
-                    resetChatSystem();
-                }
-            } else {
-                resetChatSystem();
-            }
-        }
-
-        // --- FUNGSI RESET CHAT TOTAL ---
-        function resetChatSystem() {
-            localStorage.removeItem('pin_store_chat_session');
-            botData = { step: "select", itemId: "", item: "", price: 0, username: "", screenshotBase64: "" };
-
-            if (!isBotOnline) {
-                applyBotStatusUI(false);
-                return;
-            }
-
-            document.getElementById('chatBody').innerHTML = `
-                <div class="chat-msg bot" id="botGreetingMsg">
-                    Halo! 👋 Saya bot asisten <b>pin gantenk</b>. Silakan pilih item yang mau kamu beli:
-                    <div class="chat-options" id="chatOptions"></div>
-                </div>
-            `;
-            
-            let chatFooter = document.getElementById('chatFooter');
-            if (chatFooter) {
-                chatFooter.innerHTML = '<div style="text-align:center; font-size:10px; color:#64748b;">Silakan pilih item di atas 👆</div>';
-            }
-
-            renderChatOptions(true);
-            saveChatState();
-        }
+        renderChatOptions();
 
         function toggleChat() {
             let widget = document.getElementById('chatWidget');
-            let isFlex = (widget.style.display === 'flex');
-            widget.style.display = isFlex ? 'none' : 'flex';
-
-            if (!isBotOnline) {
-                applyBotStatusUI(false);
-            } else if (botData.step === 'select') {
-                renderChatOptions(true);
-            }
-            saveChatState();
+            widget.style.display = (widget.style.display === 'flex') ? 'none' : 'flex';
         }
 
         function addMessage(sender, text) {
@@ -1198,28 +742,10 @@
             div.innerHTML = text;
             body.appendChild(div);
             body.scrollTop = body.scrollHeight;
-            saveChatState();
         }
 
-        // --- BOT PILIH ITEM ---
         function botSelectItem(key) {
-            if (!isBotOnline) {
-                addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
-                return;
-            }
-
             let item = itemListData[key];
-            let currentStock = localStocks[key] !== undefined ? localStocks[key] : 0;
-
-            if (currentStock <= 0) {
-                addMessage('user', `Saya mau beli ${item.name}`);
-                setTimeout(() => {
-                    addMessage('bot', `Aduh maaf bro, item <b>${item.name}</b> stoknya lagi <b>HABIS (0)</b>! ❌<br>Silakan pilih item lainnya ya.`);
-                }, 300);
-                return;
-            }
-
-            botData.step = "form";
             botData.itemId = key;
             botData.item = item.name;
             botData.price = item.price;
@@ -1229,154 +755,89 @@
             setTimeout(() => {
                 addMessage('bot', 
                     `Sip! Total harganya: <b>Rp ${item.price.toLocaleString('id-ID')}</b>.<br><br>` +
-                    `📦 <b>Informasi Stok:</b> Tersisa <b style="color:#00ff88;">${currentStock} Pcs</b><br><br>` +
-                    `Silakan scan QRIS di bawah ini untuk pembayaran:<br>` +
-                    `<div style="text-align:center; margin: 10px 0; background:#ffffff; padding:8px; border-radius:10px;">` +
-                        `<img src="IMG-20260731-WA0007.jpg" alt="QRIS Payment" style="width:100%; max-width:200px; height:auto; border-radius:6px; display:block; margin:0 auto;"><br>` +
-                        `<a href="IMG-20260731-WA0007.jpg" download="QRIS-pin-gantenk.jpg" style="display:inline-block; margin-top:6px; color:#0077ff; text-decoration:underline; font-weight:700; font-size:11px;">` +
-                            `📥 download qris untuk bayar` +
-                        `</a>` +
-                    `</div>` +
-                    `Atau transfer DANA/GoPay/OVO ke: <b>0858-2353-8521</b><br><br>` +
-                    `<b>Setelah bayar, isi Username Roblox & lampirkan Bukti Transfer di bawah ini:</b>`
+                    `Silakan scan QRIS atau TF ke DANA: <b>0858-2353-8521</b>.<br><br>` +
+                    `<b>Setelah bayar, isi Username Roblox & lampirkan SS Bukti TF di bawah:</b>`
                 );
 
-                let footer = document.getElementById('chatFooter');
-                footer.innerHTML = `
+                document.getElementById('chatFooter').innerHTML = `
                     <div class="chat-form">
-                        <input type="text" id="bot-usn-input" placeholder="Masukkan Username Roblox..." oninput="saveChatState()" />
-                        <label for="tf-file" id="file-label">
-                            📸 Pilih Foto Bukti Transfer
-                        </label>
+                        <input type="text" id="bot-usn-input" placeholder="Masukkan Username Roblox..." />
+                        <label for="tf-file" id="file-label">📸 Pilih Foto Bukti Transfer</label>
                         <input type="file" id="tf-file" accept="image/*" style="display:none;" onchange="previewScreenshot(this)">
                         <button class="btn-submit-bot" onclick="processBotSubmission()">Lanjut ke WhatsApp 🚀</button>
                     </div>
                 `;
-                saveChatState();
-            }, 400);
+            }, 300);
         }
 
-        // --- FUNGSI PROSES DAN KOMPRESI GUMBAR BUKTI TF SEMENTARA DIBACA ---
         function previewScreenshot(input) {
             if (!input.files || !input.files[0]) return;
-            let file = input.files[0];
-
-            // Gunakan canvas untuk mengompresi gambar (biar ringan masuk ke database)
             let reader = new FileReader();
             reader.onload = function (e) {
-                let img = new Image();
-                img.onload = function () {
-                    let canvas = document.createElement('canvas');
-                    let ctx = canvas.getContext('2d');
-
-                    // Resize ke maksimal lebar 600px
-                    let maxWidth = 600;
-                    let scaleRatio = maxWidth / img.width;
-                    if (scaleRatio < 1) {
-                        canvas.width = maxWidth;
-                        canvas.height = img.height * scaleRatio;
-                    } else {
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                    }
-
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                    // Konversi ke Base64 dengan kualitas 0.7 (ringan & jelas)
-                    let compressedBase64 = canvas.toDataURL('image/jpeg', 0.7);
-
-                    botData.screenshotBase64 = compressedBase64;
-                    addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${compressedBase64}" alt="Bukti Transfer">`);
-                    
-                    let label = document.getElementById('file-label');
-                    if (label) {
-                        label.innerText = "✅ Foto Berhasil Diunggah! (Ganti)";
-                        label.style.borderColor = "#00ff88";
-                        label.style.color = "#00ff88";
-                    }
-                    saveChatState();
-                };
-                img.src = e.target.result;
+                botData.screenshotBase64 = e.target.result;
+                addMessage('user', `🖼️ Bukti Transfer Terlampir:<br><img src="${e.target.result}">`);
+                let label = document.getElementById('file-label');
+                if (label) {
+                    label.innerText = "✅ Foto Berhasil Diunggah!";
+                    label.style.borderColor = "#00ff88";
+                    label.style.color = "#00ff88";
+                }
             };
-            reader.readAsDataURL(file);
+            reader.readAsDataURL(input.files[0]);
         }
 
+        // --- ⚡ PROSES KETIKA BOT BILANG "SIP" & KIRIM KE WA + DITAMBAHKAN KE LOGS ---
         function processBotSubmission() {
-            if (!isBotOnline) {
-                addMessage('bot', 'pinpin lgi bobo kamu gabisa beli dulu😡😡');
-                return;
-            }
-
             let usnInput = document.getElementById('bot-usn-input').value.trim();
             if (!usnInput) {
                 alert("Harap isi Username Roblox kamu terlebih dahulu!");
                 return;
             }
-
             if (!botData.screenshotBase64) {
-                alert("Harap sertakan / lampirkan foto bukti transfer!");
+                alert("Harap lampirkan foto bukti transfer!");
                 return;
             }
 
             botData.username = usnInput;
-            botData.step = "done";
 
-            // 1. DITAMBAHKAN: SIMPAN OTOMATIS DATA DAN SS FOTO BUKTI TF KE DATABASE FIREBASE
+            // 1. DITAMBAHKAN KE FIREBASE "LOGS" UNTUK TAMPIL DI LIVE LOGS REALTIME
             const now = new Date();
-            const timeFormatted = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) + 
-                                 " - " + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WITA";
+            const timeFormatted = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + " WITA";
 
-            db.ref('orders').push({
+            db.ref('logs').push({
                 username: botData.username,
                 item: botData.item,
                 price: botData.price,
-                timestamp: timeFormatted,
-                image: botData.screenshotBase64
+                time: timeFormatted
             });
 
-            // 2. Kurangi stok item di Firebase
-            db.ref('stocks/' + botData.itemId).transaction((current) => {
-                if (current === null) return 0;
-                return Math.max(0, current - 1);
-            });
+            // 2. BOT MENGATAKAN "SIP"
+            addMessage('bot', `Sip, pesanan kamu sudah tercatat di sistem! Klik tombol hijau di bawah untuk terhubung ke WhatsApp.`);
 
-            addMessage('bot', `Sip, data & foto bukti transfer sudah tersimpan di sistem! Klik tombol di bawah untuk kirim pesanan ke WhatsApp.`);
-
+            // 3. KIRIM PESAN WA
             let phone = "6285823538521";
             let textWa = `Halo pin gantenk!\n` +
                          `Saya sudah transfer via Web Store:\n` +
                          `Item: *${botData.item}*\n` +
                          `Harga: *Rp ${botData.price.toLocaleString('id-ID')}*\n` +
-                         `Username Roblox: *${botData.username}*\n\n` +
-                         `*(Catatan: Foto Bukti TF sudah tersimpan otomatis di Database Web)*`;
+                         `Username Roblox: *${botData.username}*`;
 
             let waUrl = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(textWa)}`;
 
-            let footer = document.getElementById('chatFooter');
-            footer.innerHTML = `
-                <div style="display:flex; flex-direction:column; gap:8px;">
-                    <a href="${waUrl}" target="_blank" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none; box-shadow: 0 0 10px rgba(37,211,102,0.4);">
-                        📲 Kirim Pesanan ke WhatsApp
-                    </a>
-                    <button onclick="resetChatSystem()" style="background:#171c2e; border:1px solid #00f0ff; color:#00f0ff; padding:8px; border-radius:8px; font-size:11px; font-weight:700; cursor:pointer;">
-                        🔄 Mulai Transaksi Baru
-                    </button>
-                </div>
+            document.getElementById('chatFooter').innerHTML = `
+                <a href="${waUrl}" target="_blank" style="display:block; text-align:center; background:#25D366; color:#fff; padding:10px; border-radius:8px; font-size:12px; font-weight:700; text-decoration:none;">
+                    📲 Kirim Pesanan ke WhatsApp
+                </a>
             `;
-            saveChatState();
         }
 
         function copyText(text, btn) {
-            navigator.clipboard.writeText(text).then(function() {
-                let originalText = btn.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                let orig = btn.innerText;
                 btn.innerText = "Copied! ✅";
-                setTimeout(function() {
-                    btn.innerText = originalText;
-                }, 2000);
+                setTimeout(() => btn.innerText = orig, 2000);
             });
         }
-
-        window.addEventListener('DOMContentLoaded', loadChatState);
     </script>
 </body>
 </html>
