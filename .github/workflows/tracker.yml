@@ -1,0 +1,33 @@
+name: Roblox Stock Tracker
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Berjalan otomatis tiap 5 menit
+  workflow_dispatch: # Agar bisa ditrigger manual dari HP
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install noblox.js
+
+      - name: Run Tracker
+        env:
+          ROBLOX_COOKIE: ${{ secrets.ROBLOX_COOKIE }}
+        run: node tracker.js
+
+      - name: Commit & Push Update Stok
+        run: |
+          git config --global user.name "GitHub Action Bot"
+          git config --global user.email "action@github.com"
+          git add stock.json
+          git commit -m "Auto-update stock data" || exit 0
+          git push
