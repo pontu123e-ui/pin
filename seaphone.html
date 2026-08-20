@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seaphone Helper & Timer</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Roboto, sans-serif; }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: #1e293b;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        h2 { text-align: center; margin-top: 0; color: #38bdf8; font-size: 1.3rem; }
+        
+        /* Timer Style */
+        .timer-card {
+            background: #0f172a;
+            border: 2px solid #0284c7;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .timer-val {
+            font-size: 2.8rem;
+            font-weight: 800;
+            font-family: monospace;
+            color: #38bdf8;
+        }
+        .status-lbl { font-size: 0.85rem; color: #94a3b8; margin-top: 5px; }
+
+        /* Buttons */
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        .btn-reset { background: #0284c7; color: white; }
+        .btn-settings { background: #475569; color: white; }
+        .btn:hover { opacity: 0.9; }
+
+        /* Temp Mail Section */
+        .box-title { font-size: 0.9rem; color: #cbd5e1; margin: 15px 0 8px 0; font-weight: bold; }
+        iframe {
+            width: 100%;
+            height: 350px;
+            border: 1px solid #334155;
+            border-radius: 10px;
+            background: #ffffff;
+        }
+
+        .warning {
+            color: #ef4444 !important;
+            border-color: #ef4444 !important;
+            animation: pulse 1s infinite;
+        }
+        @keyframes pulse { 50% { opacity: 0.4; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>📱 Seaphone Helper</h2>
+
+    <!-- Section 1: Timer 4 Jam -->
+    <div class="timer-card" id="timerBox">
+        <div class="timer-val" id="timerDisplay">04:00:00</div>
+        <div class="status-lbl" id="statusLabel">Status: Cloudphone Running</div>
+    </div>
+
+    <!-- Section 2: Quick Action Buttons -->
+    <button class="btn btn-reset" onclick="reset4Hours()">🔄 Akun Baru (Reset 4 Jam)</button>
+    
+    <!-- Link Intent Android ke Settings Seaphone -->
+    <a class="btn btn-settings" href="intent:#Intent;action=android.settings.APPLICATION_DETAILS_SETTINGS;package=com.seaphone.app;end">
+        ⚙️ Buka App Info Seaphone (Clear Data)
+    </a>
+
+    <!-- Section 3: Embed Temp Mail -->
+    <div class="box-title">✉️ Temp Mail Direct Box:</div>
+    <iframe src="https://temp-mail.org/id/" title="Temp Mail"></iframe>
+</div>
+
+<script>
+    const FOUR_HOURS_MS = 4 * 60 * 60 * 1000;
+
+    function getEndTime() {
+        return parseInt(localStorage.getItem("seaphone_expiry")) || 0;
+    }
+
+    function reset4Hours() {
+        const newEndTime = Date.now() + FOUR_HOURS_MS;
+        localStorage.setItem("seaphone_expiry", newEndTime);
+        updateTimer();
+    }
+
+    function updateTimer() {
+        const endTime = getEndTime();
+        const now = Date.now();
+        const diff = Math.floor((endTime - now) / 1000);
+
+        const display = document.getElementById("timerDisplay");
+        const status = document.getElementById("statusLabel");
+        const timerBox = document.getElementById("timerBox");
+
+        if (endTime === 0 || diff <= 0) {
+            display.innerText = "00:00:00";
+            timerBox.classList.add("warning");
+            status.innerText = "⚠️ SISA WAKTU HABIS! Clear Data Sekarang!";
+            status.style.color = "#ef4444";
+            return;
+        }
+
+        const hrs = Math.floor(diff / 3600);
+        const mins = Math.floor((diff % 3600) / 60);
+        const secs = diff % 60;
+
+        display.innerText = 
+            String(hrs).padStart(2, '0') + ":" + 
+            String(mins).padStart(2, '0') + ":" + 
+            String(secs).padStart(2, '0');
+
+        if (diff < 600) { // Kurang dari 10 menit
+            timerBox.classList.add("warning");
+            status.innerText = "⚠️ Tinggal < 10 Menit! Siap-siap Reset!";
+            status.style.color = "#ef4444";
+        } else {
+            timerBox.classList.remove("warning");
+            status.innerText = "Status: Cloudphone Running";
+            status.style.color = "#94a3b8";
+        }
+    }
+
+    setInterval(updateTimer, 1000);
+    updateTimer();
+</script>
+
+</body>
+</html>
