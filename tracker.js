@@ -1,24 +1,38 @@
 const noblox = require('noblox.js');
 const fs = require('fs');
 
-async function checkStock() {
+const PLACE_ID = 104973076655377; // Place ID Capybaras VS Plants
+
+async function run() {
     try {
-        // Ambil ID game tujuan kamu (Ganti ID di bawah dengan Place ID game Roblox-nya)
-        const placeId = 123456789; 
-        const gameInfo = await noblox.getPlaceInfo(placeId);
+        const cookie = process.env.ROBLOX_COOKIE;
+        if (cookie) {
+            await noblox.setCookie(cookie);
+            console.log("Berhasil authentication dengan cookie Roblox.");
+        } else {
+            console.log("Menjalankan tracker tanpa cookie.");
+        }
+
+        // Ambil data detail game dari API Roblox
+        const placeDetails = await noblox.getPlaceInfo(PLACE_ID);
 
         const stockData = {
-            updatedAt: new Date().toISOString(),
-            gameName: gameInfo.Name || "Game Roblox",
-            status: "Online",
-            // Kamu bisa tambah data stok custom di sini
+            gameName: placeDetails.Name || "Capybaras VS Plants",
+            status: "Online / Active",
+            placeId: PLACE_ID,
+            playing: placeDetails.Playing || 0,
+            visits: placeDetails.Visits || 0,
+            capybaraStock: "Mengecek NPC Capybara...",
+            gearStock: "Mengecek NPC Gear...",
+            updatedAt: new Date().toISOString()
         };
 
         fs.writeFileSync('stock.json', JSON.stringify(stockData, null, 2));
-        console.log('Stok berhasil diupdate!');
+        console.log("File stock.json berhasil diperbarui!");
     } catch (err) {
-        console.error('Gagal update stok:', err);
+        console.error("Gagal menjalankan tracker:", err);
+        process.exit(1);
     }
 }
 
-checkStock();
+run();
