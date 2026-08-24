@@ -14,33 +14,37 @@ app.get('/api/bypass', async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) return res.status(400).json({ error: 'URL tidak boleh kosong' });
 
-    try {
-        // Menggunakan endpoint API bypass alternatif
-        const response = await fetch(`https://api.ethon.ai/bypass?url=${encodeURIComponent(targetUrl)}`);
-        
-        if (!response.ok) {
-            throw new Error(`HTTP Error Status: ${response.status}`);
-        }
+    const encodedUrl = encodeURIComponent(targetUrl);
 
-        const data = await response.json();
+    // Daftar provider API bypass gratis yang akan dicoba berurutan
+    const apiEndpoints = [
+        `https://api.bypasser.su/api/bypass?url=${encodedUrl}`,
+        `https://bypass.city/api/bypass?url=${encodedUrl}`,
+        `https://api.bypass.vip/bypass?url=${encodedUrl}`
+    ];
 
-        if (data.result || data.destination || data.result_url) {
-            res.json({ 
-                success: true, 
-                key: data.result || data.destination || data.result_url 
-            });
-        } else {
-            res.status(500).json({ 
-                success: false, 
-                message: data.message || 'API gagal mengekstrak link/key.' 
-            });
+    for (const endpoint of apiEndpoints) {
+        try {
+            const response = await fetch(endpoint, { timeout: 5000 });
+            if (!response.ok) continue;
+
+            const data = await response.json();
+            const resultKey = data.result || data.destination || data.result_url || data.key;
+
+            if (resultKey && !resultKey.includes('FREE API SHUT DOWN')) {
+                return res.json({ success: true, key: resultKey });
+            }
+        } catch (e) {
+            // Jika API gagal/down, lanjut mencoba API berikutnya di daftar
+            continue;
         }
-    } catch (err) {
-        res.status(500).json({ 
-            success: false, 
-            message: 'Penyedia API sedang down atau memblokir request.' 
-        });
     }
+
+    // Jika semua API di atas gagal
+    res.status(500).json({ 
+        success: false, 
+        message: 'Semua provider API bypass publik sedang down/di-block. Coba lagi nanti.' 
+    });
 });
 
 const PORT = process.env.PORT || 3000;
