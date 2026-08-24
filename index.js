@@ -6,10 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Mengarahkan halaman utama ke file b.html
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/b.html');
 });
 
+// Endpoint API untuk bypass
 app.get('/api/bypass', async (req, res) => {
     const targetUrl = req.query.url;
     if (!targetUrl) return res.status(400).json({ error: 'URL tidak boleh kosong' });
