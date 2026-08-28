@@ -33,9 +33,8 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    // Bikin Objek Logo (Bisa ganti 'logo.png' dengan link/file logo kampusmu)
+    // Bikin Objek Logo Kampus (Ganti link/file gambar di bawah)
     const textureLoader = new THREE.TextureLoader();
-    // Gambar placeholder default (bisa diganti dengan path logo kampus: 'logo_kampus.png')
     const texture = textureLoader.load('https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg'); 
     const geometry = new THREE.PlaneGeometry(1.5, 1.5);
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
@@ -59,24 +58,29 @@
       if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
         const landmarks = results.multiHandLandmarks[0];
 
-        // Koordinat Telapak Tangan (Landmark 9 / Middle Finger MCP)
+        // Titik Tengah Telapak Tangan (Landmark 9)
         const handX = (0.5 - landmarks[9].x) * 5;
-        const handY = (0.5 - landmarks[9].y) * 5;
+        const handY = (0.5 - landmarks[9].y) * 5 - 0.5; // Sedikit di atas telapak tangan
 
-        // Posisikan Logo di atas Tangan
         logoMesh.position.set(handX, handY, 0);
 
-        // Hitung Deteksi Telapak Tangan Terbuka (Jarak Telunjuk ke Pergelangan)
+        // --- DETEKSI GESTUR TELAPAK TANGAN MENDATAR (MENDONGAK) ---
         const wrist = landmarks[0];
+        const middleTip = landmarks[12];
         const indexTip = landmarks[8];
-        const dist = Math.hypot(indexTip.x - wrist.x, indexTip.y - wrist.y);
+        const pinkyTip = landmarks[20];
 
-        // Jika Telapak Terbuka (Jarak Cukup Jauh)
-        if (dist > 0.3) {
+        // Hitung bentangan jari (telapak terbuka)
+        const handSpan = Math.hypot(indexTip.x - pinkyTip.x, indexTip.y - pinkyTip.y);
+        
+        // Hitung kemiringan/sudut jari ke pergelangan (posisi telapak terbuka menghadap atas)
+        const isPalmMendatar = (wrist.y > middleTip.y) && (handSpan > 0.15);
+
+        if (isPalmMendatar) {
           logoMesh.visible = true;
           logoMesh.rotation.y += 0.08; // LOGO BERPUTAR
         } else {
-          logoMesh.visible = false; // Sembunyikan kalau mengepal
+          logoMesh.visible = false;
         }
       } else {
         logoMesh.visible = false;
@@ -93,7 +97,6 @@
     });
     cameraUtils.start();
 
-    // Loop Render Three.js
     function animate() {
       requestAnimationFrame(animate);
       renderer.render(scene, camera);
