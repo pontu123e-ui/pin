@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PKKMB Hand Tracker Logo</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: #000; }
+    #webcam { transform: scaleX(-1); position: absolute; width: 100vw; height: 100vh; object-fit: cover; }
+    #canvas-container { position: absolute; width: 100vw; height: 100vh; pointer-events: none; }
+  </style>
+
+  <!-- Load Three.js & MediaPipe Hands -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <video id="webcam" autoplay playsinline></video>
+  <div id="canvas-container"></div>
+
+  <script>
+    const videoElement = document.getElementById('webcam');
+    const container = document.getElementById('canvas-container');
+
+    // --- 1. SET UP THREE.JS SCENE ---
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 5;
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    // Bikin Objek Logo (Bisa ganti 'logo.png' dengan link/file logo kampusmu)
+    const textureLoader = new THREE.TextureLoader();
+    // Gambar placeholder default (bisa diganti dengan path logo kampus: 'logo_kampus.png')
+    const texture = textureLoader.load('https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg'); 
+    const geometry = new THREE.PlaneGeometry(1.5, 1.5);
+    const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
+    const logoMesh = new THREE.Mesh(geometry, material);
+    scene.add(logoMesh);
+    logoMesh.visible = false;
+
+    // --- 2. SET UP MEDIAPIPE HANDS ---
+    const hands = new Hands({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
+
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    hands.onResults((results) => {
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const landmarks = results.multiHandLandmarks[0];
+
+        // Koordinat Telapak Tangan (Landmark 9 / Middle Finger MCP)
+        const handX = (0.5 - landmarks[9].x) * 5;
+        const handY = (0.5 - landmarks[9].y) * 5;
+
+        // Posisikan Logo di atas Tangan
+        logoMesh.position.set(handX, handY, 0);
+
+        // Hitung Deteksi Telapak Tangan Terbuka (Jarak Telunjuk ke Pergelangan)
+        const wrist = landmarks[0];
+        const indexTip = landmarks[8];
+        const dist = Math.hypot(indexTip.x - wrist.x, indexTip.y - wrist.y);
+
+        // Jika Telapak Terbuka (Jarak Cukup Jauh)
+        if (dist > 0.3) {
+          logoMesh.visible = true;
+          logoMesh.rotation.y += 0.08; // LOGO BERPUTAR
+        } else {
+          logoMesh.visible = false; // Sembunyikan kalau mengepal
+        }
+      } else {
+        logoMesh.visible = false;
+      }
+    });
+
+    // --- 3. AKTIFKAN KAMERA HP ---
+    const cameraUtils = new Camera(videoElement, {
+      onFrame: async () => {
+        await hands.send({ image: videoElement });
+      },
+      width: 1280,
+      height: 720
+    });
+    cameraUtils.start();
+
+    // Loop Render Three.js
+    function animate() {
+      requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
