@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>PKKMB Hand Tracker Logo</title>
+  <title>PKKMB Hand Tracker Logo ITH</title>
   <style>
     * { box-sizing: border-box; }
     body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: sans-serif; }
@@ -24,7 +24,7 @@
 <body>
 
   <div id="video-container">
-    <div id="status-info">Mengarahkan Kamera...</div>
+    <div id="status-info">Arahkan Tangan Menadah...</div>
     <video id="webcam" autoplay playsinline></video>
     <div id="canvas-container"></div>
   </div>
@@ -44,25 +44,22 @@
     renderer.setPixelRatio(window.devicePixelRatio);
     container.appendChild(renderer.domElement);
 
-    // Bikin Objek Logo (Ganti URL ini dengan logo kampusmu)
+    // Bikin Objek Logo (Memakai file 'logo.png' yang kamu upload)
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg'); 
+    const texture = textureLoader.load('logo.png'); 
     const geometry = new THREE.PlaneGeometry(1.2, 1.2);
     const material = new THREE.MeshBasicMaterial({ map: texture, transparent: true, side: THREE.DoubleSide });
     const logoMesh = new THREE.Mesh(geometry, material);
     scene.add(logoMesh);
     logoMesh.visible = false;
 
-    // Menyesuaikan ukuran layar jika HP di-rotate
     window.addEventListener('resize', () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    // Conversi Koordinat 2D Layar HP ke 3D World
     function convertTo3D(x, y) {
-      // Mirroring X agar pas dengan tampilan kamera depan
       const normX = -((x) * 2 - 1); 
       const normY = -(y * 2 - 1);
 
@@ -89,36 +86,42 @@
       if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
         const landmarks = results.multiHandLandmarks[0];
 
-        // Titik Tengah Telapak Tangan (Landmark 9)
+        // Titik Pangkal Telapak (Landmark 9)
         const centerPalm = landmarks[9];
         const pos3D = convertTo3D(centerPalm.x, centerPalm.y);
 
-        // Posisikan logo melayang pas di atas telapak tangan
-        logoMesh.position.set(pos3D.x, pos3D.y + 0.3, pos3D.z);
+        // Posisikan logo melayang persis DI ATAS telapak tangan yang menadah
+        logoMesh.position.set(pos3D.x, pos3D.y + 0.4, pos3D.z);
 
-        // --- CEK APAKAH JARI-JARI TERBUKA ---
-        // Cek jarak ujung 4 jari ke pergelangan tangan (Landmark 0)
         const wrist = landmarks[0];
-        const indexOpen  = Math.hypot(landmarks[8].x - wrist.x, landmarks[8].y - wrist.y) > 0.25;
-        const middleOpen = Math.hypot(landmarks[12].x - wrist.x, landmarks[12].y - wrist.y) > 0.25;
-        const ringOpen   = Math.hypot(landmarks[16].x - wrist.x, landmarks[16].y - wrist.y) > 0.25;
-        const pinkyOpen  = Math.hypot(landmarks[20].x - wrist.x, landmarks[20].y - wrist.y) > 0.25;
+        const indexMCP = landmarks[5];
+        const pinkyMCP = landmarks[17];
+        const middleTip = landmarks[12];
 
-        const isHandOpen = indexOpen && middleOpen && ringOpen && pinkyOpen;
+        // Cek apakah posisi tangan menadah (bukan melambai berdiri)
+        const isUprightWaving = wrist.y - middleTip.y > 0.25; 
+        
+        // Cek apakah telapak tangan terbuka
+        const palmWidth = Math.hypot(indexMCP.x - pinkyMCP.x, indexMCP.y - pinkyMCP.y);
+        const isOpenPalm = palmWidth > 0.12;
 
-        if (isHandOpen) {
+        if (!isUprightWaving && isOpenPalm) {
           logoMesh.visible = true;
           logoMesh.rotation.y += 0.08; // Logo Berputar
-          statusInfo.innerText = "✨ Telapak Terbuka: Logo Berputar!";
+          statusInfo.innerText = "✨ Posisi Menadah Pas! Logo ITH Berputar";
           statusInfo.style.background = "rgba(0, 180, 0, 0.8)";
+        } else if (isUprightWaving) {
+          logoMesh.visible = false;
+          statusInfo.innerText = "🖐️ Posisikan Tangan Menadah (Bukan Melambai)";
+          statusInfo.style.background = "rgba(200, 50, 0, 0.8)";
         } else {
           logoMesh.visible = false;
-          statusInfo.innerText = "✊ Tangan Terdeteksi (Buka Jari-Jari)";
+          statusInfo.innerText = "🤲 Buka Telapak Tanganmu";
           statusInfo.style.background = "rgba(200, 120, 0, 0.8)";
         }
       } else {
         logoMesh.visible = false;
-        statusInfo.innerText = "✋ Tunjukkan Tangan ke Kamera";
+        statusInfo.innerText = "🤲 Menadahkan Tangan ke Kamera";
         statusInfo.style.background = "rgba(0,0,0,0.7)";
       }
     });
