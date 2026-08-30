@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Interactive Hand Tracking</title>
+  <style>
+    body { margin: 0; overflow: hidden; background-color: #111; }
+    #webcam { display: none; }
+    #canvas-container { width: 100vw; height: 100vh; }
+  </style>
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- MediaPipe Hand Landmarker -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/vision_bundle.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <video id="webcam" autoplay playsinline></video>
+  <div id="canvas-container"></div>
+
+  <script type="module">
+    import { HandLandmarker, FilesetResolver } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest";
+
+    let scene, camera, renderer, cube;
+    let handLandmarker;
+    let video = document.getElementById("webcam");
+
+    // 1. Inisialisasi Three.js (Scene 3D)
+    function initThree() {
+      const container = document.getElementById("canvas-container");
+      scene = new THREE.Scene();
+
+      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.z = 5;
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+
+      // Tambahkan Kubus 3D
+      const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+      const material = new THREE.MeshNormalMaterial();
+      cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      // Responsif jika window di-resize
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+    }
+
+    // 2. Inisialisasi MediaPipe Hand Tracking
+    async function initHandTracking() {
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@latest/wasm"
+      );
+      handLandmarker = await HandLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath: `https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task`,
+          delegate: "GPU"
+        },
+        runningMode: "VIDEO",
+        numHands: 1
+      });
+
+      startCamera();
+    }
+
+    // 3. Jalankan Webcam
+    function startCamera() {
+      navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
+        video.srcObject = stream;
+        video.addEventListener("loadeddata", predictWebcam);
+      });
+    }
+
+    // 4. Tracking Loop & Interaksi 3D
+    let lastVideoTime = -1;
+    async function predictWebcam() {
+      if (video.currentTime !== lastVideoTime) {
+        lastVideoTime = video.currentTime;
+        const results = await handLandmarker.detectForVideo(video, performance.now());
+
+        if (results.landmarks && results.landmarks.length > 0) {
+          const hand = results.landmarks[0];
+          
+          // Mengambil koordinat telunjuk (landmark index 8)
+          const indexFinger = hand[8];
+
+          // Mapping posisi tangan (0 sampai 1) ke koordinat 3D World Scene
+          cube.position.x = (0.5 - indexFinger.x) * 8; // Dibalik agar tidak cermin
+          cube.position.y = (0.5 - indexFinger.y) * 6;
+
+          // Putar kubus perlahan saat terdeteksi
+          cube.rotation.x += 0.02;
+          cube.rotation.y += 0.02;
+        }
+      }
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(predictWebcam);
+    }
+
+    // Jalankan Aplikasi
+    initThree();
+    initHandTracking();
+  </script>
+</body>
+</html>
