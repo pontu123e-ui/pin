@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Anime Battle Simulator</title>
+  <style>
+    body {
+      background-color: #a8d5c2;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .arena {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 300px;
+      height: 250px;
+      position: relative;
+    }
+    .card {
+      text-align: center;
+      position: relative;
+    }
+    .card img {
+      width: 80px;
+      height: auto;
+    }
+    .hp-bar {
+      width: 100px;
+      height: 20px;
+      background-color: red;
+      border: 2px solid black;
+      margin-top: 5px;
+      color: white;
+      font-weight: bold;
+      line-height: 20px;
+    }
+    .winner-tag {
+      display: none;
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: gold;
+      color: black;
+      padding: 2px 8px;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+    .ko-tag {
+      display: none;
+      color: gray;
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 30px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="title" id="battle-title">NARUTO VS LIGHT</div>
+
+  <div class="arena">
+    <div class="card" id="p1">
+      <div class="winner-tag" id="w1">WINNER</div>
+      <img src="naruto.png" alt="Naruto">
+      <div class="hp-bar" id="hp1">100</div>
+      <div>Naruto</div>
+      <div class="ko-tag" id="ko1">KO</div>
+    </div>
+
+    <div class="card" id="p2">
+      <div class="winner-tag" id="w2">WINNER</div>
+      <img src="light.png" alt="Light">
+      <div class="hp-bar" id="hp2">100</div>
+      <div>Light</div>
+      <div class="ko-tag" id="ko2">KO</div>
+    </div>
+  </div>
+
+  <div id="result-text" style="margin-top: 15px;"></div>
+  <button onclick="startBattle()">New Random Battle</button>
+
+  <script>
+    function startBattle() {
+      // Reset Tampilan
+      document.getElementById('w1').style.display = 'none';
+      document.getElementById('w2').style.display = 'none';
+      document.getElementById('ko1').style.display = 'none';
+      document.getElementById('ko2').style.display = 'none';
+      document.getElementById('hp1').style.backgroundColor = 'green';
+      document.getElementById('hp2').style.backgroundColor = 'green';
+      document.getElementById('hp1').innerText = '100';
+      document.getElementById('hp2').innerText = '100';
+
+      // Penentuan Pemenang Secara Acak (0 atau 1)
+      const winner = Math.floor(Math.random() * 2);
+
+      if (winner === 0) {
+        // Naruto Menang
+        document.getElementById('w1').style.display = 'block';
+        document.getElementById('hp2').innerText = '0 HP';
+        document.getElementById('hp2').style.backgroundColor = 'black';
+        document.getElementById('ko2').style.display = 'block';
+        document.getElementById('battle-title').innerText = 'NARUTO VS LIGHT - FINISH!';
+        document.getElementById('result-text').innerText = 'Random Winner: Naruto Uzumaki!';
+      } else {
+        // Light Menang
+        document.getElementById('w2').style.display = 'block';
+        document.getElementById('hp1').innerText = '0 HP';
+        document.getElementById('hp1').style.backgroundColor = 'black';
+        document.getElementById('ko1').style.display = 'block';
+        document.getElementById('battle-title').innerText = 'NARUTO VS LIGHT - FINISH!';
+        document.getElementById('result-text').innerText = 'Random Winner: Light Yagami!';
+      }
+    }
+  </script>
+</body>
+</html>
