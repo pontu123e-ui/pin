@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Dev & Script Monitor Hub</title>
+    <title>Roblox Inventory & Dev Tracker Hub</title>
     <style>
         * {
             box-sizing: border-box;
@@ -80,7 +80,21 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* Monitor Styles */
+        /* General Inputs & Buttons */
+        .input-group { margin-bottom: 14px; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 6px; color: #cbd5e1; }
+
+        input[type="text"], input[type="number"], textarea {
+            width: 100%; padding: 10px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
+        }
+        input[type="color"] { width: 100%; height: 40px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
+        
+        .btn {
+            background: #0284c7; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: background 0.2s;
+        }
+        .btn:hover { background: #0369a1; }
+
+        /* Monitor & Tracker Styles */
         .status-card {
             background: #030712;
             border: 1px solid #1f2937;
@@ -99,25 +113,40 @@
             display: inline-block;
             margin-right: 6px;
         }
-
         .dot-online { background-color: #2ed573; box-shadow: 0 0 8px #2ed573; }
-        .dot-warning { background-color: #ffa502; box-shadow: 0 0 8px #ffa502; }
+        .dot-offline { background-color: #ff4757; box-shadow: 0 0 8px #ff4757; }
 
-        /* Console / Profiler */
-        .console-box {
+        .inventory-box {
             background: #030712;
             border: 1px solid #1f2937;
             border-radius: 10px;
-            padding: 12px;
-            font-family: monospace;
-            font-size: 0.85rem;
-            color: #4ade80;
-            height: 120px;
+            padding: 8px;
+            height: 180px;
             overflow-y: auto;
-            margin-bottom: 12px;
         }
 
-        /* Inputs & UI Elements */
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+        }
+
+        .item-row .tag {
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .tag-legendary { background: rgba(255, 165, 0, 0.2); color: #ffa502; border: 1px solid #ffa502; }
+        .tag-rare { background: rgba(125, 95, 255, 0.2); color: #7d5fff; border: 1px solid #7d5fff; }
+        .tag-common { background: rgba(148, 163, 184, 0.2); color: #94a3b8; border: 1px solid #94a3b8; }
+
         .preview-box {
             height: 80px;
             border-radius: 12px;
@@ -131,24 +160,10 @@
             text-shadow: 0 2px 4px rgba(0,0,0,0.8);
         }
 
-        .input-group { margin-bottom: 14px; }
-        label { display: block; font-size: 0.8rem; margin-bottom: 6px; color: #cbd5e1; }
-
-        input[type="color"] { width: 100%; height: 40px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
-        input[type="text"], input[type="number"], textarea {
-            width: 100%; padding: 10px; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: #fff; font-size: 0.85rem; outline: none;
-        }
-        textarea { font-family: monospace; height: 90px; resize: none; }
-
         .output-box {
             background: #030712; padding: 10px 14px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #1f2937;
         }
         .output-box code { color: #4ade80; font-family: monospace; font-size: 0.8rem; word-break: break-all; }
-
-        .btn {
-            background: #0284c7; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; font-weight: 600; transition: background 0.2s;
-        }
-        .btn:hover { background: #0369a1; }
 
         /* Toast Alert */
         #toast {
@@ -162,56 +177,43 @@
 <body>
 
 <div class="card">
-    <h1>Roblox Dev Hub</h1>
-    <p class="subtitle">Utility, Converter & Script Performance Monitor</p>
+    <h1>Roblox Dev & Monitor Hub</h1>
+    <p class="subtitle">Live Player Backpack Tracker & Utilities</p>
 
     <!-- Navigation Tabs -->
     <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab('monitor', event)">📡 Status Monitor</button>
-        <button class="tab-btn" onclick="switchTab('profiler', event)">⚡ Script Test</button>
+        <button class="tab-btn active" onclick="switchTab('tracker', event)">🎒 Backpack Tracker</button>
         <button class="tab-btn" onclick="switchTab('single', event)">🎨 Color3</button>
         <button class="tab-btn" onclick="switchTab('audio', event)">🎵 Sound ID</button>
     </div>
 
-    <!-- TAB 1: SERVER MONITOR -->
-    <div id="tab-monitor" class="tab-content active">
-        <div style="margin-bottom:12px; font-size:0.85rem; color:#94a3b8; display:flex; justify-content:space-between;">
-            <span>Roblox Core API Services:</span>
-            <span id="lastCheckTime" style="color:#38bdf8;">Checking...</span>
-        </div>
-
-        <div class="status-card">
-            <div><span class="status-dot dot-online"></span><strong>Roblox User & Auth API</strong></div>
-            <span style="color:#2ed573; font-size:0.8rem; font-weight:bold;">OPERATIONAL (24ms)</span>
-        </div>
-        <div class="status-card">
-            <div><span class="status-dot dot-online"></span><strong>DataStore Service</strong></div>
-            <span style="color:#2ed573; font-size:0.8rem; font-weight:bold;">OPERATIONAL (41ms)</span>
-        </div>
-        <div class="status-card">
-            <div><span class="status-dot dot-online"></span><strong>Asset Delivery (Audio/Decal)</strong></div>
-            <span style="color:#2ed573; font-size:0.8rem; font-weight:bold;">OPERATIONAL (18ms)</span>
-        </div>
-
-        <button class="btn" style="width:100%; margin-top:8px;" onclick="refreshStatus()">🔄 Ping Server Status</button>
-    </div>
-
-    <!-- TAB 2: SCRIPT PROFILER / TESTER -->
-    <div id="tab-profiler" class="tab-content">
+    <!-- TAB 1: BACKPACK & PLAYER TRACKER -->
+    <div id="tab-tracker" class="tab-content active">
         <div class="input-group">
-            <label>Masukkan Kodingan / Logic Test (JS/Luau Style):</label>
-            <textarea id="scriptInput" placeholder="print('Testing Loop Script...')"></textarea>
+            <label>Masukkan Roblox Username Target:</label>
+            <div style="display:flex; gap:8px;">
+                <input type="text" id="targetUser" placeholder="Contoh: Builderman">
+                <button class="btn" onclick="trackPlayer()">Scan Tas</button>
+            </div>
         </div>
-        
-        <button class="btn" style="width:100%; margin-bottom:12px;" onclick="runProfiler()">▶ Test Run & Measure MS</button>
 
-        <label>Console Monitor & Benchmark Output:</label>
-        <div class="console-box" id="consoleOutput">
-            [System] Ready to benchmark script execution...
+        <div class="status-card">
+            <div>
+                <span class="status-dot dot-offline" id="playerDot"></span>
+                <strong id="targetName">Target: belum di-scan</strong>
+            </div>
+            <span id="playerStatus" style="color:#94a3b8; font-size:0.75rem; font-weight:bold;">OFFLINE / IDLE</span>
+        </div>
+
+        <label style="margin-top:12px;">Daftar Item / Tools di Tas Player:</label>
+        <div id="inventoryList" class="inventory-box">
+            <p style="color:#64748b; text-align:center; padding-top:70px; font-size:0.85rem;">
+                Masukkan Username dan klik "Scan Tas" untuk melacak item.
+            </p>
         </div>
     </div>
 
-    <!-- TAB 3: COLOR3 PICKER -->
+    <!-- TAB 2: COLOR3 PICKER -->
     <div id="tab-single" class="tab-content">
         <div class="preview-box" id="previewSingle">Preview Warna</div>
         <div class="input-group">
@@ -230,7 +232,7 @@
         </div>
     </div>
 
-    <!-- TAB 4: SOUND TESTER -->
+    <!-- TAB 3: SOUND TESTER -->
     <div id="tab-audio" class="tab-content">
         <div class="input-group">
             <label>Masukkan Roblox Sound ID:</label>
@@ -246,7 +248,7 @@
 <div id="toast">Copied to Clipboard!</div>
 
 <script>
-    // Tab Switching
+    // Tab Navigation
     function switchTab(tabName, evt) {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -254,47 +256,54 @@
         document.getElementById('tab-' + tabName).classList.add('active');
     }
 
-    // Tab 1: Server Status Simulator / Ping
-    function refreshStatus() {
-        const timeEl = document.getElementById('lastCheckTime');
-        const now = new Date();
-        timeEl.innerText = now.toLocaleTimeString();
-        showToast("Status server diperbarui!");
-    }
-    refreshStatus();
+    // Tab 1: Backpack Tracker Logic
+    function trackPlayer() {
+        const username = document.getElementById('targetUser').value;
+        const targetName = document.getElementById('targetName');
+        const playerStatus = document.getElementById('playerStatus');
+        const playerDot = document.getElementById('playerDot');
+        const invList = document.getElementById('inventoryList');
 
-    // Tab 2: Script Performance Profiler
-    function runProfiler() {
-        const input = document.getElementById('scriptInput').value;
-        const consoleEl = document.getElementById('consoleOutput');
-        
-        const startTime = performance.now();
-        
-        // Simulasi Execution & Output
-        let logs = `[Runner] Executing script...\n`;
-        
-        try {
-            if(input.includes("print")) {
-                const match = input.match(/print\((['"])(.*?)\1\)/);
-                if (match) logs += `[Output]: ${match[2]}\n`;
-            }
-            
-            const endTime = performance.now();
-            const executionTime = (endTime - startTime).toFixed(3);
-            const memUsage = (Math.random() * 0.4 + 0.1).toFixed(2);
-            
-            logs += `-----------------------------------\n`;
-            logs += `✔ Execution Finished in: ${executionTime} ms\n`;
-            logs += `📊 Est. Memory Usage: ${memUsage} MB\n`;
-            logs += `⚡ Performance Status: OPTIMAL`;
-        } catch (e) {
-            logs += `❌ Error: ${e.message}`;
+        if(!username) {
+            showToast("⚠️ Masukkan Username dulu!");
+            return;
         }
 
-        consoleEl.innerText = logs;
+        targetName.innerText = "Target: " + username;
+        playerStatus.innerText = "FETCHING DATA...";
+        playerStatus.style.color = "#38bdf8";
+        invList.innerHTML = `<p style="color:#38bdf8; text-align:center; padding-top:70px; font-size:0.85rem;">🔍 Scanning Backpack & Equipment...</p>`;
+
+        // Simulasi scan item real-time
+        setTimeout(() => {
+            playerDot.className = "status-dot dot-online";
+            playerStatus.innerText = "IN-GAME (Trading Plaza)";
+            playerStatus.style.color = "#2ed573";
+            
+            // List item hasil scan
+            invList.innerHTML = `
+                <div class="item-row">
+                    <span>⚔️ <strong>Dark Blade v2</strong></span>
+                    <span class="tag tag-legendary">LEGENDARY</span>
+                </div>
+                <div class="item-row">
+                    <span>🧪 <strong>XP Boost Potion x5</strong></span>
+                    <span class="tag tag-rare">RARE</span>
+                </div>
+                <div class="item-row">
+                    <span>🍎 <strong>Health Apple</strong></span>
+                    <span class="tag tag-common">COMMON</span>
+                </div>
+                <div class="item-row">
+                    <span>💎 <strong>1,500 Gems</strong></span>
+                    <span class="tag tag-rare" style="border-color:#38bdf8; color:#38bdf8;">CURRENCY</span>
+                </div>
+            `;
+            showToast("Data tas berhasil ditarik!");
+        }, 1200);
     }
 
-    // Tab 3: Color Logic
+    // Tab 2: Color Logic
     const picker = document.getElementById('colorPicker');
     const hexInput = document.getElementById('hexInput');
     const preview = document.getElementById('previewSingle');
@@ -321,7 +330,7 @@
     picker.addEventListener('input', (e) => updateSingle(e.target.value));
     hexInput.addEventListener('input', (e) => updateSingle(e.target.value));
 
-    // Tab 4: Sound Tester
+    // Tab 3: Sound Tester
     let currentAudio = null;
     function playSound() {
         const soundId = document.getElementById('soundIdInput').value;
@@ -336,7 +345,7 @@
             .catch(() => status.innerText = "❌ Gagal/Asset Private!");
     }
 
-    // Toast Function
+    // Toast Utility
     function copyText(id) {
         const text = document.getElementById(id).innerText;
         navigator.clipboard.writeText(text);
