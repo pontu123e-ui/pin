@@ -3,35 +3,326 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temp Mail Instan Pribadi</title>
+    <title>Temp Mail Instan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; max-width: 600px; margin: auto; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        button { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
-        button:hover { background: #2563eb; }
-        .email-box { background: #334155; padding: 10px; border-radius: 6px; word-break: break-all; font-family: monospace; font-size: 1.1em; text-align: center; color: #38bdf8; }
-        .inbox-item { background: #334155; padding: 10px; border-radius: 6px; margin-top: 10px; }
-        .otp-code { color: #4ade80; font-weight: bold; font-size: 1.2em; }
+        :root {
+            --bg-color: #090d16;
+            --card-bg: #121826;
+            --border-color: #1e293b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #818cf8, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .email-container {
+            display: flex;
+            align-items: center;
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            gap: 10px;
+        }
+
+        .email-text {
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #38bdf8;
+            overflow-x: auto;
+            white-space: nowrap;
+            flex-grow: 1;
+        }
+
+        .email-text::-webkit-scrollbar {
+            height: 4px;
+        }
+        .email-text::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 2px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-full {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .btn-icon {
+            background: #1e293b;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+        .btn-icon:hover {
+            background: #334155;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            animation: pulse 1.5px infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .inbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .inbox-item {
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mail-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mail-subject {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .otp-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px dashed rgba(99, 102, 241, 0.4);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .otp-code {
+            font-family: monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #818cf8;
+            letter-spacing: 1px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 24px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Toast Notification */
+        #toast {
+            visibility: hidden;
+            background: #334155;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 16px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: visibility 0.2s, opacity 0.2s;
+            opacity: 0;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
 
-    <h2>⚡ Temp Mail Instan</h2>
-    
-    <div class="card">
-        <p>Email Aktif Kamu:</p>
-        <div id="emailDisplay" class="email-box">Memuat email...</div>
-        <button onclick="generateEmail()">✨ Buat Email Baru Instan</button>
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Instan TempMail</h1>
+            <p>Bebas cooldown, anti-ribet, siap pakai.</p>
+        </div>
+        
+        <div class="card">
+            <div class="label">
+                <span>Alamat Email Aktif</span>
+            </div>
+            <div class="email-container">
+                <div id="emailDisplay" class="email-text">Memuat email...</div>
+                <button class="btn-icon" onclick="copyEmail()">Salin</button>
+            </div>
+            <button class="btn-full" onclick="generateEmail()">✨ Buat Email Baru Instan</button>
+        </div>
+
+        <div class="card">
+            <div class="inbox-header">
+                <span class="label" style="margin-bottom:0;">Kotak Masuk (Inbox)</span>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span>Memantau OTP</span>
+                </div>
+            </div>
+            <div id="inboxList" class="inbox-list">
+                <div class="empty-state">Belum ada pesan masuk. Menunggu kode verifikasi...</div>
+            </div>
+        </div>
     </div>
 
-    <div class="card">
-        <h3>Inbox / Pesan Masuk (Auto-refresh)</h3>
-        <div id="inboxList">Belum ada pesan masuk.</div>
-    </div>
+    <div id="toast">Berhasil disalin!</div>
 
 <script>
     let currentEmail = "";
     let sidToken = "";
+
+    function showToast(message) {
+        let toast = document.getElementById("toast");
+        toast.innerText = message;
+        toast.className = "show";
+        setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 2000);
+    }
+
+    function copyEmail() {
+        if (!currentEmail) return;
+        navigator.clipboard.writeText(currentEmail);
+        showToast("Email berhasil disalin!");
+    }
+
+    function copyOtp(code) {
+        navigator.clipboard.writeText(code);
+        showToast(`OTP [${code}] disalin!`);
+    }
 
     async function generateEmail() {
         document.getElementById("emailDisplay").innerText = "Membuat...";
@@ -42,9 +333,11 @@
             sidToken = data.sid_token;
             
             document.getElementById("emailDisplay").innerText = currentEmail;
-            document.getElementById("inboxList").innerText = "Menunggu pesan masuk...";
+            document.getElementById("inboxList").innerHTML = '<div class="empty-state">Menunggu kode verifikasi masuk...</div>';
+            showToast("Email baru siap!");
         } catch (err) {
             document.getElementById("emailDisplay").innerText = "Gagal membuat email!";
+            showToast("Gagal terhubung ke server.");
         }
     }
 
@@ -58,33 +351,56 @@
             let inboxContainer = document.getElementById("inboxList");
             
             if (list && list.length > 0) {
-                inboxContainer.innerHTML = "";
-                list.forEach(msg => {
+                let htmlContent = "";
+                for (let msg of list) {
                     if (!msg.mail_from.toLowerCase().includes("guerrilla")) {
-                        // Ambil isi detail email untuk cek OTP
-                        fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${sidToken}&email_id=${msg.mail_id}`)
-                            .then(r => r.json())
-                            .then(detail => {
-                                inboxContainer.innerHTML += `
-                                    <div class="inbox-item">
-                                        <b>Dari:</b> ${detail.mail_from}<br>
-                                        <b>Subjek:</b> ${detail.mail_subject}<br>
-                                        <p>${detail.mail_body}</p>
+                        let detailRes = await fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${sidToken}&email_id=${msg.mail_id}`);
+                        let detail = await detailRes.json();
+                        
+                        let bodyText = detail.mail_body || "";
+                        // Cari kode angka 4 sampai 6 digit sebagai indikasi OTP
+                        let otpMatch = bodyText.match(/\b\d{4,6}\b/);
+                        let otpSection = "";
+                        
+                        if (otpMatch) {
+                            let foundOtp = otpMatch[0];
+                            otpSection = `
+                                <div class="otp-box">
+                                    <div>
+                                        <span style="font-size: 0.7rem; color: var(--text-muted); display:block;">KODE OTP DITEMUKAN</span>
+                                        <span class="otp-code">${foundOtp}</span>
                                     </div>
-                                `;
-                            });
+                                    <button onclick="copyOtp('${foundOtp}')" style="padding: 6px 10px; font-size: 0.75rem;">Salin OTP</button>
+                                </div>
+                            `;
+                        }
+
+                        htmlContent += `
+                            <div class="inbox-item">
+                                <div class="mail-meta">
+                                    <span><b>Dari:</b> ${detail.mail_from}</span>
+                                    <span>${detail.mail_date || ''}</span>
+                                </div>
+                                <div class="mail-subject">${detail.mail_subject}</div>
+                                <div style="font-size: 0.8rem; color: var(--text-muted); word-break: break-word; max-height: 80px; overflow-y: auto;">${bodyText}</div>
+                                ${otpSection}
+                            </div>
+                        `;
                     }
-                });
+                }
+                if (htmlContent) {
+                    inboxContainer.innerHTML = htmlContent;
+                }
             }
         } catch (err) {
-            console.error("Gagal cek inbox");
+            console.error("Gagal sinkronisasi inbox");
         }
     }
 
-    // Generate email pertama kali saat halaman dibuka
+    // Eksekusi awal
     generateEmail();
 
-    // Cek inbox setiap 4 detik otomatis
+    // Auto-refresh cek inbox setiap 4 detik
     setInterval(checkInbox, 4000);
 </script>
 
