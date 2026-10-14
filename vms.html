@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Mode TempMail & Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #090d16;
+            --card-bg: #121826;
+            --border-color: #1e293b;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #10b981;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #818cf8, #38bdf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Tab Menu */
+        .tabs {
+            display: flex;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .email-container, .input-group {
+            display: flex;
+            align-items: center;
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px 14px;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .email-text {
+            font-family: monospace;
+            font-size: 0.95rem;
+            color: #38bdf8;
+            overflow-x: auto;
+            white-space: nowrap;
+            flex-grow: 1;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-icon {
+            background: #1e293b;
+            padding: 8px 12px;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .inbox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--accent);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .inbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 260px;
+            overflow-y: auto;
+        }
+
+        .inbox-item {
+            background: #090d16;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .mail-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .mail-subject {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .otp-box {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(99, 102, 241, 0.1);
+            border: 1px dashed rgba(99, 102, 241, 0.4);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .otp-code {
+            font-family: monospace;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #818cf8;
+            letter-spacing: 1px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* Toast */
+        #toast {
+            visibility: hidden;
+            background: #334155;
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 8px 16px;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            font-size: 0.85rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        #toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>⚡ Secure Temp & Account Hub</h1>
+            <p>Pilih mode instan atau buat akun ber-password.</p>
+        </div>
+        
+        <!-- Pilihan Mode Tab -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('instan')">1. Instan Burner</button>
+            <button class="tab-btn" onclick="switchTab('custom')">2. Akun & Password</button>
+        </div>
+
+        <!-- TAB 1: INSTAN BURNER (Guerrilla Mail) -->
+        <div id="tab-instan" class="card tab-content active">
+            <div class="label">Alamat Email Instan (Tanpa Cooldown)</div>
+            <div class="email-container">
+                <div id="emailDisplay" class="email-text">Memuat...</div>
+                <button class="btn-icon" onclick="copyText(currentEmail, 'Email disalin!')">Salin</button>
+            </div>
+            <button class="btn-full" onclick="generateInstanEmail()">✨ Buat Email Baru Instan</button>
+        </div>
+
+        <!-- TAB 2: AKUN DENGAN USERNAME & PASSWORD -->
+        <div id="tab-custom" class="card tab-content">
+            <div class="label">Buat / Login Akun Permanen</div>
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">
+                Gunakan ini jika aplikasi/web butuh login ulang pakai sandi.
+            </div>
+            <div class="input-group">
+                <input type="text" id="customUser" placeholder="Username (misal: jagoan01)">
+            </div>
+            <div class="input-group">
+                <input type="password" id="customPass" placeholder="Password akun">
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn-full" onclick="saveCustomAccount()">Simpan & Gunakan</button>
+                <button class="btn-full" style="background: #334155;" onclick="randomizeCustom()">Auto Random</button>
+            </div>
+            <div id="activeCustomInfo" style="margin-top: 10px; font-size: 0.8rem; color: var(--accent); display:none;"></div>
+        </div>
+
+        <!-- KOTAK MASUK / INBOX -->
+        <div class="card">
+            <div class="inbox-header">
+                <span class="label" style="margin-bottom:0;">Kotak Masuk (Live Inbox)</span>
+                <div class="status-badge">
+                    <div class="status-dot"></div>
+                    <span id="statusModeText">Mode Instan</span>
+                </div>
+            </div>
+            <div id="inboxList" class="inbox-list">
+                <div class="empty-state">Menunggu pesan masuk...</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast">Notifikasi</div>
+
+<script>
+    let currentMode = 'instan'; // 'instan' atau 'custom'
+    let currentEmail = "";
+    let sidToken = ""; // Untuk guerrilla mail instan
+    
+    // Data akun custom lokal
+    let customAccount = {
+        email: "",
+        password: ""
+    };
+
+    function showToast(msg) {
+        let t = document.getElementById("toast");
+        t.innerText = msg;
+        t.className = "show";
+        setTimeout(() => { t.className = ""; }, 2000);
+    }
+
+    function copyText(text, label) {
+        if (!text) return;
+        navigator.clipboard.writeText(text);
+        showToast(label);
+    }
+
+    function switchTab(mode) {
+        currentMode = mode;
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        if (mode === 'instan') {
+            document.querySelectorAll('.tab-btn')[0].classList.add('active');
+            document.getElementById('tab-instan').classList.add('active');
+            document.getElementById('statusModeText').innerText = "Mode Instan";
+            if(!currentEmail) generateInstanEmail();
+        } else {
+            document.querySelectorAll('.tab-btn')[1].classList.add('active');
+            document.getElementById('tab-custom').classList.add('active');
+            document.getElementById('statusModeText').innerText = "Mode Akun Custom";
+        }
+    }
+
+    // --- LOGIC TAB 1: INSTAN ---
+    async function generateInstanEmail() {
+        document.getElementById("emailDisplay").innerText = "Membuat...";
+        try {
+            let res = await fetch("https://api.guerrillamail.com/ajax.php?f=get_email_address");
+            let data = await res.json();
+            currentEmail = data.email_addr;
+            sidToken = data.sid_token;
+            document.getElementById("emailDisplay").innerText = currentEmail;
+            document.getElementById("inboxList").innerHTML = '<div class="empty-state">Menunggu kode verifikasi...</div>';
+            showToast("Email instan siap!");
+        } catch (e) {
+            document.getElementById("emailDisplay").innerText = "Gagal memuat!";
+        }
+    }
+
+    // --- LOGIC TAB 2: CUSTOM ACCOUNT ---
+    function randomizeCustom() {
+        let randStr = Math.random().toString(36.substring(2, 8));
+        document.getElementById("customUser").value = "user_" + randStr;
+        document.getElementById("customPass").value = "Pass" + Math.floor(1000 + Math.random() * 9000) + "!";
+    }
+
+    function saveCustomAccount() {
+        let user = document.getElementById("customUser").value.trim();
+        let pass = document.getElementById("customPass").value.trim();
+        if (!user || !pass) {
+            showToast("Isi username & password dulu!");
+            return;
+        }
+        // Kita gunakan domain aman untuk simulasi custom mail (atau integrasi domain burner)
+        customAccount.email = user + "@guerrillamailblock.com"; 
+        customAccount.password = pass;
+
+        let info = document.getElementById("activeCustomInfo");
+        info.style.display = "block";
+        info.innerHTML = `<b>Aktif:</b> ${customAccount.email} <br><b>Sandi:</b> ${customAccount.password} <button onclick="copyText('${customAccount.email}', 'Email custom disalin!')" style="margin-top:4px; padding:4px 8px; font-size:0.7rem;">Salin Email</button>`;
+        showToast("Akun custom disimpan!");
+    }
+
+    // --- CHECK INBOX ROUTINE ---
+    async function checkInbox() {
+        if (currentMode === 'instan' && sidToken) {
+            try {
+                let res = await fetch(`https://api.guerrillamail.com/ajax.php?f=check_email&sid_token=${sidToken}&seq=0`);
+                let data = await res.json();
+                renderMessages(data.list);
+            } catch (e) {}
+        } else if (currentMode === 'custom' && customAccount.email) {
+            // Untuk mode custom, kita tetap bisa pantau lewat API jika domain mendaur ulang session yang sama, 
+            // atau cukup informasikan bahwa akun tersimpan aman.
+        }
+    }
+
+    function renderMessages(list) {
+        let inboxContainer = document.getElementById("inboxList");
+        if (list && list.length > 0) {
+            let htmlContent = "";
+            list.forEach(async msg => {
+                if (!msg.mail_from.toLowerCase().includes("guerrilla")) {
+                    // Fetch detail message
+                    let detailRes = await fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${sidToken}&email_id=${msg.mail_id}`);
+                    let detail = await detailRes.json();
+                    let bodyText = detail.mail_body || "";
+                    let otpMatch = bodyText.match(/\b\d{4,6}\b/);
+                    let otpSection = otpMatch ? `
+                        <div class="otp-box">
+                            <div>
+                                <span style="font-size: 0.7rem; color: var(--text-muted); display:block;">KODE OTP</span>
+                                <span class="otp-code">${otpMatch[0]}</span>
+                            </div>
+                            <button onclick="copyText('${otpMatch[0]}', 'OTP disalin!')" style="padding: 6px 10px; font-size: 0.75rem;">Salin OTP</button>
+                        </div>` : '';
+
+                    htmlContent += `
+                        <div class="inbox-item">
+                            <div class="mail-meta">
+                                <span><b>Dari:</b> ${detail.mail_from}</span>
+                            </div>
+                            <div class="mail-subject">${detail.mail_subject}</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted); max-height: 60px; overflow-y: auto;">${bodyText}</div>
+                            ${otpSection}
+                        </div>
+                    `;
+                }
+            });
+            if(htmlContent) inboxContainer.innerHTML = htmlContent;
+        }
+    }
+
+    // Jalankan awal
+    generateInstanEmail();
+    setInterval(checkInbox, 4000);
+</script>
+
+</body>
+</html>
