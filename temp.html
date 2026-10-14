@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temp Mail Instan Pribadi</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; max-width: 600px; margin: auto; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        button { background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; }
+        button:hover { background: #2563eb; }
+        .email-box { background: #334155; padding: 10px; border-radius: 6px; word-break: break-all; font-family: monospace; font-size: 1.1em; text-align: center; color: #38bdf8; }
+        .inbox-item { background: #334155; padding: 10px; border-radius: 6px; margin-top: 10px; }
+        .otp-code { color: #4ade80; font-weight: bold; font-size: 1.2em; }
+    </style>
+</head>
+<body>
+
+    <h2>⚡ Temp Mail Instan</h2>
+    
+    <div class="card">
+        <p>Email Aktif Kamu:</p>
+        <div id="emailDisplay" class="email-box">Memuat email...</div>
+        <button onclick="generateEmail()">✨ Buat Email Baru Instan</button>
+    </div>
+
+    <div class="card">
+        <h3>Inbox / Pesan Masuk (Auto-refresh)</h3>
+        <div id="inboxList">Belum ada pesan masuk.</div>
+    </div>
+
+<script>
+    let currentEmail = "";
+    let sidToken = "";
+
+    async function generateEmail() {
+        document.getElementById("emailDisplay").innerText = "Membuat...";
+        try {
+            let res = await fetch("https://api.guerrillamail.com/ajax.php?f=get_email_address");
+            let data = await res.json();
+            currentEmail = data.email_addr;
+            sidToken = data.sid_token;
+            
+            document.getElementById("emailDisplay").innerText = currentEmail;
+            document.getElementById("inboxList").innerText = "Menunggu pesan masuk...";
+        } catch (err) {
+            document.getElementById("emailDisplay").innerText = "Gagal membuat email!";
+        }
+    }
+
+    async function checkInbox() {
+        if (!sidToken) return;
+        try {
+            let res = await fetch(`https://api.guerrillamail.com/ajax.php?f=check_email&sid_token=${sidToken}&seq=0`);
+            let data = await res.json();
+            
+            let list = data.list;
+            let inboxContainer = document.getElementById("inboxList");
+            
+            if (list && list.length > 0) {
+                inboxContainer.innerHTML = "";
+                list.forEach(msg => {
+                    if (!msg.mail_from.toLowerCase().includes("guerrilla")) {
+                        // Ambil isi detail email untuk cek OTP
+                        fetch(`https://api.guerrillamail.com/ajax.php?f=fetch_email&sid_token=${sidToken}&email_id=${msg.mail_id}`)
+                            .then(r => r.json())
+                            .then(detail => {
+                                inboxContainer.innerHTML += `
+                                    <div class="inbox-item">
+                                        <b>Dari:</b> ${detail.mail_from}<br>
+                                        <b>Subjek:</b> ${detail.mail_subject}<br>
+                                        <p>${detail.mail_body}</p>
+                                    </div>
+                                `;
+                            });
+                    }
+                });
+            }
+        } catch (err) {
+            console.error("Gagal cek inbox");
+        }
+    }
+
+    // Generate email pertama kali saat halaman dibuka
+    generateEmail();
+
+    // Cek inbox setiap 4 detik otomatis
+    setInterval(checkInbox, 4000);
+</script>
+
+</body>
+</html>
