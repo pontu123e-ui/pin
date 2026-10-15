@@ -15,6 +15,7 @@
             --accent: #10b981;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
+            --danger: #ef4444;
         }
 
         * {
@@ -171,52 +172,31 @@
             flex-shrink: 0;
         }
 
-        .inbox-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .status-badge {
-            font-size: 0.7rem;
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--accent);
-            padding: 4px 8px;
-            border-radius: 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .status-dot {
-            width: 6px;
-            height: 6px;
-            background-color: var(--accent);
-            border-radius: 50%;
-        }
-
-        .inbox-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-height: 260px;
-            overflow-y: auto;
-        }
-
-        .inbox-item {
+        .saved-item {
             background: #090d16;
             border: 1px solid var(--border-color);
             border-radius: 10px;
             padding: 12px;
+            margin-top: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 20px 0;
-            color: var(--text-muted);
-            font-size: 0.85rem;
+        .saved-actions {
+            display: flex;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .saved-actions button {
+            padding: 6px 10px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+        }
+
+        .btn-danger {
+            background: var(--danger) !important;
         }
 
         #toast {
@@ -247,7 +227,7 @@
     <div class="container">
         <div class="header">
             <h1>⚡ Secure Temp & Account Hub</h1>
-            <p>Pilih mode instan atau buat akun ber-password.</p>
+            <p>Simpan akun permanen di browser HP kamu.</p>
         </div>
         
         <div class="tabs">
@@ -265,37 +245,33 @@
             <button class="btn-full" onclick="generateInstanEmail()">✨ Buat Email Baru Instan</button>
         </div>
 
-        <!-- TAB 2: AKUN DENGAN USERNAME & PASSWORD -->
+        <!-- TAB 2: AKUN PERMANEN (SAVED STORAGE) -->
         <div id="tab-custom" class="card tab-content">
-            <div class="label">Buat / Login Akun Permanen</div>
-            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 10px;">
-                Simpan akun custom ini agar bisa dipakai login ulang.
-            </div>
+            <div class="label">Buat Akun Baru</div>
             <div class="input-group">
                 <input type="text" id="customUser" placeholder="Username (misal: vmsuser01)">
             </div>
             <div class="input-group">
                 <input type="password" id="customPass" placeholder="Password akun">
             </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn-full" onclick="saveCustomAccount()">Simpan & Gunakan</button>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="btn-full" onclick="saveCustomAccount()">💾 Simpan Permanen</button>
                 <button class="btn-full" style="background: #334155;" onclick="randomizeCustom()">Auto Random</button>
             </div>
-            <div id="activeCustomInfo" style="margin-top: 10px; font-size: 0.8rem; color: var(--accent); display:none;"></div>
+
+            <div class="label" style="margin-top: 16px;">📁 Daftar Akun Tersimpan (Permanen)</div>
+            <div id="savedAccountList">
+                <div style="font-size: 0.8rem; color: var(--text-muted); text-align: center; padding: 10px 0;">Belum ada akun yang tersimpan.</div>
+            </div>
         </div>
 
         <!-- KOTAK MASUK -->
         <div class="card">
-            <div class="inbox-header">
-                <span class="label" style="margin-bottom:0;">Kotak Masuk (Live Inbox)</span>
-                <div class="status-badge">
-                    <div class="status-dot"></div>
-                    <span id="statusModeText">Mode Instan</span>
-                </div>
+            <div class="label">Status Email Aktif</div>
+            <div id="activeEmailBox" style="font-family: monospace; font-size: 0.9rem; color: var(--accent); word-break: break-all; margin-bottom: 10px;">
+                Belum ada email dipilih.
             </div>
-            <div id="inboxList" class="inbox-list">
-                <div class="empty-state">Menunggu pesan masuk...</div>
-            </div>
+            <button class="btn-full" style="background: #1e293b; font-size: 0.8rem;" onclick="copyText(currentEmail, 'Email disalin!')">Salin Email Aktif</button>
         </div>
     </div>
 
@@ -304,7 +280,6 @@
 <script>
     let currentMode = 'instan';
     let currentEmail = "";
-    let customAccount = { email: "", password: "" };
 
     function showToast(msg) {
         let t = document.getElementById("toast");
@@ -329,34 +304,21 @@
         if (mode === 'instan') {
             document.getElementById('btnTabInstan').classList.add('active');
             document.getElementById('tab-instan').classList.add('active');
-            document.getElementById('statusModeText').innerText = "Mode Instan";
             if (!currentEmail) generateInstanEmail();
         } else {
             document.getElementById('btnTabCustom').classList.add('active');
             document.getElementById('tab-custom').classList.add('active');
-            document.getElementById('statusModeText').innerText = "Mode Akun Custom";
-            if (customAccount.email) {
-                document.getElementById('emailDisplay').innerText = customAccount.email;
-            }
+            loadSavedAccounts();
         }
     }
 
-    // Generator email instan pakai alternatif publik via fetch aman / random fallback
-    async function generateInstanEmail() {
-        document.getElementById("emailDisplay").innerText = "Membuat...";
-        try {
-            // Menggunakan layanan temp mail publik dengan format aman
-            let randomId = Math.random().toString(36).substring(2, 10);
-            currentEmail = "user" + randomId + "@guerrillamail.com";
-            document.getElementById("emailDisplay").innerText = currentEmail;
-            document.getElementById("inboxList").innerHTML = '<div class="empty-state">Email siap! Menunggu pesan/OTP masuk...</div>';
-            showToast("Email instan baru dibuat!");
-        } catch (e) {
-            let randomId = Math.floor(100000 + Math.random() * 900000);
-            currentEmail = "temp" + randomId + "@1secmail.com";
-            document.getElementById("emailDisplay").innerText = currentEmail;
-            showToast("Email siap (Fallback)!");
-        }
+    // Generator email instan
+    function generateInstanEmail() {
+        let randomId = Math.random().toString(36).substring(2, 10);
+        currentEmail = "user" + randomId + "@guerrillamail.com";
+        document.getElementById("emailDisplay").innerText = currentEmail;
+        document.getElementById("activeEmailBox").innerText = currentEmail;
+        showToast("Email instan dibuat!");
     }
 
     function randomizeCustom() {
@@ -365,6 +327,7 @@
         document.getElementById("customPass").value = "Pass" + Math.floor(1000 + Math.random() * 9000) + "!";
     }
 
+    // SIMPAN KE LOCALSTORAGE (PERMANEN)
     function saveCustomAccount() {
         let user = document.getElementById("customUser").value.trim();
         let pass = document.getElementById("customPass").value.trim();
@@ -372,18 +335,65 @@
             showToast("Isi username & password dulu!");
             return;
         }
-        customAccount.email = user + "@1secmail.org";
-        customAccount.password = pass;
 
-        let info = document.getElementById("activeCustomInfo");
-        info.style.display = "block";
-        info.innerHTML = `<b>Akun Aktif:</b> ${customAccount.email} <br><b>Sandi:</b> ${customAccount.password} <button onclick="copyText('${customAccount.email}', 'Email custom disalin!')" style="margin-top:6px; padding:6px 10px; font-size:0.75rem;">Salin Email Ini</button>`;
+        let email = user + "@1secmail.org";
+        let saved = JSON.parse(localStorage.getItem("vms_accounts") || "[]");
+
+        // Tambah ke list
+        saved.push({ email: email, pass: pass, date: new Date().toLocaleDateString() });
+        localStorage.setItem("vms_accounts", JSON.stringify(saved));
+
+        // Set email aktif
+        setActiveAccount(email);
         
-        currentEmail = customAccount.email;
-        showToast("Akun custom disimpan & aktif!");
+        // Reset input & render ulang
+        document.getElementById("customUser").value = "";
+        document.getElementById("customPass").value = "";
+        loadSavedAccounts();
+        showToast("Akun disimpan permanen!");
     }
 
-    // Jalankan pertama kali
+    function loadSavedAccounts() {
+        let saved = JSON.parse(localStorage.getItem("vms_accounts") || "[]");
+        let listContainer = document.getElementById("savedAccountList");
+
+        if (saved.length === 0) {
+            listContainer.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-muted); text-align: center; padding: 10px 0;">Belum ada akun tersimpan.</div>`;
+            return;
+        }
+
+        let html = "";
+        saved.forEach((acc, index) => {
+            html += `
+                <div class="saved-item">
+                    <div style="font-size: 0.85rem; font-weight: 600; color: #38bdf8;">${acc.email}</div>
+                    <div style="font-size: 0.78rem; color: var(--text-muted);">Sandi: <span style="color: #f8fafc; font-family: monospace;">${acc.pass}</span></div>
+                    <div class="saved-actions">
+                        <button onclick="setActiveAccount('${acc.email}')">Gunakan</button>
+                        <button style="background: #334155;" onclick="copyText('${acc.email} | ${acc.pass}', 'Kredensial disalin!')">Salin</button>
+                        <button class="btn-danger" onclick="deleteAccount(${index})">Hapus</button>
+                    </div>
+                </div>
+            `;
+        });
+        listContainer.innerHTML = html;
+    }
+
+    function setActiveAccount(email) {
+        currentEmail = email;
+        document.getElementById("activeEmailBox").innerText = currentEmail;
+        showToast(`Email aktif: ${email}`);
+    }
+
+    function deleteAccount(index) {
+        let saved = JSON.parse(localStorage.getItem("vms_accounts") || "[]");
+        saved.splice(index, 1);
+        localStorage.setItem("vms_accounts", JSON.stringify(saved));
+        loadSavedAccounts();
+        showToast("Akun dihapus!");
+    }
+
+    // Inisialisasi awal
     generateInstanEmail();
 </script>
 
