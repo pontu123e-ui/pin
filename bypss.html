@@ -80,11 +80,11 @@
 </div>
 
 <script>
-// Daftar endpoint API bypass alternatif terbaru
-const apiEndpoints = [
-    url => `https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`,
-    url => `https://api.justin.rest/bypass?url=${encodeURIComponent(url)}`,
-    url => `https://bypass.bot.nu/bypass2?url=${encodeURIComponent(url)}`
+// Server API bypass beserta jalur CORS proxy
+const apiList = [
+    url => `https://corsproxy.io/?` + encodeURIComponent(`https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`),
+    url => `https://api.allorigins.win/raw?url=` + encodeURIComponent(`https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`),
+    url => `https://corsproxy.io/?` + encodeURIComponent(`https://bypass.bot.nu/bypass2?url=${encodeURIComponent(url)}`)
 ];
 
 async function startBypass() {
@@ -104,15 +104,24 @@ async function startBypass() {
 
     let success = false;
 
-    for (let i = 0; i < apiEndpoints.length; i++) {
+    for (let i = 0; i < apiList.length; i++) {
         statusText.textContent = `Mencoba jalur server ${i + 1}...`;
+        statusText.style.color = "#f59e0b";
+        
         try {
-            const res = await fetch(apiEndpoints[i](input));
-            const data = await res.json();
+            const res = await fetch(apiList[i](input));
+            const text = await res.text();
+            let data;
+            
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                continue;
+            }
 
             const targetUrl = data.destination || data.result || data.url || (data.data && data.data.destination);
 
-            if (targetUrl && targetUrl.startsWith('http')) {
+            if (targetUrl && typeof targetUrl === 'string' && targetUrl.startsWith('http')) {
                 statusText.textContent = "Berhasil!";
                 statusText.style.color = "#4ade80";
                 outputLink.textContent = targetUrl;
@@ -121,14 +130,14 @@ async function startBypass() {
                 break;
             }
         } catch (err) {
-            console.log(`Server ${i + 1} gagal, mencoba server berikutnya...`);
+            console.log(`Server ${i + 1} error, berpindah ke server berikutnya...`);
         }
     }
 
     if (!success) {
         statusText.textContent = "Gagal memproses link";
         statusText.style.color = "#ef4444";
-        outputLink.textContent = "Semua server sibuk atau link tidak valid/tidak didukung.";
+        outputLink.textContent = "Semua jalur API sedang diblokir/down oleh provider bypass.";
     }
 }
 </script>
