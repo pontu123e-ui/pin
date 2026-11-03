@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bypass Link Unlimited - Local Server</title>
+    <title>Bypass Link Unlimited - Termux Tunnel</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body {
@@ -68,13 +68,13 @@
 
 <div class="card">
     <h2>Link Bypasser</h2>
-    <p>Bypass Lootlabs & lainnya menggunakan server lokal Termux</p>
+    <p>Bypass Lootlabs & lainnya menggunakan server Termux</p>
     
     <input type="text" id="linkInput" placeholder="Tempelkan link di sini...">
     <button onclick="startBypass()">Bypass Sekarang</button>
 
     <div id="resultContainer" class="result">
-        <div id="statusText" class="status">Menghubungkan ke Termux...</div>
+        <div id="statusText" class="status">Menghubungkan ke server...</div>
         <a id="outputLink" href="#" target="_blank">---</a>
     </div>
 </div>
@@ -98,8 +98,8 @@ async function startBypass() {
     outputLink.href = "#";
 
     try {
-        // Mengarah ke server lokal Termux yang sedang aktif di HP kamu
-        const endpoint = `http://localhost:3000/api/bypass?url=${encodeURIComponent(inputUrl)}`;
+        // Mengarah ke server Termux via tunnel HTTPS Serveo
+        const endpoint = `https://cca6cafc1688d413-180-251-149-1.serveousercontent.com/api/bypass?url=${encodeURIComponent(inputUrl)}`;
         
         const response = await fetch(endpoint);
         const data = await response.json();
@@ -115,7 +115,7 @@ async function startBypass() {
     } catch (error) {
         statusText.textContent = "Gagal terhubung";
         statusText.style.color = "#ef4444";
-        outputLink.textContent = "Pastikan server Termux (`node server.js`) menyala dan tidak ditutup!";
+        outputLink.textContent = "Pastikan server Termux dan tunnel Serveo di HP kamu menyala!";
     }
 }
 </script>
