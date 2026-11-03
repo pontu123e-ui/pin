@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bypass Link Fast</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+        }
+        h2 { text-align: center; margin-top: 0; color: #38bdf8; }
+        p { text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 12px;
+            outline: none;
+        }
+        input:focus { border-color: #38bdf8; }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #0284c7;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        button:hover { background: #0369a1; }
+        .result {
+            margin-top: 20px;
+            padding: 14px;
+            background: #0f172a;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            display: none;
+            word-break: break-all;
+        }
+        .result a { color: #4ade80; text-decoration: none; font-weight: bold; }
+        .status { font-size: 12px; color: #f59e0b; margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>Link Bypasser</h2>
+    <p>Bypass Lootlabs, Linkvertise, & target lainnya tanpa limitasi aplikasi</p>
+    
+    <input type="text" id="linkInput" placeholder="Tempelkan link di sini...">
+    <button onclick="startBypass()">Bypass Sekarang</button>
+
+    <div id="resultContainer" class="result">
+        <div id="statusText" class="status">Mengontak Server...</div>
+        <a id="outputLink" href="#" target="_blank">---</a>
+    </div>
+</div>
+
+<script>
+// Daftar endpoint API publik bypass
+const apiEndpoints = [
+    url => `https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`,
+    url => `https://bypass.bot.nu/bypass2?url=${encodeURIComponent(url)}`,
+    url => `https://dlr-api.vercel.app/api/bypass?url=${encodeURIComponent(url)}`
+];
+
+async function startBypass() {
+    const input = document.getElementById('linkInput').value.trim();
+    const resultBox = document.getElementById('resultContainer');
+    const statusText = document.getElementById('statusText');
+    const outputLink = document.getElementById('outputLink');
+
+    if (!input) {
+        alert("Masukkan link-nya dulu bro!");
+        return;
+    }
+
+    resultBox.style.display = 'block';
+    outputLink.textContent = "Sedang diproses...";
+    outputLink.href = "#";
+
+    let success = false;
+
+    // Coba API satu per satu otomatis jika ada yang limit/gagal
+    for (let i = 0; i < apiEndpoints.length; i++) {
+        statusText.textContent = `Mencoba jalur server ${i + 1}...`;
+        try {
+            const res = await fetch(apiEndpoints[i](input));
+            const data = await res.json();
+
+            const targetUrl = data.destination || data.result || data.url || (data.data && data.data.destination);
+
+            if (targetUrl && targetUrl.startsWith('http')) {
+                statusText.textContent = "Berhasil!";
+                statusText.style.color = "#4ade80";
+                outputLink.textContent = targetUrl;
+                outputLink.href = targetUrl;
+                success = true;
+                break;
+            }
+        } catch (err) {
+            console.log(`Server ${i + 1} gagal, mencoba server berikutnya...`);
+        }
+    }
+
+    if (!success) {
+        statusText.textContent = "Gagal memproses link";
+        statusText.style.color = "#ef4444";
+        outputLink.textContent = "Semua server sibuk atau link tidak valid/tidak didukung.";
+    }
+}
+</script>
+
+</body>
+</html>
