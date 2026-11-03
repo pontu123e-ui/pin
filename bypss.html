@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bypass Link Fast</title>
+    <title>Bypass Link Unlimited</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body {
@@ -68,76 +68,73 @@
 
 <div class="card">
     <h2>Link Bypasser</h2>
-    <p>Bypass Lootlabs, Linkvertise, & target lainnya tanpa limitasi aplikasi</p>
+    <p>Bypass Lootlabs, Linkvertise, & target lainnya tanpa limitasi</p>
     
     <input type="text" id="linkInput" placeholder="Tempelkan link di sini...">
     <button onclick="startBypass()">Bypass Sekarang</button>
 
     <div id="resultContainer" class="result">
-        <div id="statusText" class="status">Mengontak Server...</div>
+        <div id="statusText" class="status">Menghubungkan...</div>
         <a id="outputLink" href="#" target="_blank">---</a>
     </div>
 </div>
 
 <script>
-// Server API bypass beserta jalur CORS proxy
-const apiList = [
-    url => `https://corsproxy.io/?` + encodeURIComponent(`https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`),
-    url => `https://api.allorigins.win/raw?url=` + encodeURIComponent(`https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`),
-    url => `https://corsproxy.io/?` + encodeURIComponent(`https://bypass.bot.nu/bypass2?url=${encodeURIComponent(url)}`)
-];
-
 async function startBypass() {
-    const input = document.getElementById('linkInput').value.trim();
+    let inputUrl = document.getElementById('linkInput').value.trim();
     const resultBox = document.getElementById('resultContainer');
     const statusText = document.getElementById('statusText');
     const outputLink = document.getElementById('outputLink');
 
-    if (!input) {
+    if (!inputUrl) {
         alert("Masukkan link-nya dulu bro!");
         return;
     }
 
     resultBox.style.display = 'block';
-    outputLink.textContent = "Sedang diproses...";
+    statusText.textContent = "Memproses bypass...";
+    statusText.style.color = "#f59e0b";
+    outputLink.textContent = "Sedang mencari tautan asli...";
     outputLink.href = "#";
 
-    let success = false;
+    try {
+        // Menggunakan layanan API publik utama yang aktif menangani Lootlabs/Linkvertise
+        const endpoint = `https://api.bypass.vip/bypass?url=${encodeURIComponent(inputUrl)}`;
+        const response = await fetch(endpoint);
+        const data = await response.json();
 
-    for (let i = 0; i < apiList.length; i++) {
-        statusText.textContent = `Mencoba jalur server ${i + 1}...`;
-        statusText.style.color = "#f59e0b";
-        
-        try {
-            const res = await fetch(apiList[i](input));
-            const text = await res.text();
-            let data;
+        let finalUrl = data.destination || data.result || data.url;
+
+        // Cek jika hasil berupa objek atau ada didalam properti data
+        if (!finalUrl && data.data) {
+            finalUrl = data.data.destination || data.data.result;
+        }
+
+        if (finalUrl && typeof finalUrl === 'string' && finalUrl.startsWith('http')) {
+            statusText.textContent = "Berhasil!";
+            statusText.style.color = "#4ade80";
+            outputLink.textContent = finalUrl;
+            outputLink.href = finalUrl;
+        } else {
+            // Fallback: Jika API utama gagal, arahkan sistem menggunakan proxy alternatif
+            const altEndpoint = `https://api.allorigins.win/raw?url=` + encodeURIComponent(`https://bypass.bot.nu/bypass2?url=${encodeURIComponent(inputUrl)}`);
+            const altRes = await fetch(altEndpoint);
+            const altData = await altRes.json();
             
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                continue;
-            }
-
-            const targetUrl = data.destination || data.result || data.url || (data.data && data.data.destination);
-
-            if (targetUrl && typeof targetUrl === 'string' && targetUrl.startsWith('http')) {
+            let altFinal = altData.destination || altData.result || altData.url;
+            if (altFinal && altFinal.startsWith('http')) {
                 statusText.textContent = "Berhasil!";
                 statusText.style.color = "#4ade80";
-                outputLink.textContent = targetUrl;
-                outputLink.href = targetUrl;
-                success = true;
-                break;
+                outputLink.textContent = altFinal;
+                outputLink.href = altFinal;
+            } else {
+                throw new Error("Gagal total");
             }
-        } catch (err) {
-            console.log(`Server ${i + 1} error, berpindah ke server berikutnya...`);
         }
-    }
-
-    if (!success) {
-        statusText.textContent = "Gagal memproses link";
+    } catch (error) {
+        statusText.textContent = "Gagal memproses";
         statusText.style.color = "#ef4444";
-        outputLink.textContent = "Semua jalur API sedang diblokir/down oleh provider bypass.";
+        outputLink.textContent = "Link gagal di-bypass atau server sedang sibuk. Coba beberapa saat lagi.";
     }
 }
 </script>
