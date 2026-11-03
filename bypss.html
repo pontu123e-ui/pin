@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bypass Link Unlimited</title>
+    <title>Bypass Link Unlimited - Local Server</title>
     <style>
         * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body {
@@ -68,20 +68,20 @@
 
 <div class="card">
     <h2>Link Bypasser</h2>
-    <p>Bypass Lootlabs, Linkvertise, & target lainnya tanpa limitasi</p>
+    <p>Bypass Lootlabs & lainnya menggunakan server lokal Termux</p>
     
     <input type="text" id="linkInput" placeholder="Tempelkan link di sini...">
     <button onclick="startBypass()">Bypass Sekarang</button>
 
     <div id="resultContainer" class="result">
-        <div id="statusText" class="status">Menghubungkan...</div>
+        <div id="statusText" class="status">Menghubungkan ke Termux...</div>
         <a id="outputLink" href="#" target="_blank">---</a>
     </div>
 </div>
 
 <script>
 async function startBypass() {
-    let inputUrl = document.getElementById('linkInput').value.trim();
+    const inputUrl = document.getElementById('linkInput').value.trim();
     const resultBox = document.getElementById('resultContainer');
     const statusText = document.getElementById('statusText');
     const outputLink = document.getElementById('outputLink');
@@ -92,49 +92,30 @@ async function startBypass() {
     }
 
     resultBox.style.display = 'block';
-    statusText.textContent = "Memproses bypass...";
+    statusText.textContent = "Mengirim ke server Termux...";
     statusText.style.color = "#f59e0b";
-    outputLink.textContent = "Sedang mencari tautan asli...";
+    outputLink.textContent = "Memproses...";
     outputLink.href = "#";
 
     try {
-        // Menggunakan layanan API publik utama yang aktif menangani Lootlabs/Linkvertise
-        const endpoint = `https://api.bypass.vip/bypass?url=${encodeURIComponent(inputUrl)}`;
+        // Mengarah ke server lokal Termux yang sedang aktif di HP kamu
+        const endpoint = `http://localhost:3000/api/bypass?url=${encodeURIComponent(inputUrl)}`;
+        
         const response = await fetch(endpoint);
         const data = await response.json();
 
-        let finalUrl = data.destination || data.result || data.url;
-
-        // Cek jika hasil berupa objek atau ada didalam properti data
-        if (!finalUrl && data.data) {
-            finalUrl = data.data.destination || data.data.result;
-        }
-
-        if (finalUrl && typeof finalUrl === 'string' && finalUrl.startsWith('http')) {
+        if (data.status === 'success' && data.result) {
             statusText.textContent = "Berhasil!";
             statusText.style.color = "#4ade80";
-            outputLink.textContent = finalUrl;
-            outputLink.href = finalUrl;
+            outputLink.textContent = data.result;
+            outputLink.href = data.result;
         } else {
-            // Fallback: Jika API utama gagal, arahkan sistem menggunakan proxy alternatif
-            const altEndpoint = `https://api.allorigins.win/raw?url=` + encodeURIComponent(`https://bypass.bot.nu/bypass2?url=${encodeURIComponent(inputUrl)}`);
-            const altRes = await fetch(altEndpoint);
-            const altData = await altRes.json();
-            
-            let altFinal = altData.destination || altData.result || altData.url;
-            if (altFinal && altFinal.startsWith('http')) {
-                statusText.textContent = "Berhasil!";
-                statusText.style.color = "#4ade80";
-                outputLink.textContent = altFinal;
-                outputLink.href = altFinal;
-            } else {
-                throw new Error("Gagal total");
-            }
+            throw new Error(data.message || "Gagal diproses");
         }
     } catch (error) {
-        statusText.textContent = "Gagal memproses";
+        statusText.textContent = "Gagal terhubung";
         statusText.style.color = "#ef4444";
-        outputLink.textContent = "Link gagal di-bypass atau server sedang sibuk. Coba beberapa saat lagi.";
+        outputLink.textContent = "Pastikan server Termux (`node server.js`) menyala dan tidak ditutup!";
     }
 }
 </script>
