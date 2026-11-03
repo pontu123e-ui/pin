@@ -80,11 +80,11 @@
 </div>
 
 <script>
-// Daftar endpoint API publik bypass
+// Daftar endpoint API bypass alternatif terbaru
 const apiEndpoints = [
     url => `https://api.bypass.vip/bypass?url=${encodeURIComponent(url)}`,
-    url => `https://bypass.bot.nu/bypass2?url=${encodeURIComponent(url)}`,
-    url => `https://dlr-api.vercel.app/api/bypass?url=${encodeURIComponent(url)}`
+    url => `https://api.justin.rest/bypass?url=${encodeURIComponent(url)}`,
+    url => `https://bypass.bot.nu/bypass2?url=${encodeURIComponent(url)}`
 ];
 
 async function startBypass() {
@@ -104,7 +104,6 @@ async function startBypass() {
 
     let success = false;
 
-    // Coba API satu per satu otomatis jika ada yang limit/gagal
     for (let i = 0; i < apiEndpoints.length; i++) {
         statusText.textContent = `Mencoba jalur server ${i + 1}...`;
         try {
